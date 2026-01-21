@@ -1,0 +1,36 @@
+{
+  "name": "tribly",
+  "version": "2.0.0",
+  "description": "Tribly - منصة لربط الناس بقبائلهم وفق الاهتمامات المشتركة",
+  "type": "module",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server -p 8080 -c-1",
+    "dev": "npx http-server -p 8080 -c-1 --cors",
+    "build": "echo 'Static site - no build needed'",
+    "serve": "npx live-server --port=8080",
+    "test": "echo 'No tests configured yet'"
+  },
+  "keywords": [
+    "social",
+    "community",
+    "matching",
+    "firebase"
+  ],
+  "author": "Tribly Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tribly/tribly-website"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2"
+  },
+  "dependencies": {
+    "firebase": "^9.22.0"
+  }
+}

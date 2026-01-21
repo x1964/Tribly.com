@@ -722,19 +722,79 @@
 
   <script>
     // ============================================
-    // تحميل البيانات من localStorage عند فتح الصفحة
+    // تحميل البيانات من Firebase عند فتح الصفحة
     // ============================================
     window.addEventListener('DOMContentLoaded', function() {
       console.log('✅ صفحة الملف الشخصي تم تحميلها');
-      loadProfileData();
-      loadAvatarImage();
+      
+      // مراقبة حالة تسجيل الدخول
+      onAuthStateChanged((user) => {
+        if (user) {
+          console.log('✅ المستخدم مسجل دخول:', user.email);
+          loadProfileDataFromFirebase(user.uid);
+          loadAvatarImage();
+        } else {
+          console.log('⚠️ لم يتم تسجيل الدخول - إعادة التوجيه إلى صفحة الدخول');
+          setTimeout(() => {
+            window.location.href = 'login.html';
+          }, 1000);
+        }
+      });
     });
 
     // ============================================
-    // حفظ البيانات في localStorage
+    // تحميل البيانات من Firebase
+    // ============================================
+    async function loadProfileDataFromFirebase(uid) {
+      const profile = await getUserProfile(uid);
+      
+      if (profile) {
+        // تعبئة بيانات الملف الشخصي
+        document.getElementById('name').value = profile.name || '';
+        document.getElementById('age').value = profile.age || '';
+        document.getElementById('gender').value = profile.gender || '';
+        document.getElementById('city').value = profile.location || '';
+        document.getElementById('email').value = profile.email || '';
+        document.getElementById('bio').value = profile.bio || '';
+        document.getElementById('ageMin').value = profile.ageMin || '18';
+        document.getElementById('ageMax').value = profile.ageMax || '50';
+        document.getElementById('lookingFor').value = profile.lookingFor || '';
+        document.getElementById('distance').value = profile.distance || '50';
+        
+        // تحميل الاهتمامات
+        if (profile.interests && Array.isArray(profile.interests)) {
+          profile.interests.forEach(interest => {
+            if (!userInterests.includes(interest)) {
+              userInterests.push(interest);
+            }
+          });
+          displayInterests();
+        }
+        
+        // تحميل صورة الملف الشخصي
+        if (profile.avatar) {
+          document.querySelector('.avatar-wrapper img').src = profile.avatar;
+          localStorage.setItem('userAvatar', profile.avatar);
+        }
+        
+        console.log('✅ تم تحميل البيانات من Firebase');
+      } else {
+        console.log('ℹ️ لا توجد بيانات سابقة - سيتم إنشاء حساب جديد');
+      }
+    }
+
+    // ============================================
+    // حفظ البيانات في Firebase و localStorage
     // ============================================
     function saveProfile() {
       try {
+        const currentUser = getCurrentUser();
+        if (!currentUser) {
+          alert('❌ يجب تسجيل الدخول أولاً');
+          window.location.href = 'login.html';
+          return;
+        }
+
         // جمع البيانات
         const name = document.getElementById('name').value.trim();
         const age = document.getElementById('age').value;
@@ -790,12 +850,17 @@
           lastUpdated: new Date().toLocaleString('ar-EG')
         };
 
-        // حفظ البيانات
+        // حفظ البيانات في localStorage (نسخة احتياطية محلية)
         localStorage.setItem('userProfile', JSON.stringify(profile));
-        console.log('✅ تم حفظ البيانات:', profile);
         
-        // عرض رسالة النجاح
-        showSuccess('✅ تم حفظ البيانات بنجاح!');
+        // حفظ البيانات في Firebase
+        updateUserProfile(currentUser.uid, profile).then(() => {
+          console.log('✅ تم حفظ البيانات في Firebase:', profile);
+          showSuccess('✅ تم حفظ البيانات بنجاح!');
+        }).catch((error) => {
+          console.error('❌ خطأ في حفظ البيانات:', error);
+          showError('❌ حدث خطأ أثناء حفظ البيانات');
+        });
         
       } catch (error) {
         console.error('❌ خطأ في الحفظ:', error);
@@ -1268,4 +1333,9 @@
 
   <script src="js/profile-sync.js"></script>
 </body>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
+  <script src="js/firebase-init.js"></script>
 </html>

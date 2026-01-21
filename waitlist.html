@@ -1,185 +1,710 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
-<meta name="theme-color" content="#6ae44d">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>قائمة الانتظار - Tribly</title>
-<script src="js/language.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+    <meta name="theme-color" content="#6ae44d">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>قائمة الانتظار - Tribly</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
+    <script src="js/firebase-init.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
-* {
-    box-sizing: border-box;
-    font-family: "Segoe UI", Tahoma, sans-serif;
-}
-body {
-    margin: 0;
-    background: #0f172a;
-    color: #fff;
-}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+        }
 
-/* Navbar */
-.navbar {
-    background: #020617;
-    padding: 15px 25px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-.navbar h1 {
-    margin: 0;
-    font-size: 22px;
-    color: #38bdf8;
-}
+        /* Navbar */
+        nav {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-/* Layout */
-.container {
-    padding: 25px;
-}
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #6ae44d;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
 
-/* Cards */
-.cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px;
-}
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
 
-.card {
-    background: #020617;
-    border-radius: 14px;
-    padding: 20px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.4);
-}
-.card h3 {
-    margin: 0 0 10px;
-    font-size: 16px;
-    color: #94a3b8;
-}
-.card .value {
-    font-size: 28px;
-    font-weight: bold;
-    color: #22c55e;
-}
+        .nav-links a {
+            text-decoration: none;
+            color: #ccc;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
 
-/* Table */
-.table-box {
-    margin-top: 30px;
-    background: #020617;
-    border-radius: 14px;
-    overflow: hidden;
-}
+        .nav-links a:hover {
+            color: #6ae44d;
+        }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
+        /* Main Container */
+        .container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
 
-thead {
-    background: #020617;
-}
-th, td {
-    padding: 14px;
-    text-align: center;
-    border-bottom: 1px solid #1e293b;
-}
+        .waitlist-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(106, 228, 77, 0.3);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.6s ease-out;
+        }
 
-th {
-    color: #38bdf8;
-    font-weight: 600;
-}
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-.status-online {
-    color: #22c55e;
-}
-.status-offline {
-    color: #ef4444;
-}
-</style>
+        .waitlist-icon {
+            font-size: 3.5rem;
+            color: #6ae44d;
+            margin-bottom: 1.5rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .queue-number {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .queue-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #6ae44d, #a5ff84);
+            color: #000;
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            min-width: 150px;
+            box-shadow: 0 4px 15px rgba(106, 228, 77, 0.4);
+        }
+
+        .queue-number-large {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #6ae44d;
+            line-height: 1;
+        }
+
+        .queue-label {
+            font-size: 0.9rem;
+            color: #000;
+            margin-top: 0.5rem;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: #aaa;
+            margin-bottom: 2rem;
+        }
+
+        .info-box {
+            background: rgba(106, 228, 77, 0.1);
+            border-left: 4px solid #6ae44d;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: right;
+        }
+
+        .info-box p {
+            margin: 0.5rem 0;
+            color: #ddd;
+        }
+
+        .info-box strong {
+            color: #6ae44d;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid rgba(106, 228, 77, 0.2);
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #6ae44d;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #aaa;
+            margin-top: 0.5rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            border: 1px solid rgba(106, 228, 77, 0.2);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #6ae44d, #a5ff84);
+            width: 35%;
+            border-radius: 10px;
+            animation: fillProgress 2s ease-in-out infinite;
+        }
+
+        @keyframes fillProgress {
+            0%, 100% {
+                width: 35%;
+            }
+            50% {
+                width: 40%;
+            }
+        }
+
+        .progress-label {
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-bottom: 2rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6ae44d, #a5ff84);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(106, 228, 77, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(106, 228, 77, 0.1);
+            color: #6ae44d;
+            border: 2px solid #6ae44d;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(106, 228, 77, 0.2);
+        }
+
+        .social-share {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .social-share p {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-bottom: 1rem;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+        }
+
+        .social-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(106, 228, 77, 0.1);
+            border: 2px solid #6ae44d;
+            color: #6ae44d;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .social-btn:hover {
+            background: #6ae44d;
+            color: #000;
+            transform: translateY(-3px);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2rem;
+            text-align: center;
+            color: #aaa;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        footer a {
+            color: #6ae44d;
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .waitlist-card {
+                padding: 2rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .queue-number-large {
+                font-size: 2.5rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav {
+                padding: 1rem;
+            }
+
+            .waitlist-card {
+                padding: 1.5rem;
+                border-radius: 15px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .waitlist-icon {
+                font-size: 2.5rem;
+            }
+
+            .queue-number-large {
+                font-size: 2rem;
+            }
+
+            .queue-badge {
+                padding: 0.75rem 1.5rem;
+            }
+        }
+    </style>
 </head>
-
 <body>
+    <!-- Navbar -->
+    <nav>
+        <a href="index.html" class="logo">
+            <i class="fas fa-fire"></i> Tribly
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">الرئيسية</a></li>
+            <li><a href="about.html">حول</a></li>
+            <li><a href="login.html">دخول</a></li>
+        </ul>
+    </nav>
 
-<div class="navbar">
-    <h1>Router Control Panel</h1>
-    <span>WE Router</span>
-</div>
+    <!-- Main Content -->
+    <div class="container">
+        <div class="waitlist-card">
+            <!-- Icon -->
+            <div class="waitlist-icon">
+                <i class="fas fa-hourglass-end"></i>
+            </div>
 
-<div class="container">
+            <!-- Queue Number -->
+            <div class="queue-number">رقم دورك</div>
+            <div class="queue-badge">
+                <div class="queue-number-large" id="queueNumber">1245</div>
+                <div class="queue-label">في قائمة الانتظار</div>
+            </div>
 
-    <!-- Cards -->
-    <div class="cards">
-        <div class="card">
-            <h3>سرعة التحميل</h3>
-            <div class="value" id="download">— Mbps</div>
-        </div>
-        <div class="card">
-            <h3>سرعة الرفع</h3>
-            <div class="value" id="upload">— Mbps</div>
-        </div>
-        <div class="card">
-            <h3>الأجهزة المتصلة</h3>
-            <div class="value" id="devices">—</div>
-        </div>
-        <div class="card">
-            <h3>استهلاك الباقة</h3>
-            <div class="value" id="usage">— GB</div>
+            <!-- Title -->
+            <h1>شكراً لانضمامك! 🎉</h1>
+            <p class="subtitle">أنت الآن في قائمة الانتظار للحصول على وصول مبكر إلى Tribly</p>
+
+            <!-- Info Box -->
+            <div class="info-box">
+                <p>📧 <strong>بريدك:</strong> <span id="userEmail">example@email.com</span></p>
+                <p>📅 <strong>تاريخ التسجيل:</strong> <span id="registrationDate">21 يناير 2026</span></p>
+                <p>🎯 <strong>الأولوية:</strong> <span id="priority">عالية</span></p>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number" id="peopleAhead">1,245</div>
+                    <div class="stat-label">أشخاص قبلك</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="percentComplete">35%</div>
+                    <div class="stat-label">تقدم القائمة</div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <p class="progress-label">نسبة المدعوين حتى الآن</p>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="copyQueueNumber()">
+                    <i class="fas fa-copy"></i> نسخ رقم الدور
+                </button>
+                <button class="btn btn-secondary" onclick="shareWaitlist()">
+                    <i class="fas fa-share-alt"></i> شارك
+                </button>
+            </div>
+
+            <!-- Social Share -->
+            <div class="social-share">
+                <p>شارك مع الأصدقاء وارفع أولويتك 📢</p>
+                <div class="social-buttons">
+                    <button class="social-btn" title="WhatsApp" onclick="shareOnWhatsApp()">
+                        <i class="fab fa-whatsapp"></i>
+                    </button>
+                    <button class="social-btn" title="Twitter" onclick="shareOnTwitter()">
+                        <i class="fab fa-twitter"></i>
+                    </button>
+                    <button class="social-btn" title="Facebook" onclick="shareOnFacebook()">
+                        <i class="fab fa-facebook"></i>
+                    </button>
+                    <button class="social-btn" title="Email" onclick="shareViaEmail()">
+                        <i class="fas fa-envelope"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Devices Table -->
-    <div class="table-box">
-        <table>
-            <thead>
-                <tr>
-                    <th>اسم الجهاز</th>
-                    <th>IP</th>
-                    <th>MAC</th>
-                    <th>الحالة</th>
-                </tr>
-            </thead>
-            <tbody id="deviceTable">
-            </tbody>
-        </table>
-    </div>
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Tribly - جميع الحقوق محفوظة | <a href="privacy.html">سياسة الخصوصية</a> | <a href="service.html">شروط الخدمة</a></p>
+    </footer>
 
-</div>
+    <script>
+        let currentUserId = null;
+        let currentQueueNumber = null;
 
-<script>
-// بيانات تجريبية (بديل API الراوتر)
-const routerData = {
-    download: 72,
-    upload: 18,
-    usage: 143,
-    devices: [
-        { name: "Samsung A54", ip: "192.168.1.5", mac: "A1:B2:C3:D4", status: "online" },
-        { name: "Laptop HP", ip: "192.168.1.6", mac: "E5:F6:G7:H8", status: "online" },
-        { name: "Smart TV", ip: "192.168.1.9", mac: "X9:Y8:Z7", status: "offline" }
-    ]
-};
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                // Check if user is already registered
+                const storedUserId = localStorage.getItem('userId');
+                const storedEmail = localStorage.getItem('userEmail');
 
-// تحديث الكروت
-document.getElementById("download").innerText = routerData.download + " Mbps";
-document.getElementById("upload").innerText = routerData.upload + " Mbps";
-document.getElementById("usage").innerText = routerData.usage + " GB";
-document.getElementById("devices").innerText = routerData.devices.length;
+                if (storedUserId && storedEmail) {
+                    // Get user info from Firebase
+                    currentUserId = storedUserId;
+                    const userInfo = await waitlistManager.getUserInfo(storedUserId);
+                    if (userInfo) {
+                        updateUIWithUserData(userInfo);
+                        return;
+                    }
+                }
 
-// الأجهزة
-const table = document.getElementById("deviceTable");
-routerData.devices.forEach(d => {
-    table.innerHTML += `
-        <tr>
-            <td>${d.name}</td>
-            <td>${d.ip}</td>
-            <td>${d.mac}</td>
-            <td class="${d.status === "online" ? "status-online" : "status-offline"}">
-                ${d.status}
-            </td>
-        </tr>
-    `;
-});
-</script>
+                // Show registration form if not registered
+                showRegistrationForm();
+            } catch (error) {
+                console.error('Error initializing page:', error);
+                // Fallback to demo mode
+                setupDemoMode();
+            }
+        });
 
+        // Update UI with user data
+        async function updateUIWithUserData(userData) {
+            currentQueueNumber = userData.queueNumber;
+
+            // Get user position
+            const position = await waitlistManager.getUserPosition(userData.queueNumber);
+            const queueSize = await waitlistManager.getQueueSize();
+            const percentComplete = Math.floor((queueSize - position) / queueSize * 100);
+
+            // Update display
+            document.getElementById('queueNumber').textContent = userData.queueNumber.toLocaleString('ar-EG');
+            document.getElementById('userEmail').textContent = userData.email;
+            document.getElementById('registrationDate').textContent = userData.registrationDate;
+            document.getElementById('priority').textContent = userData.priority;
+            document.getElementById('peopleAhead').textContent = (position || 0).toLocaleString('ar-EG');
+            document.getElementById('percentComplete').textContent = percentComplete + '%';
+
+            // Update progress bar
+            const progressFill = document.querySelector('.progress-fill');
+            if (progressFill) {
+                progressFill.style.width = percentComplete + '%';
+            }
+
+            // Hide registration form if visible
+            const regForm = document.getElementById('registrationForm');
+            if (regForm) {
+                regForm.style.display = 'none';
+            }
+        }
+
+        // Show registration form
+        function showRegistrationForm() {
+            const waitlistCard = document.querySelector('.waitlist-card');
+            const formHTML = `
+                <div id="registrationForm" style="text-align: center;">
+                    <h2>انضم إلى Tribly 🎉</h2>
+                    <p style="color: #aaa; margin-bottom: 2rem;">أدخل بريدك الإلكتروني للحصول على رقم دور فريد</p>
+                    
+                    <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem;">
+                        <input 
+                            type="email" 
+                            id="emailInput" 
+                            placeholder="البريد الإلكتروني" 
+                            style="flex: 1; padding: 0.75rem; border: 2px solid #6ae44d; border-radius: 8px; background: rgba(255,255,255,0.05); color: #fff; font-size: 0.95rem;"
+                            onkeypress="if(event.key==='Enter') registerNewUser()">
+                        <button 
+                            onclick="registerNewUser()" 
+                            style="padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #6ae44d, #a5ff84); color: #000; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s;"
+                            onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(106, 228, 77, 0.4)'"
+                            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                            انضم الآن
+                        </button>
+                    </div>
+                    
+                    <p style="color: #888; font-size: 0.85rem;">لا تقلق، نحن لن نرسل لك بريد إلكتروني مزعج 📧</p>
+                </div>
+            `;
+
+            // Insert form before the queue display
+            const queueSection = document.querySelector('.queue-number');
+            if (queueSection) {
+                queueSection.parentElement.insertAdjacentHTML('beforebegin', formHTML);
+            }
+        }
+
+        // Register new user
+        async function registerNewUser() {
+            const emailInput = document.getElementById('emailInput');
+            if (!emailInput) return;
+
+            const email = emailInput.value.trim();
+
+            if (!email || !email.includes('@')) {
+                alert('❌ الرجاء إدخال بريد إلكتروني صحيح');
+                return;
+            }
+
+            try {
+                const button = event.target;
+                button.disabled = true;
+                button.textContent = 'جاري التسجيل...';
+
+                // Register user
+                const userData = await waitlistManager.registerUser(email);
+                currentUserId = userData.id;
+                currentQueueNumber = userData.queueNumber;
+
+                // Hide form and update UI
+                const regForm = document.getElementById('registrationForm');
+                if (regForm) {
+                    regForm.remove();
+                }
+
+                // Update UI with new user data
+                await updateUIWithUserData(userData);
+
+                alert('✅ تم تسجيلك بنجاح! رقم دورك: ' + userData.queueNumber);
+
+            } catch (error) {
+                console.error('Error registering user:', error);
+                alert('❌ حدث خطأ في التسجيل: ' + error.message);
+                event.target.disabled = false;
+                event.target.textContent = 'انضم الآن';
+            }
+        }
+
+        // Setup demo mode (fallback)
+        function setupDemoMode() {
+            const queueNumber = Math.floor(Math.random() * 4000) + 1000;
+            const position = Math.floor(Math.random() * 1000) + 245;
+            const percentComplete = 35;
+
+            localStorage.setItem('queueNumber', queueNumber);
+            localStorage.setItem('userEmail', 'user@example.com');
+            localStorage.setItem('registrationDate', new Date().toLocaleDateString('ar-EG'));
+
+            document.getElementById('queueNumber').textContent = queueNumber.toLocaleString('ar-EG');
+            document.getElementById('userEmail').textContent = 'user@example.com';
+            document.getElementById('registrationDate').textContent = new Date().toLocaleDateString('ar-EG');
+            document.getElementById('peopleAhead').textContent = position.toLocaleString('ar-EG');
+            document.getElementById('percentComplete').textContent = percentComplete + '%';
+        }
+
+        // Copy queue number
+        function copyQueueNumber() {
+            const queueNumber = document.getElementById('queueNumber').textContent;
+            navigator.clipboard.writeText(queueNumber).then(() => {
+                alert('✅ تم نسخ رقم الدور!');
+            });
+        }
+
+        // Share waitlist
+        function shareWaitlist() {
+            const queueNumber = document.getElementById('queueNumber').textContent;
+            const text = `انضمت إلى قائمة انتظار Tribly! رقم دوري: ${queueNumber} 🎉\nاحصل على وصول مبكر: https://tribly.com/waitlist`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Tribly Waitlist',
+                    text: text
+                });
+            } else {
+                alert(text);
+            }
+
+            // Track share
+            if (currentUserId) {
+                waitlistManager.trackShare(currentUserId, 'native');
+            }
+        }
+
+        // Social media sharing
+        function shareOnWhatsApp() {
+            const queueNumber = document.getElementById('queueNumber').textContent;
+            const text = encodeURIComponent(`🎉 انضمت إلى Tribly!\nرقم دوري: ${queueNumber}\n\nاحصل على وصول مبكر: https://tribly.com/waitlist`);
+            window.open(`https://wa.me/?text=${text}`);
+
+            if (currentUserId) {
+                waitlistManager.trackShare(currentUserId, 'whatsapp');
+                waitlistManager.addReferral(currentUserId);
+            }
+        }
+
+        function shareOnTwitter() {
+            const queueNumber = document.getElementById('queueNumber').textContent;
+            const text = encodeURIComponent(`انضمت إلى قائمة انتظار @Tribly! 🚀\nرقم دوري: ${queueNumber}\nهل تريد الانضمام؟ https://tribly.com/waitlist`);
+            window.open(`https://twitter.com/intent/tweet?text=${text}`);
+
+            if (currentUserId) {
+                waitlistManager.trackShare(currentUserId, 'twitter');
+                waitlistManager.addReferral(currentUserId);
+            }
+        }
+
+        function shareOnFacebook() {
+            window.open('https://www.facebook.com/sharer/sharer.php?u=https://tribly.com/waitlist', '_blank');
+
+            if (currentUserId) {
+                waitlistManager.trackShare(currentUserId, 'facebook');
+                waitlistManager.addReferral(currentUserId);
+            }
+        }
+
+        function shareViaEmail() {
+            const queueNumber = document.getElementById('queueNumber').textContent;
+            const userEmail = document.getElementById('userEmail').textContent;
+            const subject = encodeURIComponent('انضم إلى Tribly - أوجد قبيلتك');
+            const body = encodeURIComponent(`مرحباً،\n\nانضمت إلى قائمة انتظار Tribly وحصلت على رقم دور: ${queueNumber}\n\nهل تريد الانضمام؟\nhttps://tribly.com/waitlist\n\nالبريد الخاص بي: ${userEmail}`);
+            window.location.href = `mailto:?subject=${subject}&body=${body}`;
+
+            if (currentUserId) {
+                waitlistManager.trackShare(currentUserId, 'email');
+                waitlistManager.addReferral(currentUserId);
+            }
+        }
+    </script>
 </body>
 </html>
