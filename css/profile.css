@@ -1,0 +1,120 @@
+*{
+  box-sizing:border-box;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont;
+}
+
+body{
+  margin:0;
+  background:#f0f2f5;
+}
+
+.app{
+  display:flex;
+  min-height:100vh;
+}
+
+/* Sidebar */
+.sidebar{
+  width:260px;
+  background:#fff;
+  border-right:1px solid #ddd;
+  display:flex;
+  justify-content:center;
+  padding-top:40px;
+}
+
+.avatar-wrapper{
+  text-align:center;
+}
+
+.avatar-wrapper img{
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  object-fit:cover;
+  border:3px solid #1877f2;
+}
+
+.avatar-wrapper input{
+  display:none;
+}
+
+.avatar-wrapper span{
+  display:block;
+  margin-top:10px;
+  color:#1877f2;
+  cursor:pointer;
+  font-weight:600;
+}
+
+/* Content */
+.content{
+  flex:1;
+  padding:40px;
+  max-width:600px;
+}
+
+h1{
+  margin-bottom:30px;
+}
+
+.field{
+  margin-bottom:20px;
+}
+
+label{
+  display:block;
+  margin-bottom:6px;
+  font-weight:600;
+}
+
+input, textarea{
+  width:100%;
+  padding:12px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  outline:none;
+}
+
+textarea{
+  resize:none;
+  height:80px;
+}
+
+.chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:10px;
+}
+
+.chip{
+  background:#e4e6eb;
+  padding:6px 12px;
+  border-radius:16px;
+  font-size:14px;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:8px;
+  background:#1877f2;
+  color:#fff;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+/* Mobile */
+@media (max-width:768px){
+  .app{
+    flex-direction:column;
+  }
+  .sidebar{
+    width:100%;
+    border-right:none;
+    border-bottom:1px solid #ddd;
+  }
+}

@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+  <meta name="theme-color" content="#6ae44d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>مركز الدعم - Tribly</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- EmailJS for sending emails -->
+  <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <style>
+    /* ===== RESET & BASE STYLES ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary-color: #6ae44d;
+      --primary-dark: #5acc3d;
+      --primary-light: rgba(106, 228, 77, 0.1);
+      --secondary-color: #0a1929;
+      --accent-color: #3498db;
+      --text-light: #e0e0e0;
+      --text-dark: #333;
+      --text-gray: #888;
+      --bg-light: #ffffff;
+      --bg-dark: #0a1929;
+      --bg-card: rgba(255, 255, 255, 0.95);
+      --success-color: #2ecc71;
+      --error-color: #e74c3c;
+      --warning-color: #f39c12;
+      --border-radius: 12px;
+      --box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Cairo', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0a1929 0%, #1a1a2e 50%, #16213e 100%);
+      background-attachment: fixed;
+      color: var(--text-light);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary-color);
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--primary-dark);
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10, 25, 41, 0.95);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      border-bottom: 2px solid var(--primary-color);
+      backdrop-filter: blur(10px);
+    }
+
+    .navbar-logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--primary-color);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition);
+    }
+
+    .navbar-logo:hover {
+      transform: scale(1.05);
+      text-shadow: 0 0 20px var(--primary-color);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-light);
+      text-decoration: none;
+      transition: var(--transition);
+      font-weight: 500;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      right: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary-color);
+    }
+
+    #menuBtn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--primary-color);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* ===== HEADER ===== */
+    .support-header {
+      margin-top: 80px;
+      padding: 3rem 2rem;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(106, 228, 77, 0.15) 0%, rgba(52, 152, 219, 0.1) 100%);
+      border-bottom: 2px solid rgba(106, 228, 77, 0.3);
+      animation: fadeInDown 0.8s ease;
+    }
+
+    .support-header h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: var(--primary-color);
+      text-shadow: 0 0 20px rgba(106, 228, 77, 0.3);
+    }
+
+    .support-header p {
+      font-size: 1.2rem;
+      color: var(--text-light);
+      max-width: 600px;
+      margin: 0 auto;
+      opacity: 0.9;
+    }
+
+    /* ===== SUPPORT CONTAINER ===== */
+    .support-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    /* ===== SUPPORT FORM ===== */
+    .support-form {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(106, 228, 77, 0.2);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+      animation: slideInLeft 0.8s ease;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    .form-title {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text-light);
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .char-count {
+      font-size: 0.9rem;
+      color: var(--primary-color);
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.8rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(106, 228, 77, 0.2);
+      border-radius: 8px;
+      color: var(--text-light);
+      font-family: inherit;
+      transition: var(--transition);
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: rgba(224, 224, 224, 0.5);
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 20px rgba(106, 228, 77, 0.3);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .form-group input.success,
+    .form-group textarea.success,
+    .form-group select.success {
+      border-color: var(--success-color);
+      background: rgba(46, 204, 113, 0.1);
+    }
+
+    .form-group input.error,
+    .form-group textarea.error,
+    .form-group select.error {
+      border-color: var(--error-color);
+      background: rgba(231, 76, 60, 0.1);
+    }
+
+    .error-message {
+      color: var(--error-color);
+      font-size: 0.9rem;
+      margin-top: 0.3rem;
+      min-height: 20px;
+    }
+
+    .form-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .btn-submit,
+    .btn-reset {
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+      color: var(--secondary-color);
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(106, 228, 77, 0.4);
+    }
+
+    .btn-reset {
+      background: rgba(52, 152, 219, 0.2);
+      color: var(--accent-color);
+      border: 2px solid var(--accent-color);
+    }
+
+    .btn-reset:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* ===== SUPPORT CARDS ===== */
+    .support-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      animation: slideInRight 0.8s ease;
+    }
+
+    .support-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(106, 228, 77, 0.2);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      backdrop-filter: blur(10px);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .support-card:hover {
+      border-color: var(--primary-color);
+      transform: translateX(-5px);
+      box-shadow: 0 8px 32px rgba(106, 228, 77, 0.2);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-icon {
+      font-size: 1.5rem;
+      color: var(--primary-color);
+      min-width: 30px;
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-light);
+    }
+
+    .card-desc {
+      font-size: 0.95rem;
+      color: rgba(224, 224, 224, 0.8);
+      margin-left: 2.5rem;
+      line-height: 1.5;
+    }
+
+    /* ===== STATUS SECTION ===== */
+    .status-section {
+      margin-top: 3rem;
+      padding: 2rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(106, 228, 77, 0.2);
+      border-radius: var(--border-radius);
+      backdrop-filter: blur(10px);
+      animation: fadeInUp 0.8s ease;
+    }
+
+    .status-title {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .status-item {
+      text-align: center;
+      padding: 1rem;
+      border-radius: 8px;
+      background: rgba(46, 204, 113, 0.1);
+      border: 2px solid rgba(46, 204, 113, 0.3);
+    }
+
+    .status-item.warning {
+      background: rgba(243, 156, 18, 0.1);
+      border-color: rgba(243, 156, 18, 0.3);
+    }
+
+    .status-item.error {
+      background: rgba(231, 76, 60, 0.1);
+      border-color: rgba(231, 76, 60, 0.3);
+    }
+
+    .status-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: var(--success-color);
+    }
+
+    .status-item.warning .status-icon {
+      color: var(--warning-color);
+    }
+
+    .status-item.error .status-icon {
+      color: var(--error-color);
+    }
+
+    .status-label {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    .status-value {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    /* ===== FAQ SECTION ===== */
+    .faq-section {
+      margin-top: 3rem;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    .faq-title {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .faq-item {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(106, 228, 77, 0.2);
+      border-radius: var(--border-radius);
+      margin-bottom: 1rem;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      transition: var(--transition);
+    }
+
+    .faq-item:hover {
+      border-color: var(--primary-color);
+      box-shadow: 0 8px 32px rgba(106, 228, 77, 0.2);
+    }
+
+    .faq-question {
+      padding: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: var(--transition);
+      font-weight: 600;
+      color: var(--text-light);
+    }
+
+    .faq-question:hover {
+      background: rgba(106, 228, 77, 0.1);
+    }
+
+    .faq-icon {
+      color: var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .faq-item.active .faq-icon {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      padding: 0 1.5rem;
+      max-height: 0;
+      overflow: hidden;
+      transition: var(--transition);
+      color: rgba(224, 224, 224, 0.9);
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 500px;
+      padding: 0 1.5rem 1.5rem 1.5rem;
+    }
+
+    /* ===== ALERTS ===== */
+    .alert-message {
+      position: fixed;
+      top: 100px;
+      left: 2rem;
+      background: rgba(46, 204, 113, 0.95);
+      color: white;
+      padding: 1.5rem;
+      border-radius: var(--border-radius);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      z-index: 2000;
+      max-width: 400px;
+      opacity: 0;
+      transform: translateX(-500px);
+      transition: var(--transition);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      direction: rtl;
+    }
+
+    .alert-message.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .alert-message.error {
+      background: rgba(231, 76, 60, 0.95);
+    }
+
+    .alert-message i {
+      font-size: 1.5rem;
+    }
+
+    .close-alert {
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 1.2rem;
+      margin-right: auto;
+      transition: var(--transition);
+    }
+
+    .close-alert:hover {
+      transform: scale(1.2);
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: linear-gradient(180deg, rgba(10, 25, 41, 0.9) 0%, rgba(10, 25, 41, 0.95) 100%);
+      border-top: 2px solid var(--primary-color);
+      padding: 2rem;
+      text-align: center;
+      margin-top: 3rem;
+      color: var(--text-light);
+      box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+      text-align: right;
+    }
+
+    .footer-section h4 {
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .footer-section a {
+      display: block;
+      color: var(--text-light);
+      text-decoration: none;
+      transition: var(--transition);
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .footer-section a:hover {
+      color: var(--primary-color);
+      transform: translateX(-5px);
+    }
+
+    .footer-bottom {
+      border-top: 2px solid rgba(106, 228, 77, 0.2);
+      padding-top: 1.5rem;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes glow {
+      0%, 100% { text-shadow: 0 0 20px rgba(106, 228, 77, 0.5); }
+      50% { text-shadow: 0 0 30px rgba(106, 228, 77, 0.8); }
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .support-container {
+        grid-template-columns: 1fr;
+      }
+
+      .support-header h1 {
+        font-size: 2.2rem;
+      }
+
+      .nav-links {
+        gap: 1rem;
+      }
+
+      .status-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 1rem;
+      }
+
+      .navbar-logo {
+        font-size: 1.4rem;
+      }
+
+      #menuBtn {
+        display: block;
+      }
+
+      .nav-links {
+        position: absolute;
+        top: 60px;
+        left: 0;
+        right: 0;
+        background: rgba(10, 25, 41, 0.98);
+        flex-direction: column;
+        gap: 1rem;
+        padding: 2rem;
+        max-height: 0;
+        overflow: hidden;
+        transition: var(--transition);
+      }
+
+      .nav-links.active {
+        max-height: 500px;
+      }
+
+      .support-header {
+        margin-top: 70px;
+        padding: 2rem 1rem;
+      }
+
+      .support-header h1 {
+        font-size: 1.8rem;
+      }
+
+      .support-container {
+        padding: 2rem 1rem;
+      }
+
+      .support-form,
+      .support-card,
+      .status-section,
+      .faq-item {
+        padding: 1.5rem;
+      }
+
+      .form-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .status-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .alert-message {
+        left: 1rem;
+        right: 1rem;
+        max-width: none;
+      }
+
+      .support-header p {
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .support-header h1 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .support-form,
+      .support-card {
+        padding: 1rem;
+      }
+
+      .form-title {
+        font-size: 1.3rem;
+      }
+
+      .card-title {
+        font-size: 1rem;
+      }
+
+      .card-desc {
+        font-size: 0.85rem;
+      }
+
+      .faq-question {
+        padding: 1rem;
+      }
+
+      .faq-answer {
+        padding: 0 1rem;
+      }
+
+      .footer-content {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .footer-section,
+      .footer-section a {
+        text-align: center;
+      }
+
+      .footer-section a {
+        margin-bottom: 0.3rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar {
+        padding: 0.8rem;
+      }
+
+      .support-header {
+        padding: 1.5rem 1rem;
+      }
+
+      .support-container {
+        padding: 1.5rem 1rem;
+        gap: 1rem;
+      }
+
+      .support-form {
+        padding: 1rem;
+      }
+
+      .form-group input,
+      .form-group textarea {
+        font-size: 16px;
+      }
+
+      .btn-submit,
+      .btn-reset {
+        font-size: 0.9rem;
+        padding: 0.7rem 1rem;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .support-header h1 {
+        font-size: 1.3rem;
+      }
+
+      .navbar-logo {
+        font-size: 1.2rem;
+      }
+
+      .support-form,
+      .support-card {
+        padding: 0.8rem;
+      }
+
+      .form-title {
+        font-size: 1.1rem;
+      }
+
+      .status-grid {
+        gap: 0.8rem;
+      }
+
+      .alert-message {
+        max-width: calc(100% - 2rem);
+        padding: 1rem;
+      }
+    }
+
+    /* ===== LOADING STATE ===== */
+    .btn-loader {
+      display: none;
+      gap: 0.3rem;
+    }
+
+    .loader-dot {
+      width: 8px;
+      height: 8px;
+      background: currentColor;
+      border-radius: 50%;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    .loader-dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .loader-dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar" id="navbar">
+    <a href="index.html" class="navbar-logo">
+      <i class="fas fa-heart"></i> Tribly
+    </a>
+    <button class="menu-btn" id="menuBtn" aria-label="تبديل القائمة">
+      <i class="fas fa-bars"></i>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html"><i class="fas fa-home"></i> الرئيسية</a></li>
+      <li><a href="home.html"><i class="fas fa-users"></i> تصفح الأشخاص</a></li>
+      <li><a href="communities.html"><i class="fas fa-users"></i> المجتمعات</a></li>
+      <li><a href="faq.html"><i class="fas fa-question-circle"></i> الأسئلة</a></li>
+      <li><a href="contact-us.html"><i class="fas fa-envelope"></i> تواصل معنا</a></li>
+      <li><a href="about.html"><i class="fas fa-info-circle"></i> عن التطبيق</a></li>
+    </ul>
+  </nav>
+
+  <!-- Success/Error Messages -->
+  <div class="alert-message success" id="successMessage" role="alert">
+    <i class="fas fa-check-circle"></i>
+    <div>
+      <h4>تم الإرسال بنجاح!</h4>
+      <p>سيتم الرد عليك قريباً</p>
+    </div>
+    <button class="close-alert" aria-label="إغلاق"><i class="fas fa-times"></i></button>
+  </div>
+
+  <div class="alert-message error" id="errorMessage" role="alert">
+    <i class="fas fa-exclamation-circle"></i>
+    <div>
+      <h4>خطأ!</h4>
+      <p id="errorText">حدث خطأ ما. يرجى المحاولة مرة أخرى.</p>
+    </div>
+    <button class="close-alert" aria-label="إغلاق"><i class="fas fa-times"></i></button>
+  </div>
+
+  <!-- Header -->
+  <div class="support-header">
+    <h1><i class="fas fa-headset"></i> مركز الدعم</h1>
+    <p>نحن هنا لمساعدتك في أي استفسار أو مشكلة قد تواجهها. تواصل معنا وسنرد عليك في أسرع وقت ممكن.</p>
+  </div>
+
+  <!-- Main Content -->
+  <div class="support-container">
+    <!-- Support Form -->
+    <div class="support-form">
+      <h2 class="form-title">
+        <i class="fas fa-paper-plane"></i> نموذج الدعم الفني
+      </h2>
+
+      <form id="supportForm" method="POST" action="https://formsubmit.co/el/jixixa" novalidate>
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_next" value="https://tribly.com/support.html">
+        
+        <div class="form-group">
+          <label for="name">
+            <i class="fas fa-user"></i> اسمك الكامل *
+            <span class="char-count" id="nameCount">0/50</span>
+          </label>
+          <input type="text" id="name" name="name" required maxlength="50"
+                 placeholder="أدخل اسمك الكامل">
+          <div class="error-message" id="nameError"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">
+            <i class="fas fa-envelope"></i> البريد الإلكتروني *
+            <span class="char-count" id="emailCount">0/100</span>
+          </label>
+          <input type="email" id="email" name="email" required maxlength="100"
+                 placeholder="example@email.com">
+          <div class="error-message" id="emailError"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="category">
+            <i class="fas fa-list"></i> فئة المشكلة *
+          </label>
+          <select id="category" name="category" required>
+            <option value="">اختر الفئة</option>
+            <option value="technical">مشكلة فنية</option>
+            <option value="account">مشاكل الحساب</option>
+            <option value="payment">مشاكل الدفع</option>
+            <option value="bug">إبلاغ عن خطأ</option>
+            <option value="feature">طلب ميزة جديدة</option>
+            <option value="other">أخرى</option>
+          </select>
+          <div class="error-message" id="categoryError"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="priority">
+            <i class="fas fa-flag"></i> الأولوية *
+          </label>
+          <select id="priority" name="priority" required>
+            <option value="">اختر الأولوية</option>
+            <option value="low">منخفضة</option>
+            <option value="medium">متوسطة</option>
+            <option value="high">عالية</option>
+            <option value="urgent">حرجة</option>
+          </select>
+          <div class="error-message" id="priorityError"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="message">
+            <i class="fas fa-comment"></i> الرسالة *
+            <span class="char-count" id="messageCount">0/1000</span>
+          </label>
+          <textarea id="message" name="message" required maxlength="1000"
+                    placeholder="اشرح المشكلة بالتفصيل..." rows="5"></textarea>
+          <div class="error-message" id="messageError"></div>
+        </div>
+
+        <div class="form-group">
+          <input type="checkbox" id="followup" name="followup">
+          <label for="followup" style="display: inline;">
+            أرغب في الحصول على تحديثات حول حالة الدعم
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-submit" id="submitBtn">
+            <i class="fas fa-paper-plane"></i>
+            <span class="btn-text">إرسال الطلب</span>
+            <div class="btn-loader" id="submitLoader">
+              <div class="loader-dot"></div>
+              <div class="loader-dot"></div>
+              <div class="loader-dot"></div>
+            </div>
+          </button>
+          <button type="reset" class="btn-reset">
+            <i class="fas fa-redo"></i> مسح البيانات
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Support Info Cards -->
+    <div class="support-cards">
+      <div class="support-card">
+        <div class="card-header">
+          <div class="card-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="card-title">أوقات العمل</div>
+        </div>
+        <p class="card-desc">
+          🕗 السبت - الخميس: 9 صباحاً - 5 مساءً<br>
+          ⏰ الجمعة: 12 ظهراً - 5 مساءً<br>
+          ⛔ أيام العطل: مغلق
+        </p>
+      </div>
+
+      <div class="support-card">
+        <div class="card-header">
+          <div class="card-icon">
+            <i class="fas fa-phone"></i>
+          </div>
+          <div class="card-title">اتصل بنا</div>
+        </div>
+        <p class="card-desc">
+          📱 رقم الهاتف: +20 120 777 1639<br>
+          ⏱️ وقت الرد: خلال 2 ساعة عمل<br>
+          💬 WhatsApp: متاح
+        </p>
+      </div>
+
+      <div class="support-card">
+        <div class="card-header">
+          <div class="card-icon">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <div class="card-title">البريد الإلكتروني</div>
+        </div>
+        <p class="card-desc">
+          📧 support@tribly.com<br>
+          📧 triblyteam@gmail.com<br>
+          ⏱️ وقت الرد: خلال 24 ساعة
+        </p>
+      </div>
+
+      <div class="support-card">
+        <div class="card-header">
+          <div class="card-icon">
+            <i class="fas fa-life-ring"></i>
+          </div>
+          <div class="card-title">مستويات الدعم</div>
+        </div>
+        <p class="card-desc">
+          🥇 دعم فوري: مشاكل حرجة<br>
+          🥈 دعم سريع: مشاكل عالية<br>
+          🥉 دعم عادي: مشاكل عامة
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- System Status -->
+  <div class="support-container">
+    <div class="status-section" style="grid-column: 1 / -1;">
+      <h3 class="status-title">
+        <i class="fas fa-server"></i> حالة النظام
+      </h3>
+      <div class="status-grid">
+        <div class="status-item">
+          <div class="status-icon">✓</div>
+          <div class="status-label">خوادم التطبيق</div>
+          <div class="status-value">يعمل بكفاءة</div>
+        </div>
+        <div class="status-item">
+          <div class="status-icon">✓</div>
+          <div class="status-label">قاعدة البيانات</div>
+          <div class="status-value">متصل بشكل كامل</div>
+        </div>
+        <div class="status-item">
+          <div class="status-icon">✓</div>
+          <div class="status-label">خدمة البريد</div>
+          <div class="status-value">تعمل عادياً</div>
+        </div>
+        <div class="status-item">
+          <div class="status-icon">✓</div>
+          <div class="status-label">APIs الخارجية</div>
+          <div class="status-value">متاحة وآمنة</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ Section -->
+  <div class="support-container">
+    <div class="faq-section" style="grid-column: 1 / -1;">
+      <h3 class="faq-title">
+        <i class="fas fa-question-circle"></i> الأسئلة الشائعة حول الدعم
+      </h3>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          كم وقت انتظار الرد على طلب الدعم؟
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          متوسط وقت الرد هو 2-24 ساعة حسب أولوية الطلب. طلبات الأولوية العالية والحرجة يتم الرد عليها خلال ساعات قليلة.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          هل يمكنني التحدث مع فريق الدعم مباشرة؟
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          نعم، يمكنك الاتصال بنا عبر الهاتف في أوقات العمل، أو إرسال رسالة على WhatsApp. كما يمكنك استخدام نموذج الدعم هنا للحصول على رد سريع.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          ماذا أفعل إذا لم أتلقى رد على طلبي؟
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          تأكد من تفعيل البريد الإلكتروني وتفقد مجلد البريد العشوائي. إذا لم تتلقَ رد، يمكنك محاولة الاتصال بنا مباشرة على رقم الهاتف.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          هل توجد رسوم لخدمة الدعم؟
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          لا، خدمة الدعم مجانية تماماً لجميع المستخدمين. نحن نقدمها كجزء من التزامنا تجاه رضاك.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          كيف يمكنني الإبلاغ عن خطأ في التطبيق؟
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          اختر "إبلاغ عن خطأ" من فئة المشكلة في النموذج أعلاه، واشرح الخطأ بالتفصيل مع ذكر خطوات تكراره.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          هل أستطيع طلب ميزة جديدة؟
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          بالتأكيد! استخدم "طلب ميزة جديدة" واخبرنا بفكرتك. نحن نقدر كل اقتراح ونأخذه بعين الاعتبار.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4><i class="fas fa-link"></i> روابط سريعة</h4>
+        <a href="index.html">الرئيسية</a>
+        <a href="home.html">تصفح الأشخاص</a>
+        <a href="communities.html">المجتمعات</a>
+        <a href="about.html">عن التطبيق</a>
+      </div>
+      <div class="footer-section">
+        <h4><i class="fas fa-info-circle"></i> المساعدة</h4>
+        <a href="faq.html">الأسئلة الشائعة</a>
+        <a href="support.html">مركز الدعم</a>
+        <a href="contact-us.html">تواصل معنا</a>
+        <a href="privacy.html">سياسة الخصوصية</a>
+      </div>
+      <div class="footer-section">
+        <h4><i class="fas fa-share-alt"></i> تابعنا</h4>
+        <a href="https://facebook.com" target="_blank" rel="noopener"><i class="fab fa-facebook"></i> Facebook</a>
+        <a href="https://twitter.com" target="_blank" rel="noopener"><i class="fab fa-twitter"></i> Twitter</a>
+        <a href="https://instagram.com" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> Instagram</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024 Tribly - جميع الحقوق محفوظة | <a href="privacy.html" style="color: var(--primary-color);">سياسة الخصوصية</a></p>
+      <p>الإصدار 2.1.0 | آخر تحديث: يناير 2026</p>
+    </div>
+  </footer>
+
+  <!-- Back to Top -->
+  <button class="back-to-top" id="backToTop" aria-label="العودة للأعلى">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <script>
+    // ===== GLOBAL VARIABLES =====
+    const elements = {
+      supportForm: document.getElementById('supportForm'),
+      submitBtn: document.getElementById('submitBtn'),
+      submitLoader: document.getElementById('submitLoader'),
+      successMessage: document.getElementById('successMessage'),
+      errorMessage: document.getElementById('errorMessage'),
+      errorText: document.getElementById('errorText'),
+      menuBtn: document.getElementById('menuBtn'),
+      navLinks: document.getElementById('navLinks'),
+      navbar: document.getElementById('navbar'),
+      backToTop: document.getElementById('backToTop')
+    };
+
+    // ===== INITIALIZATION =====
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🚀 صفحة مركز الدعم جاهزة!');
+      initSupportForm();
+      initMenu();
+      initBackToTop();
+      initFAQ();
+      initAlerts();
+    });
+
+    // ===== SUPPORT FORM HANDLING =====
+    function initSupportForm() {
+      if (!elements.supportForm) return;
+
+      // Character counters
+      initCharCounters();
+
+      // Real-time validation
+      elements.supportForm.addEventListener('input', function(e) {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+          validateField(e.target);
+        }
+      });
+
+      // Form submission with validation
+      elements.supportForm.addEventListener('submit', function(e) {
+        if (!validateForm()) {
+          e.preventDefault();
+          showError('يرجى تصحيح الأخطاء في النموذج');
+        }
+        // If validation passes, form submits naturally to formsubmit.co
+      });
+
+      // Form reset
+      elements.supportForm.addEventListener('reset', resetForm);
+    }
+
+    function initCharCounters() {
+      const inputs = elements.supportForm.querySelectorAll('input, textarea, select');
+      inputs.forEach(input => {
+        if (input.id) {
+          const counter = document.getElementById(`${input.id}Count`);
+          if (counter) {
+            updateCharCounter(input, counter);
+            input.addEventListener('input', () => updateCharCounter(input, counter));
+          }
+        }
+      });
+    }
+
+    function updateCharCounter(input, counter) {
+      const value = input.value;
+      const max = input.getAttribute('maxlength') || 100;
+      const count = value.length;
+      counter.textContent = `${count}/${max}`;
+
+      const percentage = (count / max) * 100;
+      if (percentage > 90) {
+        counter.style.color = '#e74c3c';
+      } else if (percentage > 70) {
+        counter.style.color = '#f39c12';
+      } else {
+        counter.style.color = '#6ae44d';
+      }
+    }
+
+    function validateField(field) {
+      const errorElement = document.getElementById(`${field.id}Error`);
+      let isValid = true;
+      let message = '';
+
+      field.classList.remove('error', 'success');
+      errorElement.textContent = '';
+
+      if (field.hasAttribute('required') && !field.value.trim()) {
+        isValid = false;
+        message = 'هذا الحقل مطلوب';
+      } else if (field.type === 'email' && field.value) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(field.value)) {
+          isValid = false;
+          message = 'البريد الإلكتروني غير صالح';
+        }
+      } else if (field.id === 'message' && field.value.length < 10) {
+        isValid = false;
+        message = 'الرسالة قصيرة جداً (10 أحرف على الأقل)';
+      }
+
+      if (isValid) {
+        field.classList.add('success');
+      } else {
+        field.classList.add('error');
+        errorElement.textContent = message;
+      }
+
+      return isValid;
+    }
+
+    function validateForm() {
+      const fields = elements.supportForm.querySelectorAll('input, textarea, select');
+      let isValid = true;
+
+      fields.forEach(field => {
+        if (!validateField(field)) {
+          isValid = false;
+        }
+      });
+
+      if (!isValid) {
+        showError('يرجى تصحيح الأخطاء في النموذج');
+      }
+
+      return isValid;
+    }
+
+    function saveSupportRequest(data) {
+      const request = {
+        ...data,
+        id: Date.now(),
+        status: 'pending',
+        ticketNumber: 'TBLY-SUP-' + Date.now().toString().slice(-8)
+      };
+
+      let requests = JSON.parse(localStorage.getItem('supportRequests') || '[]');
+      requests.push(request);
+      localStorage.setItem('supportRequests', JSON.stringify(requests));
+
+      console.log('💾 تم حفظ طلب الدعم:', request);
+    }
+
+    function resetForm() {
+      document.querySelectorAll('.char-count').forEach(counter => {
+        counter.textContent = '0/100';
+        counter.style.color = '#6ae44d';
+      });
+
+      document.querySelectorAll('.error-message').forEach(el => {
+        el.textContent = '';
+      });
+
+      document.querySelectorAll('.error, .success').forEach(el => {
+        el.classList.remove('error', 'success');
+      });
+    }
+
+    function showSuccess() {
+      elements.successMessage.classList.add('show');
+      setTimeout(() => elements.successMessage.classList.remove('show'), 5000);
+    }
+
+    function showError(message) {
+      elements.errorText.textContent = message;
+      elements.errorMessage.classList.add('show');
+      setTimeout(() => elements.errorMessage.classList.remove('show'), 5000);
+    }
+
+    // ===== FAQ TOGGLE =====
+    function initFAQ() {
+      document.querySelectorAll('.faq-question').forEach(question => {
+        question.addEventListener('click', function() {
+          const item = this.parentElement;
+          
+          document.querySelectorAll('.faq-item').forEach(faq => {
+            if (faq !== item) {
+              faq.classList.remove('active');
+            }
+          });
+
+          item.classList.toggle('active');
+        });
+      });
+    }
+
+    // ===== NAVIGATION =====
+    function initMenu() {
+      if (!elements.menuBtn || !elements.navLinks) return;
+
+      elements.menuBtn.addEventListener('click', function() {
+        elements.navLinks.classList.toggle('active');
+        this.innerHTML = elements.navLinks.classList.contains('active')
+          ? '<i class="fas fa-times"></i>'
+          : '<i class="fas fa-bars"></i>';
+      });
+
+      document.addEventListener('click', function(e) {
+        if (!elements.navLinks.contains(e.target) && 
+            !elements.menuBtn.contains(e.target) &&
+            elements.navLinks.classList.contains('active')) {
+          elements.navLinks.classList.remove('active');
+          elements.menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+        }
+      });
+
+      elements.navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          elements.navLinks.classList.remove('active');
+          elements.menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+        });
+      });
+    }
+
+    // ===== BACK TO TOP =====
+    function initBackToTop() {
+      if (!elements.backToTop) return;
+
+      window.addEventListener('scroll', function() {
+        elements.backToTop.style.display = window.scrollY > 300 ? 'flex' : 'none';
+      });
+
+      elements.backToTop.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    // ===== ALERTS =====
+    function initAlerts() {
+      document.querySelectorAll('.close-alert').forEach(btn => {
+        btn.addEventListener('click', function() {
+          this.closest('.alert-message').classList.remove('show');
+        });
+      });
+    }
+  </script>
+</body>
+</html>

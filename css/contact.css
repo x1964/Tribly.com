@@ -1,0 +1,67 @@
+/* الأساسيات */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', 'Cairo', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #0a1929 0%, #1a1a2e 50%, #16213e 100%);
+  background-attachment: fixed;
+  color: #e0e0e0;
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* تحسينات التمرير */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #6ae44d 0%, #5acc3d 100%);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #5acc3d 0%, #4ab02d 100%);
+}
+
+/* النافبار المحسنة */
+nav {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 1rem 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+nav.scrolled {
+  padding: 0.8rem 2rem;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #6ae44d;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo i {
+  font-size: 1.6rem;
+}
+
+/* باقي الأنماط المحسنة... */

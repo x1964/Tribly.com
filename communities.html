@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+  <meta name="theme-color" content="#6ae44d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>المجتمعات - Tribly</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="js/language.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      color: #333;
+    }
+
+    /* Navbar */
+    nav {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #6ae44d;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #6ae44d;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .profile {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid #6ae44d;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .page-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: #222;
+    }
+
+    .page-header p {
+      font-size: 1.1rem;
+      color: #666;
+    }
+
+    /* Filter Section */
+    .filter-section {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 15px;
+      margin-bottom: 2rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .filter-btn {
+      padding: 0.75rem 1.5rem;
+      border: 2px solid #ddd;
+      background: white;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .filter-btn.active {
+      background: #6ae44d;
+      color: white;
+      border-color: #6ae44d;
+    }
+
+    .filter-btn:hover {
+      border-color: #6ae44d;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid #ddd;
+      border-radius: 25px;
+      font-size: 1rem;
+      transition: border 0.3s;
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: #6ae44d;
+    }
+
+    /* Communities Grid */
+    .communities-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    /* Community Card */
+    .community-card {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .community-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .community-header {
+      background: linear-gradient(135deg, #6ae44d, #a5ff84);
+      padding: 2rem;
+      position: relative;
+      min-height: 150px;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .community-header.private {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+    }
+
+    .community-icon {
+      font-size: 3rem;
+      color: white;
+      margin-bottom: 1rem;
+    }
+
+    .community-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(255,255,255,0.9);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .community-badge.public {
+      color: #6ae44d;
+    }
+
+    .community-badge.private {
+      color: #667eea;
+    }
+
+    .community-info {
+      padding: 1.5rem;
+    }
+
+    .community-name {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #222;
+      margin-bottom: 0.5rem;
+    }
+
+    .community-desc {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .community-stats {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    .stat {
+      flex: 1;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #6ae44d;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: #999;
+      margin-top: 0.25rem;
+    }
+
+    .community-footer {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 0.9rem;
+    }
+
+    .btn-primary {
+      background: #6ae44d;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5ac93d;
+    }
+
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #eee;
+    }
+
+    .modal-header h2 {
+      font-size: 1.5rem;
+      color: #222;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #999;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #6ae44d;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    /* Community Detail View */
+    .community-detail {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .detail-header {
+      background: linear-gradient(135deg, #6ae44d, #a5ff84);
+      padding: 2rem;
+      color: white;
+    }
+
+    .detail-header.private {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+    }
+
+    .detail-content {
+      padding: 2rem;
+    }
+
+    .detail-section {
+      margin-bottom: 2rem;
+    }
+
+    .detail-section h3 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      color: #222;
+    }
+
+    .members-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+
+    .member-card {
+      background: #f5f5f5;
+      padding: 1rem;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .member-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #ddd;
+      margin: 0 auto 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .member-name {
+      font-weight: 600;
+      color: #333;
+      font-size: 0.9rem;
+    }
+
+    .member-role {
+      font-size: 0.75rem;
+      color: #999;
+      margin-top: 0.25rem;
+    }
+
+    /* Messages/Posts Section */
+    .chat-section {
+      background: #f9f9f9;
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .message {
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      border-left: 4px solid #6ae44d;
+    }
+
+    .message-author {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.25rem;
+    }
+
+    .message-time {
+      font-size: 0.8rem;
+      color: #999;
+    }
+
+    .message-content {
+      margin-top: 0.5rem;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    .message-input {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .message-input input {
+      flex: 1;
+      padding: 0.75rem;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .message-input button {
+      background: #6ae44d;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    .message-input button:hover {
+      background: #5ac93d;
+    }
+
+    .permission-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: #f0f0f0;
+      border-radius: 5px;
+      font-size: 0.75rem;
+      margin-left: 0.5rem;
+    }
+
+    .permission-badge.moderator {
+      background: #ffe0e0;
+      color: #e74c3c;
+    }
+
+    .permission-badge.member {
+      background: #e0f0ff;
+      color: #3498db;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      nav {
+        padding: 1rem;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .page-header h1 {
+        font-size: 1.8rem;
+      }
+
+      .communities-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .filter-section {
+        flex-direction: column;
+      }
+
+      .search-box {
+        width: 100%;
+      }
+
+      .detail-header {
+        padding: 1.5rem;
+      }
+
+      .detail-content {
+        padding: 1rem;
+      }
+
+      .members-list {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page-header h1 {
+        font-size: 1.5rem;
+      }
+
+      .community-card {
+        border-radius: 10px;
+      }
+
+      .modal-content {
+        padding: 1.5rem;
+        width: 95%;
+      }
+
+      .members-list {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav>
+    <a href="index.html" class="logo">Tribly</a>
+    <ul class="nav-links">
+      <li><a href="home.html" data-i18n="nav.howItWorks">التصفح</a></li>
+      <li><a href="communities.html" data-i18n="nav.about">المجتمعات</a></li>
+      <li><a href="faq.html" data-i18n="nav.about">الأسئلة</a></li>
+      <li><a href="support.html" data-i18n="nav.about">الدعم</a></li>
+      <li><a href="about.html" data-i18n="nav.about">حول</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="profile.html"><img id="profileImg" src="img/me.jpg" alt="صورة المستخدم" class="profile"></a>
+      <button class="menu-btn" id="menuBtn" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1>🌍 المجتمعات</h1>
+      <p>انضم إلى مجتمعات تشاركك نفس الاهتمامات</p>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="filter-section">
+      <button class="filter-btn active" onclick="filterCommunities('all'); return false;">الكل</button>
+      <button class="filter-btn" onclick="filterCommunities('public'); return false;">
+        <i class="fas fa-globe"></i> عام
+      </button>
+      <button class="filter-btn" onclick="filterCommunities('private'); return false;">
+        <i class="fas fa-lock"></i> خاص
+      </button>
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="ابحث عن مجتمع..." oninput="searchCommunities(); return false;">
+      </div>
+      <button class="btn btn-primary" onclick="openCreateModal(); return false;" style="width: auto;">
+        <i class="fas fa-plus"></i> إنشاء مجتمع
+      </button>
+    </div>
+
+    <!-- Communities Grid -->
+    <div class="communities-grid" id="communitiesGrid">
+      <!-- سيتم ملأها بواسطة JavaScript -->
+    </div>
+  </div>
+
+  <!-- Community Detail Modal -->
+  <div class="modal" id="detailModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="detailTitle">اسم المجتمع</h2>
+        <button class="close-btn" onclick="closeDetail()">&times;</button>
+      </div>
+      <div class="community-detail" id="detailContent">
+        <!-- سيتم ملأها بواسطة JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Create/Edit Community Modal -->
+  <div class="modal" id="createModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">إنشاء مجتمع جديد</h2>
+        <button class="close-btn" onclick="closeCreateModal()">&times;</button>
+      </div>
+      <form id="communityForm">
+        <div class="form-group">
+          <label>اسم المجتمع *</label>
+          <input type="text" id="communityName" required>
+        </div>
+
+        <div class="form-group">
+          <label>الوصف *</label>
+          <textarea id="communityDesc" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>النوع *</label>
+          <select id="communityType" style="width: 100%; padding: 0.75rem; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem;">
+            <option value="public">عام (مفتوح للجميع)</option>
+            <option value="private">خاص (يتطلب كلمة سر)</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="passwordGroup" style="display: none;">
+          <label>كلمة السر *</label>
+          <input type="password" id="communityPassword" placeholder="أدخل كلمة سر قوية">
+        </div>
+
+        <div class="form-group">
+          <label>الأيقونة (رمز تعبيري)</label>
+          <input type="text" id="communityIcon" placeholder="مثال: 🎮 🎵 ⚽" value="👥">
+        </div>
+
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="allowMemberMessaging">
+            السماح للأعضاء بالتحدث (يمكن للمشرفين تغييرها لاحقاً)
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+          إنشاء المجتمع
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Join Private Community Modal -->
+  <div class="modal" id="joinPrivateModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>الانضمام إلى مجتمع خاص</h2>
+        <button class="close-btn" onclick="closeJoinModal()">&times;</button>
+      </div>
+      <form id="joinForm">
+        <div class="form-group">
+          <label>كلمة السر</label>
+          <input type="password" id="joinPassword" placeholder="أدخل كلمة السر" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+          الانضمام
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // بيانات المجتمعات
+    let communities = [
+      {
+        id: 1,
+        name: 'عشاق الألعاب',
+        icon: '🎮',
+        desc: 'مجتمع لمحبي الألعاب الإلكترونية والألعاب التقليدية',
+        type: 'public',
+        members: 1250,
+        posts: 450,
+        moderators: ['أحمد', 'فاطمة'],
+        allowMemberMessaging: true,
+        messages: [
+          { author: 'أحمد', text: 'هل أحد يلعب لعبة جديدة؟', time: 'قبل ساعة' },
+          { author: 'محمد', text: 'نعم! أنا بلعب اللعبة الجديدة', time: 'قبل 30 دقيقة' }
+        ]
+      },
+      {
+        id: 2,
+        name: 'موسيقى وفن',
+        icon: '🎵',
+        desc: 'مجتمع للفنانين وعشاق الموسيقى',
+        type: 'public',
+        members: 890,
+        posts: 320,
+        moderators: ['سارة', 'علي'],
+        allowMemberMessaging: true,
+        messages: []
+      },
+      {
+        id: 3,
+        name: 'البرمجة والتقنية',
+        icon: '💻',
+        desc: 'مجتمع خاص للمبرمجين والمهتمين بالتقنية',
+        type: 'private',
+        password: '1234',
+        members: 450,
+        posts: 620,
+        moderators: ['سامي'],
+        allowMemberMessaging: false,
+        messages: [
+          { author: 'سامي (مشرف)', text: 'ترحيب بجميع الأعضاء الجدد', time: 'قبل يومين' }
+        ]
+      },
+      {
+        id: 4,
+        name: 'السفر والمغامرات',
+        icon: '✈️',
+        desc: 'شارك تجاربك في السفر والمغامرات',
+        type: 'public',
+        members: 2100,
+        posts: 980,
+        moderators: ['ليلى', 'محمود'],
+        allowMemberMessaging: true,
+        messages: []
+      },
+      {
+        id: 5,
+        name: 'الطبخ والطعام',
+        icon: '🍳',
+        desc: 'مشاركة الوصفات والنقاشات عن الطعام',
+        type: 'public',
+        members: 1800,
+        posts: 1250,
+        moderators: ['هديل'],
+        allowMemberMessaging: true,
+        messages: []
+      },
+      {
+        id: 6,
+        name: 'النجاح والتطور الشخصي',
+        icon: '📚',
+        desc: 'مجتمع خاص لمحبي التطور والنمو الشخصي',
+        type: 'private',
+        password: 'success123',
+        members: 600,
+        posts: 400,
+        moderators: ['الدكتور أحمد'],
+        allowMemberMessaging: false,
+        messages: []
+      }
+    ];
+
+    let currentUser = {
+      name: 'أنت',
+      role: 'member',
+      joinedCommunities: [1, 2, 4, 5]
+    };
+
+    let currentFilter = 'all';
+
+    // تهيئة الصفحة
+    document.addEventListener('DOMContentLoaded', () => {
+      renderCommunities();
+      setupEventListeners();
+    });
+
+    function renderCommunities() {
+      const grid = document.getElementById('communitiesGrid');
+      grid.innerHTML = '';
+
+      let filtered = communities;
+
+      if (currentFilter === 'public') {
+        filtered = communities.filter(c => c.type === 'public');
+      } else if (currentFilter === 'private') {
+        filtered = communities.filter(c => c.type === 'private');
+      }
+
+      const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
+      if (searchTerm) {
+        filtered = filtered.filter(c =>
+          c.name.toLowerCase().includes(searchTerm) ||
+          c.desc.toLowerCase().includes(searchTerm)
+        );
+      }
+
+      filtered.forEach(community => {
+        const isJoined = currentUser.joinedCommunities.includes(community.id);
+        const card = document.createElement('div');
+        card.className = 'community-card';
+
+        const badgeClass = community.type === 'public' ? 'public' : 'private';
+        const badgeIcon = community.type === 'public' ? '🌍' : '🔒';
+        const badgeText = community.type === 'public' ? 'عام' : 'خاص';
+
+        card.innerHTML = `
+          <div class="community-header ${community.type}">
+            <div class="community-badge ${badgeClass}">
+              ${badgeIcon} ${badgeText}
+            </div>
+            <div class="community-icon">${community.icon}</div>
+          </div>
+          <div class="community-info">
+            <div class="community-name">${community.name}</div>
+            <div class="community-desc">${community.desc}</div>
+            <div class="community-stats">
+              <div class="stat">
+                <div class="stat-number">${community.members}</div>
+                <div class="stat-label">عضو</div>
+              </div>
+              <div class="stat">
+                <div class="stat-number">${community.posts}</div>
+                <div class="stat-label">منشور</div>
+              </div>
+              <div class="stat">
+                <div class="stat-number">${community.moderators.length}</div>
+                <div class="stat-label">مشرف</div>
+              </div>
+            </div>
+            <div class="community-footer">
+              <button class="btn ${isJoined ? 'btn-secondary' : 'btn-primary'}"
+                      onclick="handleCommunityAction('${community.id}', ${isJoined})">
+                <i class="fas fa-${isJoined ? 'check' : 'plus'}"></i>
+                ${isJoined ? 'عضو' : 'انضم الآن'}
+              </button>
+              <button class="btn btn-secondary" onclick="showCommunityDetail('${community.id}')">
+                <i class="fas fa-arrow-left"></i> عرض
+              </button>
+            </div>
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 2rem;">لم يتم العثور على مجتمعات</div>';
+      }
+    }
+
+    function filterCommunities(type) {
+      currentFilter = type;
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.currentTarget?.classList.add('active');
+      renderCommunities();
+      return false;
+    }
+
+    function searchCommunities() {
+      renderCommunities();
+      return false;
+    }
+
+    function handleCommunityAction(communityId, isJoined) {
+      const community = communities.find(c => c.id == communityId);
+      
+      if (isJoined) {
+        currentUser.joinedCommunities = currentUser.joinedCommunities.filter(id => id != communityId);
+        renderCommunities();
+      } else {
+        if (community.type === 'private') {
+          openJoinModal(communityId);
+        } else {
+          currentUser.joinedCommunities.push(communityId);
+          renderCommunities();
+        }
+      }
+    }
+
+    function showCommunityDetail(communityId) {
+      const community = communities.find(c => c.id == communityId);
+      const modal = document.getElementById('detailModal');
+      const isJoined = currentUser.joinedCommunities.includes(parseInt(communityId));
+
+      document.getElementById('detailTitle').textContent = `${community.icon} ${community.name}`;
+
+      let membersHtml = community.moderators.map(mod => `
+        <div class="member-card">
+          <div class="member-avatar"><i class="fas fa-user-shield"></i></div>
+          <div class="member-name">${mod}</div>
+          <div class="member-role">مشرف</div>
+        </div>
+      `).join('');
+
+      let messagesHtml = community.messages.map(msg => `
+        <div class="message">
+          <div class="message-author">${msg.author}</div>
+          <div class="message-time">${msg.time}</div>
+          <div class="message-content">${msg.content || msg.text}</div>
+        </div>
+      `).join('');
+
+      const canMessage = isJoined && (community.allowMemberMessaging || community.moderators.includes(currentUser.name));
+
+      document.getElementById('detailContent').innerHTML = `
+        <div class="detail-header ${community.type}">
+          <h1>${community.icon} ${community.name}</h1>
+          <p>${community.desc}</p>
+        </div>
+        <div class="detail-content">
+          <div class="detail-section">
+            <h3>حول المجتمع</h3>
+            <p><strong>النوع:</strong> ${community.type === 'public' ? '🌍 عام' : '🔒 خاص'}</p>
+            <p><strong>الأعضاء:</strong> ${community.members}</p>
+            <p><strong>المنشورات:</strong> ${community.posts}</p>
+            <p><strong>حالة التحدث:</strong> ${community.allowMemberMessaging ? '✅ الأعضاء يمكنهم التحدث' : '🔇 فقط المشرفون'}</p>
+          </div>
+
+          <div class="detail-section">
+            <h3>المشرفون</h3>
+            <div class="members-list">
+              ${membersHtml}
+            </div>
+          </div>
+
+          ${isJoined ? `
+          <div class="detail-section">
+            <h3>الرسائل الأخيرة</h3>
+            <div class="chat-section">
+              ${messagesHtml || '<p style="text-align: center; color: #999;">لا توجد رسائل حتى الآن</p>'}
+              ${canMessage ? `
+              <div class="message-input">
+                <input type="text" placeholder="اكتب رسالتك..." id="msgInput">
+                <button onclick="sendMessage(${community.id})">إرسال</button>
+              </div>
+              ` : '<p style="color: #999; font-size: 0.9rem;">أنت لا تملك صلاحية التحدث في هذا المجتمع</p>'}
+            </div>
+          </div>
+          ` : ''}
+        </div>
+      `;
+
+      modal.classList.add('active');
+    }
+
+    function closeDetail() {
+      document.getElementById('detailModal').classList.remove('active');
+    }
+
+    function openCreateModal() {
+      document.getElementById('modalTitle').textContent = 'إنشاء مجتمع جديد';
+      document.getElementById('communityForm').reset();
+      document.getElementById('createModal').classList.add('active');
+    }
+
+    function closeCreateModal() {
+      document.getElementById('createModal').classList.remove('active');
+    }
+
+    function openJoinModal(communityId) {
+      document.getElementById('joinForm').dataset.communityId = communityId;
+      document.getElementById('joinPrivateModal').classList.add('active');
+    }
+
+    function closeJoinModal() {
+      document.getElementById('joinPrivateModal').classList.remove('active');
+    }
+
+    function setupEventListeners() {
+      document.getElementById('communityType')?.addEventListener('change', (e) => {
+        const passwordGroup = document.getElementById('passwordGroup');
+        passwordGroup.style.display = e.target.value === 'private' ? 'block' : 'none';
+      });
+
+      document.getElementById('communityForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const newCommunity = {
+          id: communities.length + 1,
+          name: document.getElementById('communityName').value,
+          desc: document.getElementById('communityDesc').value,
+          icon: document.getElementById('communityIcon').value || '👥',
+          type: document.getElementById('communityType').value,
+          password: document.getElementById('communityPassword').value,
+          members: 1,
+          posts: 0,
+          moderators: ['أنت'],
+          allowMemberMessaging: document.getElementById('allowMemberMessaging').checked,
+          messages: []
+        };
+
+        communities.push(newCommunity);
+        currentUser.joinedCommunities.push(newCommunity.id);
+        closeCreateModal();
+        renderCommunities();
+        alert('✅ تم إنشاء المجتمع بنجاح!');
+      });
+
+      document.getElementById('joinForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const communityId = parseInt(document.getElementById('joinForm').dataset.communityId);
+        const community = communities.find(c => c.id === communityId);
+        const password = document.getElementById('joinPassword').value;
+
+        if (community.password === password) {
+          currentUser.joinedCommunities.push(communityId);
+          closeJoinModal();
+          renderCommunities();
+          alert('✅ تم الانضمام بنجاح!');
+        } else {
+          alert('❌ كلمة السر خاطئة!');
+        }
+      });
+    }
+
+    function sendMessage(communityId) {
+      const msgInput = document.getElementById('msgInput');
+      if (msgInput.value.trim()) {
+        const community = communities.find(c => c.id === communityId);
+        community.messages.push({
+          author: currentUser.name,
+          text: msgInput.value,
+          time: 'الآن'
+        });
+        msgInput.value = '';
+        showCommunityDetail(communityId);
+      }
+    }
+  </script>
+
+  <!-- Footer -->
+  <footer style="background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%); color: #6ae44d; padding: 3rem 2rem; text-align: center; margin-top: 3rem;">
+    <div style="max-width: 1200px; margin: 0 auto;">
+      <h3 style="color: #6ae44d; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(106, 228, 77, 0.3);">Tribly</h3>
+      <p style="margin-bottom: 1.5rem; color: #ccc;">أوجد قبيلتك - انضم إلى مجتمعات تشاركك نفس الاهتمامات</p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+        <div>
+          <h4 style="color: #6ae44d; margin-bottom: 1rem;">الروابط الرئيسية</h4>
+          <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 0.5rem;"><a href="index.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">الرئيسية</a></li>
+            <li style="margin-bottom: 0.5rem;"><a href="home.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">التصفح</a></li>
+            <li style="margin-bottom: 0.5rem;"><a href="communities.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">المجتمعات</a></li>
+            <li style="margin-bottom: 0.5rem;"><a href="profile.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">الملف الشخصي</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color: #6ae44d; margin-bottom: 1rem;">المعلومات</h4>
+          <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 0.5rem;"><a href="about.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">حول</a></li>
+            <li style="margin-bottom: 0.5rem;"><a href="manifesto.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">البيان</a></li>
+            <li style="margin-bottom: 0.5rem;"><a href="privacy.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">سياسة الخصوصية</a></li>
+            <li style="margin-bottom: 0.5rem;"><a href="service.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">شروط الخدمة</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color: #6ae44d; margin-bottom: 1rem;">الدعم</h4>
+          <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 0.5rem;"><a href="support-site.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">مركز الدعم</a></li>
+            <li style="margin-bottom: 0.5rem;"><a href="contact-us.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">تواصل معنا</a></li>
+          </ul>
+        </div>
+      </div>
+      <div style="border-top: 1px solid rgba(106, 228, 77, 0.3); padding-top: 1.5rem; color: #999;">
+        <p>&copy; 2025 Tribly - جميع الحقوق محفوظة</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/profile-sync.js"></script>
+</body>
+</html>

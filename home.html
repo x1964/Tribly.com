@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+    <meta name="theme-color" content="#6ae44d">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Tribly - أوجد قبيلتك</title>
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/language.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Navbar */
+        nav {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #6ae44d;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #6ae44d;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-actions .profile {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #6ae44d;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .filter-header {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            padding: 0.8rem 1.2rem;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .filter-btn:hover {
+            border-color: #6ae44d;
+            color: #6ae44d;
+        }
+
+        .filter-btn.active {
+            background: #6ae44d;
+            color: white;
+            border-color: #6ae44d;
+        }
+
+        /* People Grid */
+        .people-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .person-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+
+        .person-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .person-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            position: relative;
+        }
+
+        .person-info {
+            padding: 1.5rem;
+        }
+
+        .person-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .age-badge {
+            background: #6ae44d;
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .person-location {
+            color: #999;
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .person-bio {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .interests {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .interest-tag {
+            background: #ecf0f1;
+            color: #666;
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .interest-tag.match {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: space-between;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-pass {
+            background: #ecf0f1;
+            color: #666;
+        }
+
+        .btn-pass:hover {
+            background: #bdc3c7;
+        }
+
+        .btn-like {
+            background: #6ae44d;
+            color: white;
+        }
+
+        .btn-like:hover {
+            background: #52c933;
+        }
+
+        .btn-message {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-message:hover {
+            background: #2980b9;
+        }
+
+        /* No Results */
+        .no-results {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: white;
+            border-radius: 15px;
+            color: #999;
+        }
+
+        .no-results i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #ddd;
+        }
+
+        /* Footer */
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        footer a {
+            color: #6ae44d;
+            text-decoration: none;
+        }
+
+        /* Match Indicator */
+        .match-score {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(106, 228, 77, 0.95);
+            color: white;
+            padding: 0.8rem 1.2rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .people-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-grid {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            }
+
+            nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                width: 100%;
+                justify-content: center;
+                gap: 1rem;
+            }
+        }
+
+        /* Empty State Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .person-card {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav>
+        <div>
+            <a href="index.html" class="logo">Tribly</a>
+        </div>
+
+        <ul class="nav-links" id="navLinks">
+            <li><a href="home.html"><i class="fas fa-home"></i> التصفح</a></li>
+            <li><a href="communities.html"><i class="fas fa-users"></i> المجتمعات</a></li>
+            <li><a href="faq.html"><i class="fas fa-question-circle"></i> الأسئلة</a></li>
+            <li><a href="support.html"><i class="fas fa-headset"></i> الدعم</a></li>
+            <li><a href="about.html"><i class="fas fa-info-circle"></i> حول</a></li>
+            <li><a href="profile.html"><i class="fas fa-user"></i> الملف الشخصي</a></li>
+        </ul>
+
+        <div class="nav-actions">
+            <div style="position: relative;">
+                <i class="fas fa-heart" style="font-size: 1.5rem; cursor: pointer; color: #e74c3c;"></i>
+                <span class="notification-badge">3</span>
+            </div>
+            <a href="profile.html">
+                <img id="homeProfileImg" src="img/me.jpg" alt="Profile" class="profile">
+            </a>
+        </div>
+    </nav>
+
+    <!-- تحميل صورة البروفايل من localStorage -->
+    <script>
+      // تحميل الصورة المحفوظة عند فتح الصفحة
+      function loadProfileImage() {
+        const profileImg = document.getElementById('homeProfileImg');
+        const savedAvatar = localStorage.getItem('userAvatar');
+        if (savedAvatar && profileImg) {
+          profileImg.src = savedAvatar;
+        }
+      }
+      
+      // تحميل الصورة فوراً عند فتح الصفحة
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', loadProfileImage);
+      } else {
+        loadProfileImage();
+      }
+      
+      // الاستماع للتغييرات في localStorage (من صفحات أخرى)
+      window.addEventListener('storage', function() {
+        loadProfileImage();
+      });
+    </script>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <h2 class="filter-header">🔍 ابحث عن قبيلتك</h2>
+            <div class="filter-grid" id="filterGrid">
+                <button class="filter-btn active" data-interest="all">الكل</button>
+                <button class="filter-btn" data-interest="music">🎵 موسيقى</button>
+                <button class="filter-btn" data-interest="sports">⚽ رياضة</button>
+                <button class="filter-btn" data-interest="gaming">🎮 ألعاب</button>
+                <button class="filter-btn" data-interest="traveling">✈️ سفر</button>
+                <button class="filter-btn" data-interest="reading">📚 قراءة</button>
+                <button class="filter-btn" data-interest="cooking">🍳 طهي</button>
+                <button class="filter-btn" data-interest="art">🎨 فن</button>
+            </div>
+        </div>
+
+        <!-- People Grid -->
+        <div class="people-grid" id="peopleGrid">
+            <!-- سيتم ملء البطاقات من خلال JavaScript -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Tribly</h4>
+                <p>أوجد قبيلتك - منصة التواصل القائمة على الاهتمامات المشتركة</p>
+            </div>
+            <div class="footer-section">
+                <h4>الروابط</h4>
+                <ul>
+                    <li><a href="index.html">الرئيسية</a></li>
+                    <li><a href="home.html">التصفح</a></li>
+                    <li><a href="communities.html">المجتمعات</a></li>
+                    <li><a href="about.html">حول</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>سياسة وقانون</h4>
+                <ul>
+                    <li><a href="privacy.html">سياسة الخصوصية</a></li>
+                    <li><a href="service.html">شروط الخدمة</a></li>
+                    <li><a href="manifesto.html">البيان</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>تواصل</h4>
+                <ul>
+                    <li><a href="about.html">عن الموقع</a></li>
+                    <li><a href="support-site.html">الدعم</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Tribly - جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <script>
+        // بيانات الأشخاص المتاحة
+        const people = [
+            {
+                id: 1,
+                name: "أحمد محمد",
+                age: 26,
+                location: "القاهرة",
+                image: "img/person1.jpg",
+                bio: "مهندس برمجيات يحب السفر والموسيقى",
+                interests: ["music", "traveling", "gaming"],
+                matchScore: 95
+            },
+            {
+                id: 2,
+                name: "فاطمة علي",
+                age: 24,
+                location: "الإسكندرية",
+                image: "img/person2.jpg",
+                bio: "معلمة تحب القراءة والفن والسفر",
+                interests: ["reading", "art", "traveling"],
+                matchScore: 88
+            },
+            {
+                id: 3,
+                name: "محمود حسن",
+                age: 27,
+                location: "القاهرة",
+                image: "img/person3.jpg",
+                bio: "كاتب ورياضي محترف",
+                interests: ["sports", "reading", "cooking"],
+                matchScore: 82
+            },
+            {
+                id: 4,
+                name: "نور محمود",
+                age: 23,
+                location: "الجيزة",
+                image: "img/person4.jpg",
+                bio: "مصممة جرافيك وعاشقة للألعاب",
+                interests: ["art", "gaming", "music"],
+                matchScore: 92
+            },
+            {
+                id: 5,
+                name: "عمر يحيى",
+                age: 28,
+                location: "القاهرة",
+                image: "img/person5.jpg",
+                bio: "طاهي محترف يحب الرياضة والموسيقى",
+                interests: ["cooking", "sports", "music"],
+                matchScore: 85
+            },
+            {
+                id: 6,
+                name: "ليلى أحمد",
+                age: 25,
+                location: "الإسكندرية",
+                image: "img/person6.jpg",
+                bio: "فنانة وعاشقة للسفر والقراءة",
+                interests: ["art", "traveling", "reading"],
+                matchScore: 90
+            }
+        ];
+
+        // متغير للاهتمام المختار الحالي
+        let currentFilter = "all";
+
+        // دالة لإنشاء بطاقة شخص
+        function createPersonCard(person) {
+            const interestEmojis = {
+                music: "🎵 موسيقى",
+                sports: "⚽ رياضة",
+                gaming: "🎮 ألعاب",
+                traveling: "✈️ سفر",
+                reading: "📚 قراءة",
+                cooking: "🍳 طهي",
+                art: "🎨 فن"
+            };
+
+            const userInterests = ["music", "traveling", "gaming"]; // الاهتمامات الحالية للمستخدم
+
+            const interestsTags = person.interests.map(interest => {
+                const isMatch = userInterests.includes(interest);
+                return `<span class="interest-tag ${isMatch ? 'match' : ''}">${interestEmojis[interest]}</span>`;
+            }).join('');
+
+            return `
+                <div class="person-card">
+                    <img src="${person.image}" alt="${person.name}" class="person-image" onerror="this.src='https://via.placeholder.com/300?text=${person.name}'">
+                    <div class="match-score">${person.matchScore}% توافق</div>
+                    
+                    <div class="person-info">
+                        <div class="person-name">
+                            ${person.name}
+                            <span class="age-badge">${person.age}</span>
+                        </div>
+                        
+                        <div class="person-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            ${person.location}
+                        </div>
+                        
+                        <p class="person-bio">${person.bio}</p>
+                        
+                        <div class="interests">
+                            ${interestsTags}
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-pass" onclick="passProfile(${person.id}); return false;" title="تخطي">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <button class="btn btn-message" onclick="openChat(${person.id}, '${person.name}'); return false;" title="رسالة">
+                                <i class="fas fa-comment"></i>
+                            </button>
+                            <button class="btn btn-like" onclick="likeProfile(${person.id}); return false;" title="إعجاب">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // دالة لعرض الأشخاص بناءً على التصفية
+        function displayPeople(filter = "all") {
+            const peopleGrid = document.getElementById("peopleGrid");
+            peopleGrid.innerHTML = "";
+
+            let filteredPeople = people;
+            if (filter !== "all") {
+                filteredPeople = people.filter(person => person.interests.includes(filter));
+            }
+
+            if (filteredPeople.length === 0) {
+                peopleGrid.innerHTML = `
+                    <div class="no-results" style="grid-column: 1 / -1;">
+                        <i class="fas fa-search"></i>
+                        <h3>لم نجد أشخاصاً يطابقون بحثك</h3>
+                        <p>جرب تصفية أخرى أو عد لاحقاً</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredPeople.forEach(person => {
+                const card = createPersonCard(person);
+                peopleGrid.innerHTML += card;
+            });
+        }
+
+        // إضافة مستمعي الأحداث للأزرار
+        document.querySelectorAll(".filter-btn").forEach(btn => {
+            btn.addEventListener("click", function() {
+                document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+                this.classList.add("active");
+                currentFilter = this.dataset.interest;
+                displayPeople(currentFilter);
+            });
+        });
+
+        // دوال الإجراءات
+        function likeProfile(personId) {
+            const person = people.find(p => p.id === personId);
+            alert(`❤️ تم إضافة ${person.name} إلى قائمة المفضلة!`);
+            removeCard(personId);
+        }
+
+        function passProfile(personId) {
+            const person = people.find(p => p.id === personId);
+            removeCard(personId);
+        }
+
+        function openChat(personId, personName) {
+            alert(`💬 فتح محادثة مع ${personName}\n(سيتم ربط هذا بنظام المراسلة الفعلي)`);
+        }
+
+        function removeCard(personId) {
+            const card = document.querySelector(`[data-person-id="${personId}"]`);
+            if (card) {
+                card.style.transition = "all 0.3s";
+                card.style.opacity = "0";
+                setTimeout(() => {
+                    card.remove();
+                    checkIfEmpty();
+                }, 300);
+            }
+        }
+
+        function checkIfEmpty() {
+            const cards = document.querySelectorAll(".person-card");
+            if (cards.length === 0) {
+                const peopleGrid = document.getElementById("peopleGrid");
+                peopleGrid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 2rem; color: #999;">
+                        <p>😊 انتهيت من جميع البطاقات!</p>
+                        <p>ارجع لاحقاً للمزيد من الملفات الشخصية</p>
+                    </div>
+                `;
+            }
+        }
+
+        // عرض الأشخاص عند تحميل الصفحة
+        document.addEventListener("DOMContentLoaded", function() {
+            displayPeople();
+        });
+
+        // تحديث بطاقات الأشخاص لإضافة معرف فريد
+        document.addEventListener("DOMContentLoaded", function() {
+            setTimeout(() => {
+                document.querySelectorAll(".person-card").forEach((card, index) => {
+                    card.setAttribute("data-person-id", people[index % people.length].id);
+                });
+            }, 100);
+        });
+    </script>
+    <script src="js/profile-sync.js"></script>
+</body>
+</html>

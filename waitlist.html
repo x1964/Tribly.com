@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+<meta name="theme-color" content="#6ae44d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>قائمة الانتظار - Tribly</title>
+<script src="js/language.js"></script>
+
+<style>
+* {
+    box-sizing: border-box;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+}
+body {
+    margin: 0;
+    background: #0f172a;
+    color: #fff;
+}
+
+/* Navbar */
+.navbar {
+    background: #020617;
+    padding: 15px 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.navbar h1 {
+    margin: 0;
+    font-size: 22px;
+    color: #38bdf8;
+}
+
+/* Layout */
+.container {
+    padding: 25px;
+}
+
+/* Cards */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: #020617;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.4);
+}
+.card h3 {
+    margin: 0 0 10px;
+    font-size: 16px;
+    color: #94a3b8;
+}
+.card .value {
+    font-size: 28px;
+    font-weight: bold;
+    color: #22c55e;
+}
+
+/* Table */
+.table-box {
+    margin-top: 30px;
+    background: #020617;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: #020617;
+}
+th, td {
+    padding: 14px;
+    text-align: center;
+    border-bottom: 1px solid #1e293b;
+}
+
+th {
+    color: #38bdf8;
+    font-weight: 600;
+}
+
+.status-online {
+    color: #22c55e;
+}
+.status-offline {
+    color: #ef4444;
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <h1>Router Control Panel</h1>
+    <span>WE Router</span>
+</div>
+
+<div class="container">
+
+    <!-- Cards -->
+    <div class="cards">
+        <div class="card">
+            <h3>سرعة التحميل</h3>
+            <div class="value" id="download">— Mbps</div>
+        </div>
+        <div class="card">
+            <h3>سرعة الرفع</h3>
+            <div class="value" id="upload">— Mbps</div>
+        </div>
+        <div class="card">
+            <h3>الأجهزة المتصلة</h3>
+            <div class="value" id="devices">—</div>
+        </div>
+        <div class="card">
+            <h3>استهلاك الباقة</h3>
+            <div class="value" id="usage">— GB</div>
+        </div>
+    </div>
+
+    <!-- Devices Table -->
+    <div class="table-box">
+        <table>
+            <thead>
+                <tr>
+                    <th>اسم الجهاز</th>
+                    <th>IP</th>
+                    <th>MAC</th>
+                    <th>الحالة</th>
+                </tr>
+            </thead>
+            <tbody id="deviceTable">
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+// بيانات تجريبية (بديل API الراوتر)
+const routerData = {
+    download: 72,
+    upload: 18,
+    usage: 143,
+    devices: [
+        { name: "Samsung A54", ip: "192.168.1.5", mac: "A1:B2:C3:D4", status: "online" },
+        { name: "Laptop HP", ip: "192.168.1.6", mac: "E5:F6:G7:H8", status: "online" },
+        { name: "Smart TV", ip: "192.168.1.9", mac: "X9:Y8:Z7", status: "offline" }
+    ]
+};
+
+// تحديث الكروت
+document.getElementById("download").innerText = routerData.download + " Mbps";
+document.getElementById("upload").innerText = routerData.upload + " Mbps";
+document.getElementById("usage").innerText = routerData.usage + " GB";
+document.getElementById("devices").innerText = routerData.devices.length;
+
+// الأجهزة
+const table = document.getElementById("deviceTable");
+routerData.devices.forEach(d => {
+    table.innerHTML += `
+        <tr>
+            <td>${d.name}</td>
+            <td>${d.ip}</td>
+            <td>${d.mac}</td>
+            <td class="${d.status === "online" ? "status-online" : "status-offline"}">
+                ${d.status}
+            </td>
+        </tr>
+    `;
+});
+</script>
+
+</body>
+</html>

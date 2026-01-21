@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+    <meta name="keywords" content="welcome in tr">
+    <meta name="theme-color" content="#6ae44d">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Tribly | the home page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Badeen+Display&display=swap" rel="stylesheet">
+    <link rel="icon" href="img/logo icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="js/language.js"></script>
+</head>
+<body>
+    <!-- Popup -->
+    <div id="betaPopup">
+        <div class="popup-content">
+            <h2>Beta Version (V0.2.1)</h2>
+            <p>Some features may not work correctly yet.<br>Thanks for testing Tribly!</p>
+            <button id="closePopup">OK</button>
+        </div>
+    </div>
+
+<!-- Navbar -->
+<nav>
+  <div class="logo">
+   <a href="index.html" class="logo">Tribly</a>
+  </div>
+  
+
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#how" data-i18n="nav.howItWorks">How It Works</a></li>
+    <li><a href="about.html" data-i18n="nav.about">About</a></li>
+    <li><a href="get-app.html" data-i18n="nav.getApp">Get The App</a></li>
+    <li><a href="manifesto.html" data-i18n="nav.manifesto">Manifesto</a></li>
+  </ul>
+
+  <div class="nav-actions">
+    <a href="waitlist.html" class="join" data-i18n="nav.join">Join</a>
+    <a href="login.html"><button class="login" data-i18n="nav.login">Login</button></a>
+          <a href="profile.html"><img id="profileImg" src="img/me.jpg" alt="Tribly photo" class="profile"></a>
+
+    
+    <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
+
+<!-- تحميل صورة البروفايل من localStorage -->
+<script>
+  // تحميل الصورة المحفوظة عند فتح الصفحة
+  function loadProfileImage() {
+    const profileImg = document.getElementById('profileImg');
+    const savedAvatar = localStorage.getItem('userAvatar');
+    if (savedAvatar && profileImg) {
+      profileImg.src = savedAvatar;
+    }
+  }
+  
+  // تحميل الصورة فوراً عند فتح الصفحة
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadProfileImage);
+  } else {
+    loadProfileImage();
+  }
+  
+  // الاستماع للتغييرات في localStorage (من صفحات أخرى)
+  window.addEventListener('storage', function() {
+    loadProfileImage();
+  });
+</script>
+
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-text">
+            <div class="beta"><span>Beta release V.0.4</span></div>
+            <h1><span data-i18n="hero.findYourTribe">Find Your</span><br><span style="font-weight:  bold; color: #6ae44d;" data-i18n="hero.tribe">Tribe </span><br><span data-i18n="hero.anywhere">Any where</span></h1>
+            <p data-i18n="hero.description">Find community and the people you click with closest to you Your next magical connection is just a click away.</p>
+            <div class="hero-buttons">
+                <a href="login.html"><button class="btn btn-green" data-i18n="hero.login">Login</button></a>
+                <button class="btn btn-yellow" data-i18n="hero.waitlist">Join Waitlist</button>
+             <a href="get-code.html"><button class="btn btn-outline" data-i18n="hero.invitation">Got An Invitation Code?</button></a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="img/hero-image-base.webp" alt="friends having dinner" >
+        </div>
+    </section> 
+
+    <!-- How It Works -->
+    <section id="how">
+        <h2 data-i18n="how.title">How Does It Work?</h2>
+        <div class="cards">
+            <div class="card">
+              <div class="icon">1</div>
+                <div class="map-box" style="background-image: url(img/cities.b5e15162.svg);"></div>
+                <h3>Join Tribly</h3>
+                <p>Subscribe to the Egyptians now and we are looking for a paid.</p><br>
+                <a href="Tribly-substack.html"><button class="join_btn">Join Tribly</button></a>
+            </div>
+            <div class="card">
+                <div class="icon">2</div>
+                <h3>Fill in your interests</h3>
+                <p>Tell us what you love, and we'll do the rest.</p>
+                <div class="interests">
+                    <div class="interest" style="background: #7df6ff; color: #000000;"><span style="color: #000000;">Music</span>✓</div>
+                    <div class="interest"><span>Sports</span>+</div>
+                    <div class="interest" style="background: #7df6ff; color: #000000;"><span style="color: #000000;">Gaming</span>✓</div>
+                    <div class="interest"><span>Traveling</span>+</div>
+                    <div class="interest"><span>reading</span>+</div>
+                    <div class="interest" style="background: #7df6ff; color: #000000;"><span  style="color: #000000;">listening</span>✓</div>
+                    <div class="interest" style="background: #7df6ff; color: #000000;"><span  style="color: #000000;">gymnastic</span>✓</div>
+                    <div class="interest"><span>football</span>+</div>
+                    <div class="interest" style="background: #7df6ff; color: #000000;"><span  style="color: #000000;">Swimming</span>✓</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="icon" >3</div>
+                <h3>Get Recommendations</h3>
+                <p>Tribly AI will suggest communities to join and activities to enjoy in person</p>
+                <img src="img/hero-image-base.jpg" alt="Events" style="width:100%;margin-top:10px;">
+            </div>
+            <div class="card">
+                <div class="icon">4</div>
+                <h3>Meet IRL</h3>
+                <p>Go out and connect with people we're sure you'll click with.</p>
+            </div>
+            <div class="card">
+                <div class="icon">5</div>
+                <h3>Rate your Experience</h3>
+                <p>Help Tribly AI improve its recommendations and make every connection even better.</p>
+                <div class="stars">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
+                </div>
+                <p id="rating-text" style="margin-top:10px;color:gray;">Click a star to rate!</p>
+            </div>
+            <!--مكان البحث عن عمل والايميل-->
+                  <div class="card">
+                <div class="icon">6</div>
+                <h3>If you want to organize your thoughts and your tasks</h3>
+                <p>Tribly provides you to organize your Time and your thoughts</p><br>
+                <a href="MindFlow/index.html" style="color: #00e200; text-decoration: none;">
+                  <button class="join_btn" style="width: 70%;">MindFLow</button></a>
+            </div>
+        </div>
+    </section>
+
+
+<section id="nearby" style="padding: 60px 20px; background: linear-gradient(125deg,#effaff, #dbf4ff); text-align: center;">
+  <h2 style="font-size: 28px; font-weight: 700; color: #2c3e50;">cities</h2>
+  <img src="img/cities.b5e15162.svg" alt="map" style="width: 100%;  border-radius: 2px;"><br>
+  <h5 style="color: #000000;">* You Can use Tribly from Anywhere but
+     the <span style="font-weight: bolder;">meetup</span> Feature is currently only available in Alexandria,Egypt*</h5>
+</section>
+
+<section id="Trusted_by">
+<h2 style="font-size: 28px; font-weight: 700; color: #2c3e50;">Trusted By Communities</h2>
+
+  <p>We are sorry and i do not have places to interview now and wait for Tribly in the Most powerful places in <span style="font-weight: bolder; color: #000000;">Alexandria</span>
+  and the rest of Egypt
+  </p>
+ <!--<img src="img/community1.9e05c9ab.svg" alt="map" style="width:200px;">
+  <img src="img/community2.cb0b43f2.svg" alt="map" style="width:200px;"><br>
+  <img src="img/community3.2f93702e.svg" alt="map" style="width:200px">
+  <img src="img/community4.528be1fc.svg" alt="map" style="width:200px;">--> 
+</section>
+
+
+
+<!-- ✅ مكتبة Leaflet للخرائط -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- Footer HTML -->
+<footer class="tribbel-footer fade-footer">
+  <div class="tf-inner">
+    <div class="tf-top">
+      <div class="tf-brand">
+        <a href="index.html" class="tf-logo">Tribly</a>
+      </div>
+
+      <div class="tf-hero">
+        <h1 class="tf-title">
+          <span class="muted">Your tribe is</span>
+          <span class="strong">Closer than you think</span>
+        </h1>
+      </div>
+
+      <nav class="tf-links">
+        <a href="index.html" data-i18n="footer.home">الرئيسية</a>
+        <a href="home.html" data-i18n="footer.browse">التصفح</a>
+        <a href="communities.html" data-i18n="footer.communities">المجتمعات</a>
+        <a href="about.html" data-i18n="footer.about">حول</a>
+        <a href="manifesto.html" data-i18n="footer.manifesto">البيان</a>
+        <a href="contact-us.html" data-i18n="footer.contact">تواصل</a>
+        <a href="support-site.html" data-i18n="footer.support">الدعم</a>
+      </nav>
+    </div>
+
+    <hr class="tf-divider">
+
+    <div class="tf-bottom">
+      <div class="tf-copy" data-i18n="footer.rights">© 2025 Tribly، جميع الحقوق محفوظة</div>
+      <div class="tf-legal">
+        <a href="privacy.html" data-i18n="footer.privacy">سياسة الخصوصية</a>
+        <a href="service.html" data-i18n="footer.terms">شروط الخدمة</a>
+      </div>
+    </div>
+  </div>
+ <!-- <div class="tf-bottom-bar"></div>-->
+</footer>
+<!-- Geolocation & Chat System -->
+    <script>
+        // Menu Toggle
+        const menuBtn = document.querySelector(".menu-btn");
+        const navLinks = document.querySelector(".nav-links");
+        
+        menuBtn.addEventListener("click", () => {
+            navLinks.classList.toggle("active");
+            menuBtn.innerHTML = navLinks.classList.contains("active") ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+
+        // Close menu when clicking on a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+
+        // Navbar Hide/Show on Scroll
+        let lastScrollTop = 0;
+        const navbar = document.querySelector("nav");
+        
+        window.addEventListener("scroll", function() {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            navbar.style.top = (scrollTop > lastScrollTop) ? "-5rem" : "0";
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        }, false);
+
+        // Star Rating
+        const stars = document.querySelectorAll('.star');
+        const ratingText = document.getElementById('rating-text');
+        
+        stars.forEach((star, index) => {
+            star.addEventListener('click', () => {
+                stars.forEach(s => s.classList.remove('active'));
+                for(let i = 0; i <= index; i++) {
+                    stars[i].classList.add('active');
+                }
+                ratingText.textContent = `You rated ${index+1} star${index ? 's' : ''}!`;
+                ratingText.style.color = 'green';
+            });
+        });
+
+        // Popup
+        const popup = document.getElementById("betaPopup");
+        const closeBtn = document.getElementById("closePopup");
+        
+        closeBtn.addEventListener("click", () => popup.style.display = "none");
+        setTimeout(() => popup.style.display = "none", 10000);
+    </script>
+</script>
+<!-- ✅ IRL Nearby Detection + Local Chat System -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  if (!navigator.geolocation) {
+    alert("المتصفح لا يدعم تحديد الموقع الجغرافي.");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(success, error);
+
+  function success(position) {
+    const userLat = position.coords.latitude;
+    const userLon = position.coords.longitude;
+
+    // 🔸 محاكاة مستخدمين قريبين
+    const usersNearby = [
+      { id: 1, name: "Ahmed", lat: userLat + 0.005, lon: userLon + 0.004 },
+      { id: 2, name: "Laila", lat: userLat + 0.02, lon: userLon + 0.015 }
+    ];
+
+    usersNearby.forEach(user => {
+      const distance = getDistance(userLat, userLon, user.lat, user.lon);
+      if (distance <= 2000) showNearbyPopup(user, distance);
+    });
+  }
+
+  function error(err) {
+    console.warn("فشل تحديد الموقع:", err.message);
+  }
+
+  function getDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371e3;
+    const φ1 = lat1 * Math.PI / 180;
+    const φ2 = lat2 * Math.PI / 180;
+    const Δφ = (lat2 - lat1) * Math.PI / 180;
+    const Δλ = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(Δφ / 2) ** 2 +
+              Math.cos(φ1) * Math.cos(φ2) *
+              Math.sin(Δλ / 2) ** 2;
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+
+  // 🪧 إشعار وجود شخص قريب + زر المراسلة
+  function showNearbyPopup(user, distance) {
+    const popup = document.createElement("div");
+    popup.innerHTML = `
+      <div style="
+        position:fixed;
+        bottom:20px;
+        right:20px;
+        background:linear-gradient(90deg, #6ae44d, #a5ff84);
+        color:#000;
+        padding:15px 25px;
+        border-radius:20px;
+        box-shadow:0 4px 15px rgba(0,0,0,0.3);
+        font-weight:600;
+        z-index:99999;
+        display:flex;
+        align-items:center;
+        gap:10px;
+      ">
+        🎯 <b>${user.name}</b> قريب منك (${(distance/1000).toFixed(2)} كم)
+        <button id="chat-${user.id}" style="
+          background:#000;
+          color:#fff;
+          border:none;
+          border-radius:10px;
+          padding:5px 12px;
+          cursor:pointer;
+          font-weight:600;">مراسلة</button>
+      </div>
+    `;
+    document.body.appendChild(popup);
+
+    // لما المستخدم يضغط على "مراسلة"
+    document.getElementById(`chat-${user.id}`).addEventListener("click", () => {
+      popup.remove();
+      openChatBox(user);
+    });
+  }
+
+  // 💬 نافذة الدردشة
+  function openChatBox(user) {
+    // إنشاء صندوق الدردشة
+    const chatBox = document.createElement("div");
+    chatBox.id = `chat-box-${user.id}`;
+    chatBox.innerHTML = `
+      <div style="
+        position:fixed;
+        bottom:20px;
+        right:20px;
+        width:300px;
+        background:#fff;
+        border-radius:15px;
+        box-shadow:0 5px 20px rgba(0,0,0,0.25);
+        display:flex;
+        flex-direction:column;
+        z-index:100000;
+      ">
+        <div style="background:#000;color:#fff;padding:10px;border-radius:15px 15px 0 0;display:flex;justify-content:space-between;align-items:center;">
+          <span>💬 ${user.name}</span>
+          <button id="closeChat" style="background:none;color:#fff;border:none;font-size:18px;cursor:pointer;">×</button>
+        </div>
+        <div id="chatMessages" style="flex:1;max-height:200px;overflow-y:auto;padding:10px;font-size:14px;"></div>
+        <div style="display:flex;border-top:1px solid #ddd;">
+          <input id="chatInput" placeholder="اكتب رسالة..." style="flex:1;border:none;padding:10px;font-size:14px;outline:none;border-radius:0 0 0 15px;">
+          <button id="sendBtn" style="background:#6ae44d;border:none;padding:10px 15px;border-radius:0 0 15px 0;cursor:pointer;font-weight:bold;">إرسال</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(chatBox);
+
+    const chatMessages = chatBox.querySelector("#chatMessages");
+    const chatInput = chatBox.querySelector("#chatInput");
+    const sendBtn = chatBox.querySelector("#sendBtn");
+
+    // تحميل الرسائل القديمة من localStorage
+    const chatKey = `chat_with_${user.id}`;
+    const messages = JSON.parse(localStorage.getItem(chatKey) || "[]");
+    messages.forEach(msg => addMessage(msg.text, msg.self));
+
+    function addMessage(text, self = true) {
+      const msg = document.createElement("div");
+      msg.textContent = text;
+      msg.style = `
+        background:${self ? "#e0ffe0" : "#f0f0f0"};
+        color:#000;
+        padding:6px 10px;
+        border-radius:10px;
+        margin:${self ? "5px 0 5px auto" : "5px auto 5px 0"};
+        width:fit-content;
+        max-width:80%;
+      `;
+      chatMessages.appendChild(msg);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    sendBtn.onclick = () => {
+      const text = chatInput.value.trim();
+      if (!text) return;
+      addMessage(text, true);
+      messages.push({ text, self: true });
+      localStorage.setItem(chatKey, JSON.stringify(messages));
+
+      // محاكاة رد تلقائي من الشخص الآخر بعد 1.5 ثانية
+      setTimeout(() => {
+        const reply = `رسالة تلقائية من ${user.name} 😉`;
+        addMessage(reply, false);
+        messages.push({ text: reply, self: false });
+        localStorage.setItem(chatKey, JSON.stringify(messages));
+      }, 1500);
+
+      chatInput.value = "";
+    };
+
+    chatBox.querySelector("#closeChat").onclick = () => chatBox.remove();
+  }
+});
+</script>
+    <script src="js/profile-sync.js"></script>
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+<meta name="theme-color" content="#6ae44d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>حول Tribly | تعرف علينا</title>
+ <link rel="icon" href="img/logo.png" type="image/x-icon">
+<script src="js/language.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Cairo', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #ffffff, #9affee);
+    color: #222;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* زر الرجوع */
+.back-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: #fff;
+    color: #333;
+    padding: 10px 18px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    text-decoration: none;
+    font-weight: bold;
+    transition: transform 0.2s ease, background 0.2s ease;
+    z-index: 999;
+}
+.back-btn:hover {
+    transform: scale(1.1);
+    background: #6ae44d;
+    color: white;
+}
+
+
+/* الحاوية الرئيسية */
+.container {
+    max-width: 900px;
+    margin: 100px auto;
+    background: #fff;
+    border-radius: 25px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    animation: fadeIn 1.2s ease;
+}
+
+/* العناوين */
+h1, h2 {
+    color: #00a83f;
+    margin-bottom: 15px;
+    text-align: center;
+}
+h1 { font-size: 32px; }
+h2 { font-size: 24px; margin-top: 40px; }
+
+/* النصوص */
+p {
+    color: #444;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 17px;
+}
+
+/* المميزات */
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+.feature {
+    background: #f8f8f8;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: 0s;
+}
+.feature:hover {
+    transform: translateY(-5px);
+    background: #e8ffe8;
+}
+.feature h3 {
+    color: #00a83f;
+    margin-bottom: 10px;
+}
+
+/* الخريطة */
+.map {
+    margin-top: 30px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* قسم التواصل */
+.contact {
+    text-align: center;
+    margin-top: 40px;
+}
+.contact a {
+    display: inline-block;
+    background: #00a83f;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 30px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+.contact a:hover {
+    background: #007d30;
+}
+
+/* أنيميشن */
+@keyframes fadeIn {
+    0% {opacity: 0; transform: translateY(30px);}
+    100% {opacity: 1; transform: translateY(0);}
+}
+
+/* استجابة للموبايل */
+@media (max-width: 768px) {
+    .container { margin: 80px 15px; padding: 25px; }
+    h1 { font-size: 26px; }
+    h2 { font-size: 20px; }
+    p { font-size: 15px; }
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-btn">↩</a>
+
+<div class="container">
+  <h1>حول Tribly 🌍</h1>
+  <p>منصة <strong>Tribly</strong> تم إنشاؤها لتقريب الناس من بعضهم في العالم الحقيقي، بعيدًا عن العزلة الرقمية. فكر فيها كجسر حقيقي بينك وبين من يشاركونك نفس الاهتمامات في منطقتك.</p>
+
+  <h2>عن الفريق 👨‍🏫 </h2>
+  <p>تم تطوير المنصة بواسطة <strong>kareem</strong> وفريقه، بهدف مساعدة المستخدمين على تكوين صداقات حقيقية، وتبادل الأفكار والمواهب في بيئة آمنة وواقعية.</p>
+
+  <h2>مميزات Tribly 🚀</h2>
+  <div class="features">
+    <div class="feature">
+      <h3>🤝 تواصل حقيقي</h3>
+      <p>يتيح لك التطبيق مقابلة أشخاص لديهم نفس اهتماماتك في الواقع.</p>
+    </div>
+    <div class="feature">
+      <h3>🌐 واجهة بسيطة</h3>
+      <p>تصميم مريح وسهل الاستخدام يضمن تجربة سلسة للجميع.</p>
+    </div>
+    <div class="feature">
+      <h3>💬 محادثات آمنة</h3>
+      <p>نظام محادثة يحافظ على خصوصيتك ويتيح تفاعلًا واقعيًا.</p>
+    </div>
+  </div>
+
+  <h2>📍 موقعنا على الخريطة</h2>
+  <div class="map">
+    <img src="img/cities.b5e15162.svg" alt="map">
+  </div>
+ <h5 style="color: #000000; justify-content: center; display: flex;">. You Can use Tribly from Anywhere but the meetup Feature is currently only available in Alexandria,Egypt*</h5>
+  <div class="contact">
+    <h2>تواصل معنا 📞</h2>
+    <a href="contact-us.html">راسلنا عبر النموذج</a>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer style="background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%); color: #6ae44d; padding: 3rem 2rem; text-align: center; margin-top: 3rem;">
+  <div style="max-width: 1200px; margin: 0 auto;">
+    <h3 style="color: #6ae44d; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(106, 228, 77, 0.3);">Tribly</h3>
+    <p style="margin-bottom: 1.5rem; color: #ccc;">أوجد قبيلتك - انضم إلى مجتمعات تشاركك نفس الاهتمامات</p>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+      <div>
+        <h4 style="color: #6ae44d; margin-bottom: 1rem;">الروابط الرئيسية</h4>
+        <ul style="list-style: none; padding: 0;">
+          <li style="margin-bottom: 0.5rem;"><a href="index.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">الرئيسية</a></li>
+          <li style="margin-bottom: 0.5rem;"><a href="home.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">التصفح</a></li>
+          <li style="margin-bottom: 0.5rem;"><a href="communities.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">المجتمعات</a></li>
+          <li style="margin-bottom: 0.5rem;"><a href="profile.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">الملف الشخصي</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color: #6ae44d; margin-bottom: 1rem;">المعلومات</h4>
+        <ul style="list-style: none; padding: 0;">
+          <li style="margin-bottom: 0.5rem;"><a href="about.html" style="color: #6ae44d; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#6ae44d'">حول</a></li>
+          <li style="margin-bottom: 0.5rem;"><a href="manifesto.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">البيان</a></li>
+          <li style="margin-bottom: 0.5rem;"><a href="privacy.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">سياسة الخصوصية</a></li>
+          <li style="margin-bottom: 0.5rem;"><a href="service.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">شروط الخدمة</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color: #6ae44d; margin-bottom: 1rem;">الدعم</h4>
+        <ul style="list-style: none; padding: 0;">
+          <li style="margin-bottom: 0.5rem;"><a href="support-site.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">مركز الدعم</a></li>
+          <li style="margin-bottom: 0.5rem;"><a href="contact-us.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">تواصل معنا</a></li>
+        </ul>
+      </div>
+    </div>
+    <div style="border-top: 1px solid rgba(106, 228, 77, 0.3); padding-top: 1.5rem; color: #999;">
+      <p>&copy; 2025 Tribly - جميع الحقوق محفوظة</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

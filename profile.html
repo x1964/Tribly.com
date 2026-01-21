@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+  <meta name="theme-color" content="#6ae44d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>الملف الشخصي - Tribly</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="js/language.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      color: #333;
+    }
+
+    /* Navbar */
+    nav {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #6ae44d;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #6ae44d;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .profile-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 2rem;
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      text-align: center;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, #6ae44d 0%, #52c933 100%);
+      border-radius: 15px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .avatar-wrapper img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 5px solid white;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .avatar-wrapper img:hover {
+      transform: scale(1.05);
+    }
+
+    .avatar-wrapper input[type="file"] {
+      display: none;
+    }
+
+    .avatar-label {
+      background: rgba(255,255,255,0.3);
+      padding: 0.8rem 1.5rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+      border: 2px solid white;
+      color: white;
+    }
+
+    .avatar-label:hover {
+      background: white;
+      color: #6ae44d;
+    }
+
+    .sidebar-stats {
+      width: 100%;
+      padding: 1.5rem 0;
+      border-top: 2px solid rgba(255,255,255,0.3);
+      border-bottom: 2px solid rgba(255,255,255,0.3);
+    }
+
+    .stat {
+      margin: 1rem 0;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .sidebar-action {
+      width: 100%;
+      padding: 1rem;
+      background: white;
+      color: #6ae44d;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .sidebar-action:hover {
+      background: #f0f0f0;
+      transform: translateY(-2px);
+    }
+
+    /* Main Content */
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .section-header {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #2c3e50;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 2px solid #6ae44d;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .field label {
+      font-weight: 600;
+      color: #2c3e50;
+      font-size: 0.95rem;
+    }
+
+    .field input[type="text"],
+    .field input[type="email"],
+    .field input[type="tel"],
+    .field input[type="number"],
+    .field textarea,
+    .field select {
+      padding: 0.8rem;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: all 0.3s;
+      background: #f9f9f9;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: #6ae44d;
+      background: white;
+      outline: none;
+      box-shadow: 0 0 10px rgba(106, 228, 77, 0.2);
+    }
+
+    .field textarea {
+      resize: vertical;
+      min-height: 100px;
+      font-family: inherit;
+    }
+
+    /* Interests Section */
+    .interests-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .interest-input-group {
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-end;
+    }
+
+    .interest-input-group input {
+      flex: 1;
+      padding: 0.8rem;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 1rem;
+    }
+
+    .interest-input-group button {
+      padding: 0.8rem 1.5rem;
+      background: #6ae44d;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+
+    .interest-input-group button:hover {
+      background: #52c933;
+      transform: translateY(-2px);
+    }
+
+    .interests-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+
+    .interest-tag {
+      background: #e8f5e9;
+      color: #2e7d32;
+      padding: 0.6rem 1.2rem;
+      border-radius: 20px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    .interest-tag span {
+      word-break: break-word;
+    }
+
+    .interest-tag button {
+      background: none;
+      border: none;
+      color: #2e7d32;
+      cursor: pointer;
+      font-size: 1.3rem;
+      padding: 0;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      margin-left: 0.5rem;
+    }
+
+    .interest-tag button:hover {
+      color: #d32f2f;
+      transform: scale(1.2);
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .preferences-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .field input[type="number"] {
+      padding: 0.8rem;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: all 0.3s;
+      background: #f9f9f9;
+    }
+
+    .field input[type="number"]:focus {
+      border-color: #6ae44d;
+      background: white;
+      outline: none;
+    }
+
+    /* منع أسهم الأرقام على الأجهزة المختلفة */
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type="number"] {
+      appearance: textfield;
+      -moz-appearance: textfield;
+    }
+
+    /* Action Buttons */
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      padding-top: 1.5rem;
+      border-top: 2px solid #ddd;
+    }
+
+    .btn {
+      padding: 0.9rem 2rem;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-cancel {
+      background: #ecf0f1;
+      color: #666;
+    }
+
+    .btn-cancel:hover {
+      background: #bdc3c7;
+    }
+
+    .btn-save {
+      background: #6ae44d;
+      color: white;
+    }
+
+    .btn-save:hover {
+      background: #52c933;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(106, 228, 77, 0.4);
+    }
+
+    /* Success Message */
+    .success-message {
+      display: none;
+      background: #d4edda;
+      color: #155724;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      border-left: 4px solid #28a745;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .profile-wrapper {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+        padding: 1rem;
+        gap: 1rem;
+      }
+
+      .avatar-wrapper {
+        flex-direction: row;
+        gap: 0.5rem;
+      }
+
+      .avatar-wrapper img {
+        width: 80px;
+        height: 80px;
+      }
+
+      .sidebar-stats {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        padding: 0.5rem 0;
+        border: none;
+        gap: 1rem;
+      }
+
+      .stat {
+        margin: 0;
+        text-align: center;
+      }
+
+      .preferences-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .button-group {
+        flex-direction: column-reverse;
+      }
+
+      nav {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 1rem;
+      }
+
+      .nav-links {
+        justify-content: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .nav-links a {
+        font-size: 0.9rem;
+      }
+
+      .sidebar-action {
+        width: auto;
+      }
+
+      .container {
+        margin: 1rem auto;
+      }
+
+      .profile-wrapper {
+        padding: 1rem;
+      }
+
+      .interests-list {
+        gap: 0.5rem;
+      }
+
+      .interest-tag {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      nav {
+        padding: 0.8rem 1rem;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+      }
+
+      .nav-links {
+        gap: 0.3rem;
+      }
+
+      .nav-links a {
+        font-size: 0.8rem;
+      }
+
+      .section-header {
+        font-size: 1.1rem;
+      }
+
+      .field label {
+        font-size: 0.85rem;
+      }
+
+      .field input,
+      .field textarea,
+      .field select {
+        font-size: 16px; /* منع zoom على iOS */
+      }
+
+      .btn {
+        padding: 0.7rem 1.5rem;
+        font-size: 0.95rem;
+      }
+
+      .interest-input-group {
+        flex-direction: column;
+      }
+
+      .interest-input-group button {
+        width: 100%;
+      }
+
+      .sidebar {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .sidebar-stats {
+        flex-direction: column;
+        border-top: 2px solid rgba(255,255,255,0.3);
+        border-bottom: 2px solid rgba(255,255,255,0.3);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav>
+    <a href="index.html" class="logo">Tribly</a>
+    <ul class="nav-links">
+      <li><a href="home.html"><i class="fas fa-home"></i> التصفح</a></li>
+      <li><a href="communities.html"><i class="fas fa-users"></i> المجتمعات</a></li>
+      <li><a href="faq.html"><i class="fas fa-question-circle"></i> الأسئلة</a></li>
+      <li><a href="support.html"><i class="fas fa-headset"></i> الدعم</a></li>
+      <li><a href="about.html"><i class="fas fa-info-circle"></i> حول</a></li>
+      <li><a href="profile.html"><i class="fas fa-user"></i> الملف الشخصي</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <div id="successMessage" class="success-message">
+      <i class="fas fa-check-circle"></i> تم حفظ البيانات بنجاح!
+    </div>
+
+    <div class="profile-wrapper">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="avatar-wrapper">
+          <img id="avatarPreview" src="img/me.jpg" alt="صورة الملف الشخصي">
+          <label for="avatarInput" class="avatar-label">
+            <i class="fas fa-camera"></i> تغيير الصورة
+          </label>
+          <input type="file" id="avatarInput" accept="image/*">
+        </div>
+
+        <div class="sidebar-stats">
+          <div class="stat">
+            <div class="stat-number" id="likes">47</div>
+            <div class="stat-label">إعجابات</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number" id="matches">12</div>
+            <div class="stat-label">توافقات</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number" id="visits">156</div>
+            <div class="stat-label">مشاهدات</div>
+          </div>
+        </div>
+
+        <button class="sidebar-action" onclick="verifyProfile()">
+          <i class="fas fa-check"></i> تحقق من الحساب
+        </button>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="content">
+        <div class="section-header">
+          <i class="fas fa-user-circle"></i> المعلومات الأساسية
+        </div>
+
+        <div class="preferences-grid">
+          <div class="field">
+            <label for="name">
+              <i class="fas fa-user"></i> الاسم الكامل <span style="color: #e74c3c;">*</span>
+            </label>
+            <input id="name" type="text" placeholder="أدخل اسمك الكامل">
+          </div>
+        </div>
+
+        <div class="preferences-grid">
+          <div class="field">
+            <label for="age"><i class="fas fa-birthday-cake"></i> العمر</label>
+            <input id="age" type="number" placeholder="25" min="18" max="100">
+          </div>
+          <div class="field">
+            <label for="gender"><i class="fas fa-venus-mars"></i> الجنس</label>
+            <select id="gender">
+              <option value="">اختر...</option>
+              <option value="male">ذكر</option>
+              <option value="female">أنثى</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="preferences-grid">
+          <div class="field">
+            <label for="city"><i class="fas fa-map-marker-alt"></i> المدينة</label>
+            <input id="city" type="text" placeholder="القاهرة">
+          </div>
+          <div class="field">
+            <label for="email"><i class="fas fa-envelope"></i> البريد الإلكتروني</label>
+            <input id="email" type="email" placeholder="your@email.com">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="bio"><i class="fas fa-comment"></i> نبذة عنك</label>
+          <textarea id="bio" placeholder="اخبرنا عن نفسك والاهتمامات التي تحب..."></textarea>
+        </div>
+
+        <div class="section-header" style="margin-top: 1.5rem;">
+          <i class="fas fa-star"></i> اهتماماتك
+        </div>
+
+        <div class="interests-wrapper">
+          <div class="interest-input-group">
+            <input 
+              id="interestInput" 
+              type="text" 
+              placeholder="أضف اهتمام جديد (مثال: الموسيقى، السفر، القراءة)"
+            >
+            <button onclick="addInterest()">إضافة</button>
+          </div>
+          <div class="interests-list" id="interests">
+            <!-- سيتم إضافة الاهتمامات هنا -->
+          </div>
+        </div>
+
+        <div class="section-header" style="margin-top: 1.5rem;">
+          <i class="fas fa-heart"></i> تفضيلاتك
+        </div>
+
+        <div class="preferences-grid">
+          <div class="field">
+            <label for="ageMin"><i class="fas fa-birthday-cake"></i> نطاق العمر من</label>
+            <input id="ageMin" type="number" placeholder="18" min="18" max="100">
+          </div>
+          <div class="field">
+            <label for="ageMax">إلى</label>
+            <input id="ageMax" type="number" placeholder="50" min="18" max="100">
+          </div>
+        </div>
+
+        <div class="preferences-grid">
+          <div class="field">
+            <label for="lookingFor"><i class="fas fa-search"></i> تبحث عن</label>
+            <select id="lookingFor">
+              <option value="">اختر...</option>
+              <option value="friends">أصدقاء</option>
+              <option value="dating">علاقة</option>
+              <option value="both">الاثنين</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="distance"><i class="fas fa-ruler"></i> المسافة (كم)</label>
+            <input id="distance" type="number" placeholder="50" min="1" max="1000">
+          </div>
+        </div>
+
+        <div class="button-group">
+          <button class="btn btn-cancel" onclick="resetForm()">
+            <i class="fas fa-undo"></i> إلغاء
+          </button>
+          <button class="btn btn-save" onclick="saveProfile()">
+            <i class="fas fa-save"></i> حفظ التغييرات
+          </button>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // ============================================
+    // تحميل البيانات من localStorage عند فتح الصفحة
+    // ============================================
+    window.addEventListener('DOMContentLoaded', function() {
+      console.log('✅ صفحة الملف الشخصي تم تحميلها');
+      loadProfileData();
+      loadAvatarImage();
+    });
+
+    // ============================================
+    // حفظ البيانات في localStorage
+    // ============================================
+    function saveProfile() {
+      try {
+        // جمع البيانات
+        const name = document.getElementById('name').value.trim();
+        const age = document.getElementById('age').value;
+        const gender = document.getElementById('gender').value;
+        const city = document.getElementById('city').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const bio = document.getElementById('bio').value.trim();
+        const interests = getInterestsList();
+        const ageMin = document.getElementById('ageMin').value;
+        const ageMax = document.getElementById('ageMax').value;
+        const lookingFor = document.getElementById('lookingFor').value;
+        const distance = document.getElementById('distance').value;
+
+        // التحقق من البيانات المطلوبة
+        if (!name) {
+          showError('⚠️ يرجى إدخال الاسم');
+          return;
+        }
+
+        if (!age || age < 18) {
+          showError('⚠️ يرجى إدخال عمر صحيح (18 أو أكثر)');
+          return;
+        }
+
+        if (!email || !isValidEmail(email)) {
+          showError('⚠️ يرجى إدخال بريد إلكتروني صحيح');
+          return;
+        }
+
+        if (!gender) {
+          showError('⚠️ يرجى اختيار الجنس');
+          return;
+        }
+
+        if (interests.length === 0) {
+          showError('⚠️ يرجى إضافة اهتمام واحد على الأقل');
+          return;
+        }
+
+        // إنشاء كائن البيانات
+        const profile = {
+          name,
+          age,
+          gender,
+          city,
+          email,
+          bio,
+          interests,
+          ageMin,
+          ageMax,
+          lookingFor,
+          distance,
+          lastUpdated: new Date().toLocaleString('ar-EG')
+        };
+
+        // حفظ البيانات
+        localStorage.setItem('userProfile', JSON.stringify(profile));
+        console.log('✅ تم حفظ البيانات:', profile);
+        
+        // عرض رسالة النجاح
+        showSuccess('✅ تم حفظ البيانات بنجاح!');
+        
+      } catch (error) {
+        console.error('❌ خطأ في الحفظ:', error);
+        showError('❌ حدث خطأ أثناء حفظ البيانات');
+      }
+    }
+
+    // ============================================
+    // التحقق من صحة البريد الإلكتروني
+    // ============================================
+    function isValidEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+
+    // ============================================
+    // تحميل البيانات من localStorage
+    // ============================================
+    function loadProfileData() {
+      try {
+        const profile = localStorage.getItem('userProfile');
+        if (profile) {
+          const data = JSON.parse(profile);
+          
+          document.getElementById('name').value = data.name || '';
+          document.getElementById('age').value = data.age || '';
+          document.getElementById('gender').value = data.gender || '';
+          document.getElementById('city').value = data.city || '';
+          document.getElementById('email').value = data.email || '';
+          document.getElementById('bio').value = data.bio || '';
+          document.getElementById('ageMin').value = data.ageMin || '';
+          document.getElementById('ageMax').value = data.ageMax || '';
+          document.getElementById('lookingFor').value = data.lookingFor || '';
+          document.getElementById('distance').value = data.distance || '';
+          
+          // تحميل الاهتمامات
+          if (data.interests && Array.isArray(data.interests)) {
+            data.interests.forEach(interest => {
+              addInterestTag(interest);
+            });
+          }
+          
+          console.log('✅ تم تحميل البيانات المحفوظة');
+        }
+      } catch (error) {
+        console.error('❌ خطأ في تحميل البيانات:', error);
+      }
+    }
+
+    // ============================================
+    // تحميل الصورة المحفوظة
+    // ============================================
+    function loadAvatarImage() {
+      try {
+        const savedAvatar = localStorage.getItem('userAvatar');
+        if (savedAvatar) {
+          document.getElementById('avatarPreview').src = savedAvatar;
+          console.log('✅ تم تحميل الصورة المحفوظة');
+        }
+      } catch (error) {
+        console.error('❌ خطأ في تحميل الصورة:', error);
+      }
+    }
+
+    // ============================================
+    // إضافة اهتمام جديد
+    // ============================================
+    function addInterest() {
+      try {
+        const input = document.getElementById('interestInput');
+        const interest = input.value.trim();
+
+        // التحقق من القيمة
+        if (!interest) {
+          showError('⚠️ يرجى كتابة اهتمام');
+          return;
+        }
+
+        if (interest.length > 50) {
+          showError('⚠️ الاهتمام طويل جداً (الحد الأقصى 50 حرف)');
+          return;
+        }
+
+        // التحقق من التكرار
+        const existingInterests = getInterestsList();
+        if (existingInterests.some(i => i.toLowerCase() === interest.toLowerCase())) {
+          showError('⚠️ هذا الاهتمام موجود بالفعل');
+          return;
+        }
+
+        // التحقق من الحد الأقصى
+        if (existingInterests.length >= 10) {
+          showError('⚠️ الحد الأقصى للاهتمامات هو 10');
+          return;
+        }
+
+        // إضافة الاهتمام
+        addInterestTag(interest);
+        input.value = '';
+        input.focus();
+        console.log('✅ تم إضافة الاهتمام:', interest);
+        
+      } catch (error) {
+        console.error('❌ خطأ في إضافة الاهتمام:', error);
+      }
+    }
+
+    // ============================================
+    // إضافة علامة الاهتمام إلى الصفحة
+    // ============================================
+    function addInterestTag(interest) {
+      try {
+        const interestsList = document.getElementById('interests');
+        const tag = document.createElement('div');
+        tag.className = 'interest-tag';
+        tag.innerHTML = `
+          <span>${escapeHtml(interest)}</span>
+          <button type="button" onclick="removeInterest(this)">×</button>
+        `;
+        interestsList.appendChild(tag);
+      } catch (error) {
+        console.error('❌ خطأ في إضافة علامة:', error);
+      }
+    }
+
+    // ============================================
+    // إزالة اهتمام
+    // ============================================
+    function removeInterest(btn) {
+      try {
+        const interest = btn.parentElement.textContent.replace('×', '').trim();
+        btn.parentElement.remove();
+        console.log('✅ تم حذف الاهتمام:', interest);
+      } catch (error) {
+        console.error('❌ خطأ في حذف الاهتمام:', error);
+      }
+    }
+
+    // ============================================
+    // الحصول على قائمة الاهتمامات
+    // ============================================
+    function getInterestsList() {
+      try {
+        const tags = document.querySelectorAll('.interest-tag');
+        return Array.from(tags).map(tag => {
+          const span = tag.querySelector('span');
+          return span ? span.textContent.trim() : '';
+        }).filter(interest => interest);
+      } catch (error) {
+        console.error('❌ خطأ في الحصول على الاهتمامات:', error);
+        return [];
+      }
+    }
+
+    // ============================================
+    // إعادة تعيين النموذج
+    // ============================================
+    function resetForm() {
+      try {
+        if (confirm('هل تريد إلغاء جميع التغييرات؟')) {
+          // مسح الاهتمامات من الصفحة فقط
+          document.getElementById('interests').innerHTML = '';
+          // إعادة تحميل البيانات
+          loadProfileData();
+          console.log('✅ تم إعادة تعيين النموذج');
+        }
+      } catch (error) {
+        console.error('❌ خطأ في إعادة التعيين:', error);
+      }
+    }
+
+    // ============================================
+    // التحقق من الحساب
+    // ============================================
+    function verifyProfile() {
+      try {
+        const email = document.getElementById('email').value.trim();
+        
+        if (!email) {
+          showError('⚠️ يرجى إدخال البريد الإلكتروني أولاً');
+          return;
+        }
+
+        showSuccess('✅ سيتم إرسال رابط التحقق إلى: ' + email);
+        console.log('✅ تم طلب التحقق من الحساب');
+        
+      } catch (error) {
+        console.error('❌ خطأ في التحقق:', error);
+      }
+    }
+
+    // ============================================
+    // تحديث الصورة
+    // ============================================
+    document.getElementById('avatarInput').addEventListener('change', function(e) {
+      try {
+        const file = e.target.files[0];
+        if (file) {
+          // التحقق من نوع الملف
+          if (!file.type.startsWith('image/')) {
+            showError('⚠️ يرجى اختيار صورة صحيحة');
+            return;
+          }
+
+          // التحقق من حجم الملف (5MB)
+          if (file.size > 5 * 1024 * 1024) {
+            showError('⚠️ حجم الصورة كبير جداً (الحد الأقصى 5MB)');
+            return;
+          }
+
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            document.getElementById('avatarPreview').src = event.target.result;
+            localStorage.setItem('userAvatar', event.target.result);
+            console.log('✅ تم تحديث الصورة');
+            showSuccess('✅ تم تحديث الصورة بنجاح! سيتم تحديث صورتك في جميع الصفحات.');
+            
+            // إرسال إشارة للصفحات الأخرى بتحديث الصورة
+            window.dispatchEvent(new Event('profileImageUpdated'));
+          };
+          reader.onerror = function() {
+            showError('❌ فشل في قراءة الصورة');
+          };
+          reader.readAsDataURL(file);
+        }
+      } catch (error) {
+        console.error('❌ خطأ في تحديث الصورة:', error);
+      }
+    });
+
+    // ============================================
+    // الخروج من الحساب
+    // ============================================
+    function logout() {
+      try {
+        if (confirm('هل تريد تسجيل الخروج؟')) {
+          localStorage.removeItem('loggedIn');
+          window.location.href = 'login.html';
+          console.log('✅ تم تسجيل الخروج');
+        }
+      } catch (error) {
+        console.error('❌ خطأ في الخروج:', error);
+      }
+    }
+
+    // ============================================
+    // السماح بالضغط على Enter لإضافة الاهتمام
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+      const interestInput = document.getElementById('interestInput');
+      if (interestInput) {
+        interestInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            addInterest();
+          }
+        });
+      }
+    });
+
+    // ============================================
+    // عرض رسالة النجاح
+    // ============================================
+    function showSuccess(message) {
+      try {
+        const successMsg = document.getElementById('successMessage');
+        if (successMsg) {
+          successMsg.innerHTML = message;
+          successMsg.style.display = 'flex';
+          
+          setTimeout(() => {
+            successMsg.style.display = 'none';
+          }, 3000);
+        }
+      } catch (error) {
+        console.error('❌ خطأ في عرض الرسالة:', error);
+      }
+    }
+
+    // ============================================
+    // عرض رسالة الخطأ
+    // ============================================
+    function showError(message) {
+      try {
+        alert(message);
+        console.warn('⚠️ ' + message);
+      } catch (error) {
+        console.error('❌ خطأ في عرض رسالة الخطأ:', error);
+      }
+    }
+
+    // ============================================
+    // منع XSS - تنظيف النصوص
+    // ============================================
+    function escapeHtml(text) {
+      const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      };
+      return text.replace(/[&<>"']/g, m => map[m]);
+    }
+
+    // ============================================
+    // تحديث الإحصائيات (محاكاة)
+    // ============================================
+    function updateStats() {
+      try {
+        document.getElementById('likes').textContent = Math.floor(Math.random() * 100) + 1;
+        document.getElementById('matches').textContent = Math.floor(Math.random() * 50) + 1;
+        document.getElementById('visits').textContent = Math.floor(Math.random() * 500) + 1;
+        console.log('✅ تم تحديث الإحصائيات');
+      } catch (error) {
+        console.error('❌ خطأ في تحديث الإحصائيات:', error);
+      }
+    }
+
+    // تحديث الإحصائيات عند تحميل الصفحة
+    window.addEventListener('load', updateStats);
+
+    // تحديث الإحصائيات كل 30 ثانية (محاكاة)
+    setInterval(updateStats, 30000);
+
+    // ============================================
+    // التحقق من تغيير المدخلات
+    // ============================================
+    let hasChanges = false;
+
+    document.addEventListener('input', function() {
+      hasChanges = true;
+    });
+
+    window.addEventListener('beforeunload', function(e) {
+      if (hasChanges) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    });
+
+    // ============================================
+    // تحديث حالة زر الحفظ
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+      const saveBtn = document.querySelector('.btn-save');
+      if (saveBtn) {
+        saveBtn.addEventListener('click', function() {
+          saveProfile();
+          hasChanges = false;
+        });
+      }
+
+      // إضافة مستمعي الأحداث لجميع الحقول
+      const fields = document.querySelectorAll('input, textarea, select');
+      fields.forEach(field => {
+        field.addEventListener('change', function() {
+          hasChanges = true;
+        });
+        field.addEventListener('blur', function() {
+          // التحقق من القيم عند فقدان التركيز
+          validateField(this);
+        });
+      });
+
+      // منع الإرسال المتكرر للنموذج
+      const form = document.querySelector('form');
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          saveProfile();
+        });
+      }
+    });
+
+    // ============================================
+    // التحقق من صحة الحقول الفردية
+    // ============================================
+    function validateField(field) {
+      try {
+        const value = field.value.trim();
+        const fieldId = field.id;
+
+        switch(fieldId) {
+          case 'name':
+            if (value && value.length < 3) {
+              field.style.borderColor = '#e74c3c';
+            } else if (value) {
+              field.style.borderColor = '#6ae44d';
+            }
+            break;
+          
+          case 'email':
+            if (value && !isValidEmail(value)) {
+              field.style.borderColor = '#e74c3c';
+            } else if (value) {
+              field.style.borderColor = '#6ae44d';
+            }
+            break;
+          
+          case 'age':
+          case 'ageMin':
+          case 'ageMax':
+            if (value && (value < 18 || value > 120)) {
+              field.style.borderColor = '#e74c3c';
+            } else if (value) {
+              field.style.borderColor = '#6ae44d';
+            }
+            break;
+          
+          default:
+            field.style.borderColor = '#ddd';
+        }
+      } catch (error) {
+        console.error('❌ خطأ في التحقق:', error);
+      }
+    }
+
+    // ============================================
+    // معالجة الأخطاء العامة
+    // ============================================
+    window.addEventListener('error', function(e) {
+      console.error('❌ خطأ غير متوقع:', e.error);
+    });
+
+    window.addEventListener('unhandledrejection', function(e) {
+      console.error('❌ رفض وعد غير معالج:', e.reason);
+    });
+
+    console.log('✅ جميع الوظائف تم تحميلها بنجاح');
+  </script>
+
+  <!-- Footer -->
+  <footer style="background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%); color: #6ae44d; padding: 3rem 2rem; text-align: center; margin-top: 3rem;">
+    <div style="max-width: 1200px; margin: 0 auto;">
+      <h3 style="color: #6ae44d; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(106, 228, 77, 0.3);">Tribly</h3>
+      <p style="margin-bottom: 1.5rem; color: #ccc;">أوجد قبيلتك - انضم إلى مجتمعات تشاركك نفس الاهتمامات</p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+        <div>
+          <h4 style="color: #6ae44d; margin-bottom: 1rem;">الروابط الرئيسية</h4>
+          <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 0.5rem;"><a href="index.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">الرئيسية</a></li>
+            <li style="margin-bottom: 0.5rem;"><a href="home.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">التصفح</a></li>
+            <li style="margin-bottom: 0.5rem;"><a href="communities.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">المجتمعات</a></li>
+            <li style="margin-bottom: 0.5rem;"><a href="profile.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">الملف الشخصي</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color: #6ae44d; margin-bottom: 1rem;">المعلومات</h4>
+          <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 0.5rem;"><a href="about.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">حول</a></li>
+            <li style="margin-bottom: 0.5rem;"><a href="manifesto.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">البيان</a></li>
+            <li style="margin-bottom: 0.5rem;"><a href="privacy.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">سياسة الخصوصية</a></li>
+            <li style="margin-bottom: 0.5rem;"><a href="service.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">شروط الخدمة</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color: #6ae44d; margin-bottom: 1rem;">الدعم</h4>
+          <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 0.5rem;"><a href="support-site.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">مركز الدعم</a></li>
+            <li style="margin-bottom: 0.5rem;"><a href="contact-us.html" style="color: #ccc; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#ccc'">تواصل معنا</a></li>
+          </ul>
+        </div>
+      </div>
+      <div style="border-top: 1px solid rgba(106, 228, 77, 0.3); padding-top: 1.5rem; color: #999;">
+        <p>&copy; 2025 Tribly - جميع الحقوق محفوظة</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/profile-sync.js"></script>
+</body>
+</html>
