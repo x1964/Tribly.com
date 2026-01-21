@@ -528,6 +528,211 @@
       color: #3498db;
     }
 
+    /* Share Section */
+    .share-section {
+      background: linear-gradient(135deg, rgba(106, 228, 77, 0.1), rgba(165, 255, 132, 0.1));
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      border: 2px dashed #6ae44d;
+    }
+
+    .share-title {
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .share-link-container {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      background: white;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      border: 2px solid #ddd;
+    }
+
+    .share-link-container input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 0.95rem;
+      color: #333;
+    }
+
+    .copy-btn {
+      background: #6ae44d;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+
+    .copy-btn:hover {
+      background: #5ac93d;
+      transform: scale(1.05);
+    }
+
+    .copy-btn.copied {
+      background: #27ae60;
+    }
+
+    .share-buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .share-btn {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .share-btn-whatsapp {
+      background: #25d366;
+      color: white;
+    }
+
+    .share-btn-whatsapp:hover {
+      background: #1fbe5f;
+    }
+
+    .share-btn-twitter {
+      background: #1da1f2;
+      color: white;
+    }
+
+    .share-btn-twitter:hover {
+      background: #1a91da;
+    }
+
+    .share-btn-email {
+      background: #ea4335;
+      color: white;
+    }
+
+    .share-btn-email:hover {
+      background: #d33426;
+    }
+
+    /* Message Styling */
+    .message-bubble {
+      background: white;
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      border-left: 4px solid #6ae44d;
+      transition: all 0.3s;
+    }
+
+    .message-bubble:hover {
+      box-shadow: 0 4px 12px rgba(106, 228, 77, 0.15);
+    }
+
+    .message-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .message-author {
+      font-weight: 700;
+      color: #6ae44d;
+      font-size: 1rem;
+    }
+
+    .message-time {
+      font-size: 0.75rem;
+      color: #999;
+    }
+
+    .message-content {
+      color: #333;
+      line-height: 1.6;
+      margin-top: 0.5rem;
+      word-wrap: break-word;
+    }
+
+    /* Chat Container */
+    .chat-container {
+      background: #f5f5f5;
+      border-radius: 12px;
+      padding: 1.5rem;
+      max-height: 400px;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+    }
+
+    .empty-chat {
+      text-align: center;
+      color: #999;
+      padding: 2rem;
+      font-style: italic;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .input-group input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    .input-group input:focus {
+      outline: none;
+      border-color: #6ae44d;
+      box-shadow: 0 0 8px rgba(106, 228, 77, 0.2);
+    }
+
+    .input-group button {
+      background: #6ae44d;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      white-space: nowrap;
+    }
+
+    .input-group button:hover {
+      background: #5ac93d;
+      transform: translateY(-2px);
+    }
+
+    .input-group button:active {
+      transform: translateY(0);
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       nav {
@@ -937,15 +1142,22 @@
         </div>
       `).join('');
 
-      let messagesHtml = community.messages.map(msg => `
-        <div class="message">
-          <div class="message-author">${msg.author}</div>
-          <div class="message-time">${msg.time}</div>
+      let messagesHtml = community.messages.map((msg, idx) => `
+        <div class="message-bubble">
+          <div class="message-header">
+            <span class="message-author">${msg.author}</span>
+            <span class="message-time">${msg.time}</span>
+          </div>
           <div class="message-content">${msg.content || msg.text}</div>
         </div>
       `).join('');
 
       const canMessage = isJoined && (community.allowMemberMessaging || community.moderators.includes(currentUser.name));
+
+      // إنشاء الرابط للمجتمع
+      const communityLink = `${window.location.origin}${window.location.pathname}?community=${community.id}`;
+      const encodedLink = encodeURIComponent(communityLink);
+      const shareText = `انضم إلى مجتمع "${community.name}" على Tribly`;
 
       document.getElementById('detailContent').innerHTML = `
         <div class="detail-header ${community.type}">
@@ -953,8 +1165,34 @@
           <p>${community.desc}</p>
         </div>
         <div class="detail-content">
+          
+          ${isJoined ? `
+          <div class="share-section">
+            <div class="share-title">
+              <i class="fas fa-share-alt"></i> شارك المجتمع مع أصدقائك
+            </div>
+            <div class="share-link-container">
+              <input type="text" value="${communityLink}" readonly id="communityLinkInput">
+              <button class="copy-btn" onclick="copyCommunityLink('${communityLink}')">
+                <i class="fas fa-copy"></i> نسخ الرابط
+              </button>
+            </div>
+            <div class="share-buttons">
+              <button class="share-btn share-btn-whatsapp" onclick="shareWhatsApp('${shareText}', '${encodedLink}')">
+                <i class="fab fa-whatsapp"></i> WhatsApp
+              </button>
+              <button class="share-btn share-btn-twitter" onclick="shareTwitter('${shareText}', '${encodedLink}')">
+                <i class="fab fa-twitter"></i> X/تويتر
+              </button>
+              <button class="share-btn share-btn-email" onclick="shareEmail('${shareText}', '${communityLink}')">
+                <i class="fas fa-envelope"></i> ايميل
+              </button>
+            </div>
+          </div>
+          ` : ''}
+
           <div class="detail-section">
-            <h3>حول المجتمع</h3>
+            <h3>ℹ️ حول المجتمع</h3>
             <p><strong>النوع:</strong> ${community.type === 'public' ? '🌍 عام' : '🔒 خاص'}</p>
             <p><strong>الأعضاء:</strong> ${community.members}</p>
             <p><strong>المنشورات:</strong> ${community.posts}</p>
@@ -962,7 +1200,7 @@
           </div>
 
           <div class="detail-section">
-            <h3>المشرفون</h3>
+            <h3>👥 المشرفون</h3>
             <div class="members-list">
               ${membersHtml}
             </div>
@@ -970,22 +1208,31 @@
 
           ${isJoined ? `
           <div class="detail-section">
-            <h3>الرسائل الأخيرة</h3>
-            <div class="chat-section">
-              ${messagesHtml || '<p style="text-align: center; color: #999;">لا توجد رسائل حتى الآن</p>'}
-              ${canMessage ? `
-              <div class="message-input">
-                <input type="text" placeholder="اكتب رسالتك..." id="msgInput">
-                <button onclick="sendMessage(${community.id})">إرسال</button>
-              </div>
-              ` : '<p style="color: #999; font-size: 0.9rem;">أنت لا تملك صلاحية التحدث في هذا المجتمع</p>'}
+            <h3>💬 المحادثة</h3>
+            <div class="chat-container" id="messagesContainer">
+              ${messagesHtml ? messagesHtml : '<div class="empty-chat">🙌 كن أول من يرسل رسالة!</div>'}
             </div>
+            ${canMessage ? `
+            <div class="input-group">
+              <input type="text" placeholder="اكتب رسالتك الآن..." id="msgInput" onkeypress="handleEnter(event, ${community.id})">
+              <button onclick="sendMessage(${community.id})">
+                <i class="fas fa-paper-plane"></i> إرسال
+              </button>
+            </div>
+            ` : '<p style="color: #999; font-size: 0.9rem; text-align: center; padding: 1rem; background: #f5f5f5; border-radius: 8px;">🔒 أنت لا تملك صلاحية التحدث في هذا المجتمع</p>'}
           </div>
-          ` : ''}
+          ` : '<div style="text-align: center; padding: 2rem; background: #f5f5f5; border-radius: 8px;"><p style="color: #999; margin-bottom: 1rem;">⚠️ انضم للمجتمع لترى الرسائل والمحادثات</p></div>'}
         </div>
       `;
 
       modal.classList.add('active');
+      // تمرير التركيز للرسائل
+      setTimeout(() => {
+        const container = document.getElementById('messagesContainer');
+        if (container) {
+          container.scrollTop = container.scrollHeight;
+        }
+      }, 100);
     }
 
     function closeDetail() {
@@ -1068,6 +1315,51 @@
         });
         msgInput.value = '';
         showCommunityDetail(communityId);
+      }
+    }
+
+    // نسخ رابط المجتمع
+    function copyCommunityLink(link) {
+      navigator.clipboard.writeText(link).then(() => {
+        const btn = event.target.closest('.copy-btn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> تم النسخ!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.classList.remove('copied');
+        }, 2000);
+      }).catch(err => {
+        alert('حدث خطأ في نسخ الرابط');
+      });
+    }
+
+    // مشاركة على WhatsApp
+    function shareWhatsApp(text, link) {
+      const message = `${text}\n${decodeURIComponent(link)}`;
+      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+    }
+
+    // مشاركة على تويتر
+    function shareTwitter(text, link) {
+      const tweetText = `${text} ${decodeURIComponent(link)}`;
+      const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+      window.open(twitterUrl, '_blank');
+    }
+
+    // مشاركة عبر ايميل
+    function shareEmail(subject, link) {
+      const emailBody = `اشترك معي في المجتمع:\n${decodeURIComponent(link)}`;
+      const emailUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
+      window.location.href = emailUrl;
+    }
+
+    // معالجة Enter للرسائل
+    function handleEnter(event, communityId) {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage(communityId);
       }
     }
   </script>
