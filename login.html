@@ -1,574 +1,310 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="تسجيل الدخول إلى Tribly - منصة ربط الناس بقبائلهم">
-    <title>تسجيل الدخول | Tribly</title>
-    
-    <!-- Firebase Scripts -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
-    <script src="js/firebase-init.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+  <meta name="theme-color" content="#6ae44d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>تسجيل الدخول | Tribly</title>
+  <link rel="icon" href="img/logo.png" type="image/x-icon">
+  <script src="js/language.js"></script>
+  <style>
+    * {margin: 0; padding: 0; box-sizing: border-box;}
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    body {
+      font-family: 'Cairo', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      padding: 20px;
+      transition: background 0.5s, color 0.5s;
+    }
 
-        :root {
-            --primary: #667eea;
-            --secondary: #764ba2;
-            --success: #28a745;
-            --danger: #dc3545;
-            --warning: #ffc107;
-            --info: #17a2b8;
-            --light: #f8f9fa;
-            --dark: #343a40;
-        }
+    /* 🌤 الوضع النهاري */
+    body.day {
+      background: linear-gradient(135deg, #f9fff1, #fffbea);
+      color: #000;
+    }
 
-        html {
-            scroll-behavior: smooth;
-        }
+    /* 🌙 الوضع الليلي */
+    body.night {
+      background: linear-gradient(135deg, #0b0b0b, #1c1c1c);
+      color: #fff;
+    }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+    /* 🍃 أوراق الشجر */
+    .leaves {
+      color: green;
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+    }
 
-        .container {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 450px;
-            width: 100%;
-            padding: 40px;
-            animation: slideUp 0.5s ease-out;
-        }
+    .leaf {
+      position: absolute;
+      width: 40px; height: 40px;
+      background: url('https://images.icon-icons.com/1238/PNG/512/treeleaf_83777.png') no-repeat center/contain;
+      opacity: 0.8;
+      animation: fall linear infinite;
+    }
 
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    @keyframes fall {
+      0% { transform: translateY(-10%) rotate(0deg); opacity: 0.8; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
 
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+    .logo {
+      width: 130px;
+      margin-bottom: 10px;
+      animation: fadeIn 1.8s ease-in-out;
+      z-index: 1;
+    }
 
-        .header h1 {
-            color: var(--dark);
-            font-size: 28px;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
+    .text {
+      font-size: 18px;
+      font-weight: 500;
+      color: #00b85c;
+      margin-bottom: 25px;
+      text-align: center;
+      opacity: 0.9;
+      animation: slideIn 1.5s ease-in-out;
+      z-index: 1;
+    }
 
-        .header p {
-            color: #999;
-            font-size: 14px;
-        }
+    .beta {
+      display: inline-block;
+      background: linear-gradient(90deg, #b8860b, #ffd569);
+      color: #222;
+      border-color: #000;
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 0.375rem 1.125rem;
+      border-radius: 1.25rem;
+      margin-bottom: 1.5625rem;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+    .beta::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -5rem;
+      width: 3.75rem;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.6);
+      transform: skewX(-20deg);
+      animation: shine 2.5s infinite linear;
+    }
 
-        label {
-            display: block;
-            color: var(--dark);
-            font-weight: 600;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
+    @keyframes shine {
+      0% { left: -5rem; }
+      100% { left: 120%; }
+    }
 
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            font-family: inherit;
-        }
+    .loader {
+      width: 90px; height: 90px;
+      border-radius: 50%;
+      border: 8px solid #ffffff;
+      border-top: 8px solid #00ff6a;
+      border-right: 8px solid #ffd500;
+      animation: spin 2s linear infinite;
+      margin-bottom: 30px;
+      z-index: 1;
+    }
 
-        input[type="email"]:focus,
-        input[type="password"]:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
 
-        input[type="email"]:invalid:not(:placeholder-shown),
-        input[type="password"]:invalid:not(:placeholder-shown) {
-            border-color: var(--danger);
-        }
+    input {
+      background: #f8f8f8;
+      border: 2px solid #cceeaa;
+      border-radius: 70px;
+      padding: 18px;
+      width: 400px;
+      max-width: 90%;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0, 255, 90, 0.1);
+      font-size: 16px;
+      transition: 0.3s;
+      z-index: 1;
+      position: relative;
+    }
 
-        .input-hint {
-            font-size: 12px;
-            color: #999;
-            margin-top: 5px;
-        }
+    input:focus {
+      outline: none;
+      border-color: #00b85c;
+      box-shadow: 0 0 10px rgba(0, 184, 92, 0.3);
+    }
 
-        .input-hint.error {
-            color: var(--danger);
-            display: none;
-        }
+    .btn {
+      background: #000;
+      color: white;
+      border: 2px solid #cceeaa;
+      border-radius: 70px;
+      padding: 16px;
+      width: 250px;
+      max-width: 80%;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-size: 16px;
+      z-index: 1;
+      position: relative;
+    }
 
-        .remember-forgot {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            font-size: 13px;
-        }
+    .btn:hover {
+      background: #00b85c;
+      color: #fff;
+      transform: translateY(-3px);
+    }
 
-        .checkbox-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+    .toggle-mode {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background: #00b85c;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 55px;
+      height: 55px;
+      font-size: 22px;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      transition: 0.3s;
+      z-index: 10;
+    }
 
-        .checkbox-wrapper input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-            accent-color: var(--primary);
-        }
+    .toggle-mode:hover {
+      transform: rotate(20deg);
+      background: #009c4e;
+    }
 
-        .checkbox-wrapper label {
-            margin: 0;
-            cursor: pointer;
-            color: #666;
-            font-weight: 400;
-        }
+    .error {
+      color: red;
+      font-size: 15px;
+      margin-top: 15px;
+      display: none;
+      z-index: 1;
+      position: relative;
+    }
 
-        .forgot-password {
-            color: var(--primary);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-        .forgot-password:hover {
-            color: var(--secondary);
-        }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-        .btn-login {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-login:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-login:active:not(:disabled) {
-            transform: translateY(0);
-        }
-
-        .btn-login:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .alert {
-            padding: 12px 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .alert.show {
-            display: block;
-        }
-
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border-left: 4px solid #28a745;
-        }
-
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border-left: 4px solid #dc3545;
-        }
-
-        .alert-info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border-left: 4px solid #17a2b8;
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 25px 0;
-            color: #999;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: #e0e0e0;
-        }
-
-        .divider span {
-            padding: 0 10px;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .signup-link {
-            text-align: center;
-            margin-top: 20px;
-            color: #666;
-            font-size: 14px;
-        }
-
-        .signup-link a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .signup-link a:hover {
-            color: var(--secondary);
-            text-decoration: underline;
-        }
-
-        .loading-spinner {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top: 3px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 8px;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .btn-content {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .password-toggle {
-            position: relative;
-        }
-
-        .password-toggle .toggle-icon {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #999;
-            font-size: 18px;
-            transition: all 0.3s ease;
-        }
-
-        .password-toggle input {
-            padding-right: 40px;
-            padding-left: 15px;
-        }
-
-        .password-toggle .toggle-icon:hover {
-            color: var(--primary);
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 25px;
-            }
-
-            .header h1 {
-                font-size: 24px;
-            }
-
-            .remember-forgot {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-        }
-
-        .form-group input::placeholder {
-            color: #ccc;
-        }
-    </style>
+    @media (max-width: 768px) {
+      .logo { width: 120px; }
+      input { width: 90%; font-size: 15px; padding: 15px; }
+      .btn { width: 85%; font-size: 15px; padding: 14px; }
+      .toggle-mode { width: 50px; height: 50px; font-size: 20px; bottom: 20px; right: 20px; }
+    }
+  </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>🔐 تسجيل الدخول</h1>
-            <p>رحباً بعودتك إلى Tribly</p>
-        </div>
+<body class="day">
 
-        <div id="alertBox" class="alert"></div>
+  <!-- 🍃 أوراق الشجر -->
+  <div class="leaves" id="leaves"></div>
 
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="email">📧 البريد الإلكتروني</label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    name="email"
-                    placeholder="example@email.com"
-                    required
-                    autocomplete="email"
-                >
-                <div class="input-hint error" id="emailHint"></div>
-            </div>
+  <img src="img/logo icon.png" class="logo" alt="Logo">
+  <div class="text">meet like-minded people nearby IRL</div>
+  <div class="beta">Beta release V0.4</div>
+  <div class="loader"></div>
 
-            <div class="form-group">
-                <label for="password">🔑 كلمة المرور</label>
-                <div class="password-toggle">
-                    <input 
-                        type="password" 
-                        id="password" 
-                        name="password"
-                        placeholder="أدخل كلمة المرور"
-                        required
-                        autocomplete="current-password"
-                        minlength="6"
-                    >
-                    <span class="toggle-icon" onclick="togglePassword()">👁️</span>
-                </div>
-                <div class="input-hint error" id="passwordHint"></div>
-            </div>
+  <input type="text" id="codeInput" placeholder="Pin or Invitation code">
+  <button class="btn" onclick="checkCode()">دخول</button>
 
-            <div class="remember-forgot">
-                <div class="checkbox-wrapper">
-                    <input type="checkbox" id="rememberMe" name="rememberMe">
-                    <label for="rememberMe">تذكرني</label>
-                </div>
-                <a href="forgot-password.html" class="forgot-password">هل نسيت كلمة المرور؟</a>
-            </div>
+  <div id="error" class="error">❌ الكود غير صحيح</div>
 
-            <button type="submit" class="btn-login" id="loginBtn">
-                <div class="btn-content">
-                    <div class="loading-spinner" id="spinner"></div>
-                    <span id="btnText">دخول</span>
-                </div>
-            </button>
-        </form>
+  <button class="toggle-mode" onclick="toggleMode()">☀️</button>
 
-        <div class="divider">
-            <span>أو</span>
-        </div>
+  <script>
+    const validCodes = {
+      "kareem_ibrahem9": "ريس",
+      "team-tribly": "فريق Tribly",
+      "developer15": "مطور Tribly",
+      "khaled_awad5": "خالد",
+      "user2025": "مستخدم",
+      "abdo_rady0": "عبدو",
+      "ahmed_samir19": "يابوحميد",
+      "shrouk_samir12": "شروق",
+      "mohamed_samir13": "حموو",
+      "Abdo_hamada2": "بودي",
+      "Eslam_omer20": "السيكوا",
+      "Elsawy_mohamed21": "الصاوي",
+      "mohamed_hany15": "حموو هاني",
+    };
 
-        <div class="signup-link">
-            ليس لديك حساب؟ 
-            <a href="signup.html">أنشئ حساباً جديداً</a>
-        </div>
-    </div>
+    // 🌿 إنشاء أوراق الشجر + تحميل الوضع المحفوظ
+    window.onload = function() {
+      const savedUser = localStorage.getItem("tribble_user");
+      if (savedUser) {
+        alert(`👋 أهلاً يا ${savedUser}!`);
+        window.location.href = "home.html";
+      }
 
-    <script>
-        const loginForm = document.getElementById('loginForm');
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
-        const loginBtn = document.getElementById('loginBtn');
-        const alertBox = document.getElementById('alertBox');
-        const spinner = document.getElementById('spinner');
-        const btnText = document.getElementById('btnText');
+      const savedMode = localStorage.getItem("mode");
+      if (savedMode === "night") toggleMode(true);
 
-        // Toggle password visibility
-        window.togglePassword = function() {
-            const icon = document.querySelector('.toggle-icon');
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                icon.textContent = '🙈';
-            } else {
-                passwordInput.type = 'password';
-                icon.textContent = '👁️';
-            }
-        };
+      const leavesContainer = document.getElementById('leaves');
+      for (let i = 0; i < 12; i++) {
+        const leaf = document.createElement('div');
+        leaf.classList.add('leaf');
+        leaf.style.left = Math.random() * 100 + '%';
+        leaf.style.animationDuration = 6 + Math.random() * 5 + 's';
+        leaf.style.animationDelay = Math.random() * 5 + 's';
+        leaf.style.opacity = Math.random() * 0.8 + 0.2;
+        leavesContainer.appendChild(leaf);
+      }
+    };
 
-        // Validate email
-        function validateEmail(email) {
-            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return regex.test(email);
-        }
+    function checkCode() {
+      const input = document.getElementById("codeInput").value.trim().toLowerCase();
+      const error = document.getElementById("error");
 
-        // Show alert
-        function showAlert(message, type) {
-            alertBox.textContent = message;
-            alertBox.className = `alert show alert-${type}`;
-            setTimeout(() => {
-                alertBox.classList.remove('show');
-            }, 5000);
-        }
+      if (validCodes[input]) {
+        const username = validCodes[input];
+        localStorage.setItem("tribble_user", username);
+        alert(`🌿 أهلاً يا ${username}!`);
+        window.location.href = "home.html";
+      } else {
+        error.style.display = "block";
+        setTimeout(() => error.style.display = "none", 2500);
+      }
+    }
 
-        // Form submission
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
+    function toggleMode(init = false) {
+      const body = document.body;
+      const button = document.querySelector('.toggle-mode');
 
-            const email = emailInput.value.trim();
-            const password = passwordInput.value;
-            const rememberMe = document.getElementById('rememberMe').checked;
-
-            // Validation
-            if (!email) {
-                showAlert('❌ أدخل بريدك الإلكتروني', 'error');
-                emailInput.focus();
-                return;
-            }
-
-            if (!validateEmail(email)) {
-                showAlert('❌ البريد الإلكتروني غير صحيح', 'error');
-                emailInput.focus();
-                return;
-            }
-
-            if (!password) {
-                showAlert('❌ أدخل كلمة المرور', 'error');
-                passwordInput.focus();
-                return;
-            }
-
-            if (password.length < 6) {
-                showAlert('❌ كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error');
-                passwordInput.focus();
-                return;
-            }
-
-            // Login
-            await performLogin(email, password, rememberMe);
-        });
-
-        async function performLogin(email, password, rememberMe) {
-            loginBtn.disabled = true;
-            spinner.style.display = 'inline-block';
-            btnText.textContent = 'جاري الدخول...';
-
-            try {
-                if (typeof loginUser === 'undefined') {
-                    throw new Error('Firebase not initialized');
-                }
-
-                const user = await loginUser(email, password);
-
-                if (user) {
-                    showAlert(`✅ مرحباً ${user.email}!`, 'success');
-                    
-                    if (rememberMe) {
-                        localStorage.setItem('rememberEmail', email);
-                    } else {
-                        localStorage.removeItem('rememberEmail');
-                    }
-
-                    localStorage.setItem('tribble_user', user.email);
-                    
-                    setTimeout(() => {
-                        window.location.href = 'profile.html';
-                    }, 1500);
-                } else {
-                    showAlert('❌ بريد إلكتروني أو كلمة مرور غير صحيحة', 'error');
-                    passwordInput.value = '';
-                    passwordInput.focus();
-                }
-            } catch (error) {
-                console.error('Login error:', error);
-                
-                let errorMessage = '❌ حدث خطأ في تسجيل الدخول';
-                
-                if (error.message.includes('user-not-found')) {
-                    errorMessage = '❌ المستخدم غير موجود';
-                } else if (error.message.includes('wrong-password')) {
-                    errorMessage = '❌ كلمة المرور غير صحيحة';
-                } else if (error.message.includes('too-many-requests')) {
-                    errorMessage = '⚠️ محاولات كثيرة، حاول لاحقاً';
-                } else if (error.message.includes('Firebase not initialized')) {
-                    errorMessage = '⚠️ يرجى التحقق من مفاتيح Firebase';
-                }
-                
-                showAlert(errorMessage, 'error');
-            } finally {
-                loginBtn.disabled = false;
-                spinner.style.display = 'none';
-                btnText.textContent = 'دخول';
-            }
-        }
-
-        // Load remembered email
-        window.addEventListener('load', () => {
-            const rememberEmail = localStorage.getItem('rememberEmail');
-            if (rememberEmail) {
-                emailInput.value = rememberEmail;
-                document.getElementById('rememberMe').checked = true;
-                passwordInput.focus();
-            }
-        });
-
-        // Real-time validation
-        emailInput.addEventListener('blur', () => {
-            if (emailInput.value && !validateEmail(emailInput.value)) {
-                document.getElementById('emailHint').textContent = '❌ البريد غير صحيح';
-                document.getElementById('emailHint').style.display = 'block';
-            }
-        });
-
-        emailInput.addEventListener('input', () => {
-            document.getElementById('emailHint').style.display = 'none';
-        });
-
-        passwordInput.addEventListener('input', () => {
-            document.getElementById('passwordHint').style.display = 'none';
-        });
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && loginForm.checkValidity()) {
-                loginForm.dispatchEvent(new Event('submit'));
-            }
-        });
-    </script>
+      if (body.classList.contains("day") && !init) {
+        body.classList.replace("day", "night");
+        button.textContent = "🌙";
+        localStorage.setItem("mode", "night");
+      } else {
+        body.classList.replace("night", "day");
+        button.textContent = "☀️";
+        localStorage.setItem("mode", "day");
+      }
+    }
+  </script>
 </body>
 </html>

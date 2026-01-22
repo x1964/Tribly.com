@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="app-title">Tribly - احصل على التطبيق</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(125deg, #effaff 0%, #dbf4ff 100%);
+            min-height: 100vh;
+        }
+
+        html[lang="ar"] body {
+            direction: rtl;
+        }
+
+        html[lang="en"] body,
+        html[lang="fr"] body {
+            direction: ltr;
+        }
+
+        /* Navbar */
+        nav {
+            background: #fff;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        nav.rtl {
+            direction: rtl;
+        }
+
+        nav.ltr {
+            direction: ltr;
+        }
+
+        nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+            color: #000;
+            font-weight: 700;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+
+        .logo-section:hover {
+            color: #6ae44d;
+        }
+
+        .logo-section img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: contain;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #6ae44d;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            background: #6ae44d;
+            transition: width 0.3s;
+        }
+
+        html[lang="ar"] .nav-links a::after {
+            right: 0;
+        }
+
+        html[lang="en"] .nav-links a::after,
+        html[lang="fr"] .nav-links a::after {
+            left: 0;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        #languageSwitcher {
+            position: relative;
+        }
+
+        .lang-toggle {
+            background: #6ae44d;
+            color: #000;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 13px;
+        }
+
+        .lang-toggle:hover {
+            opacity: 0.9;
+        }
+
+        .lang-toggle i {
+            font-size: 1.1rem;
+        }
+
+        #langDropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            background: white;
+            border: 1px solid #6ae44d;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            margin-top: 0.5rem;
+            z-index: 1000;
+            min-width: 150px;
+            overflow: hidden;
+        }
+
+        html[lang="ar"] #langDropdown {
+            left: 0;
+        }
+
+        html[lang="en"] #langDropdown,
+        html[lang="fr"] #langDropdown {
+            right: 0;
+        }
+
+        #langDropdown.show {
+            display: block;
+        }
+
+        .lang-option {
+            width: 100%;
+            padding: 12px 16px;
+            border: none;
+            background: #fff;
+            cursor: pointer;
+            text-align: left;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 14px;
+            color: #000;
+            border-top: 1px solid #eee;
+        }
+
+        .lang-option:first-child {
+            border-top: none;
+            background: #f5f5f5;
+        }
+
+        html[lang="ar"] .lang-option {
+            text-align: right;
+        }
+
+        .lang-option:hover {
+            background: #f0f0f0;
+        }
+
+        .lang-option.active {
+            background: #6ae44d;
+            color: #000;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .hero {
+            text-align: center;
+            color: #000;
+            margin-bottom: 4rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            color: #333;
+        }
+
+        .store-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .store-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            transition: transform 0.4s, box-shadow 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .store-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #6ae44d;
+        }
+
+        .store-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
+        }
+
+        .store-card.coming-soon {
+            opacity: 0.85;
+            position: relative;
+        }
+
+        .store-card.featured {
+            border: 2px solid #6ae44d;
+            box-shadow: 0 4px 15px rgba(106, 228, 77, 0.25);
+        }
+
+        .store-card.featured:hover {
+            box-shadow: 0 8px 25px rgba(106, 228, 77, 0.35);
+        }
+
+        .badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff6b6b;
+            color: white;
+            padding: 0.4rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .badge.premium {
+            background: #6ae44d;
+            color: #000;
+            box-shadow: 0 4px 15px rgba(106, 228, 77, 0.3);
+        }
+
+        .download-btn.disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .download-btn.disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .download-btn.featured-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .coming-date {
+            font-size: 0.85rem;
+            color: #999;
+            margin-top: 0.8rem;
+            font-style: italic;
+        }
+
+        .available-text {
+            font-size: 0.85rem;
+            color: #6ae44d;
+            margin-top: 0.8rem;
+            font-weight: 600;
+        }
+
+        .store-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            color: #6ae44d;
+        }
+
+        .store-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .store-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .download-btn {
+            background: #6ae44d;
+            color: #000;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .download-btn:hover:not(.disabled) {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+
+        .features {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 4rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .features h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 15px;
+            transition: transform 0.3s;
+        }
+
+        .feature-item:hover {
+            transform: scale(1.05);
+        }
+
+        .feature-item i {
+            font-size: 2.5rem;
+            color: #6ae44d;
+            margin-bottom: 1rem;
+        }
+
+        .feature-item h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .feature-item p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .requirements {
+            background: linear-gradient(125deg, rgba(106, 228, 77, 0.1) 0%, rgba(125, 246, 255, 0.1) 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 4rem;
+            border-left: 5px solid #6ae44d;
+        }
+
+        html[lang="ar"] .requirements {
+            border-left: none;
+            border-right: 5px solid #6ae44d;
+        }
+
+        .requirements h3 {
+            color: #6ae44d;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .requirements ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .requirements li {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: #555;
+        }
+
+        .requirements li i {
+            color: #6ae44d;
+            font-size: 1.2rem;
+        }
+
+        .cta-section {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 4rem;
+        }
+
+        .cta-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .cta-section p {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: #6ae44d;
+            color: #000;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #6ae44d;
+            border: 2px solid #6ae44d;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: #6ae44d;
+            color: #000;
+        }
+
+        /* Waitlist Section */
+        .waitlist-section {
+            background: linear-gradient(125deg, rgba(106, 228, 77, 0.1) 0%, rgba(125, 246, 255, 0.1) 100%);
+            border-radius: 15px;
+            padding: 3rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            border: 2px solid rgba(106, 228, 77, 0.3);
+        }
+
+        .waitlist-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .waitlist-section p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .waitlist-form {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .waitlist-form input {
+            padding: 0.9rem 1.5rem;
+            border: 2px solid #6ae44d;
+            border-radius: 50px;
+            font-size: 1rem;
+            min-width: 250px;
+            transition: border-color 0.3s;
+        }
+
+        .waitlist-form input:focus {
+            outline: none;
+            border-color: #7df6ff;
+            box-shadow: 0 0 10px rgba(125, 246, 255, 0.2);
+        }
+
+        .waitlist-form button {
+            padding: 0.9rem 2rem;
+        }
+
+        .waitlist-info {
+            font-size: 0.9rem;
+            color: #999;
+            font-style: italic;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+            border-top: 2px solid #6ae44d;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #6ae44d;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-section a {
+            color: #bbb;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: #6ae44d;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(106, 228, 77, 0.2);
+            color: #6ae44d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .footer-social a:hover {
+            background: #6ae44d;
+            color: #000;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #333;
+            padding-top: 2rem;
+            text-align: center;
+            color: #999;
+        }
+
+        .logo-footer {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: contain;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .store-card {
+                padding: 1.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .features h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav>
+        <nav-container style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem; max-width: 1400px; margin: 0 auto;">
+            <a href="index.html" class="logo-section">
+                <img src="img/logo icon.png" alt="Tribly Logo">
+                <span data-i18n="app-brand">Tribly</span>
+            </a>
+            
+            <ul class="nav-links">
+                <li><a href="index.html" data-i18n="nav-how">كيف تعمل</a></li>
+                <li><a href="about.html" data-i18n="nav-about">عن التطبيق</a></li>
+                <li><a href="faq.html" data-i18n="nav-faq">الأسئلة الشائعة</a></li>
+                <li><a href="support.html" data-i18n="nav-support">الدعم</a></li>
+            </ul>
+
+            <div id="languageSwitcher">
+                <button class="lang-toggle">
+                    <i class="fas fa-globe"></i>
+                    <span id="currentLang">العربية</span>
+                </button>
+                <div id="langDropdown">
+                    <button class="lang-option" data-lang="ar">🇸🇦 العربية</button>
+                    <button class="lang-option" data-lang="en">🇬🇧 English</button>
+                    <button class="lang-option" data-lang="fr">🇫🇷 Français</button>
+                </div>
+            </div>
+        </nav-container>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <h1 data-i18n="app-hero-title">احصل على تطبيق Tribly الآن</h1>
+            <p data-i18n="app-hero-desc">اتصل بأصدقائك في أي مكان، في أي وقت</p>
+        </div>
+
+        <!-- Store Cards -->
+        <div class="store-section">
+            <!-- iOS -->
+            <div class="store-card coming-soon">
+                <div class="badge" data-i18n="app-coming-soon">قريباً</div>
+                <div class="store-icon">
+                    <i class="fab fa-apple"></i>
+                </div>
+                <h3 data-i18n="app-ios">iPhone / iPad</h3>
+                <p data-i18n="app-ios-desc">متوفر على App Store</p>
+                <button class="download-btn disabled" disabled>
+                    <i class="fas fa-hourglass-end"></i>
+                    <span data-i18n="app-coming-soon">قريباً</span>
+                </button>
+                <p class="coming-date" data-i18n="app-q1-2026">متاح في Q1 2026</p>
+            </div>
+
+            <!-- Android -->
+            <div class="store-card coming-soon">
+                <div class="badge" data-i18n="app-coming-soon">قريباً</div>
+                <div class="store-icon">
+                    <i class="fab fa-android"></i>
+                </div>
+                <h3 data-i18n="app-android">Android</h3>
+                <p data-i18n="app-android-desc">متوفر على Google Play</p>
+                <button class="download-btn disabled" disabled>
+                    <i class="fas fa-hourglass-end"></i>
+                    <span data-i18n="app-coming-soon">قريباً</span>
+                </button>
+                <p class="coming-date" data-i18n="app-q1-2026">متاح في Q1 2026</p>
+            </div>
+
+            <!-- Web -->
+            <div class="store-card featured">
+                <div class="badge premium" data-i18n="app-available-now">متاح الآن</div>
+                <div class="store-icon">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <h3 data-i18n="app-web">النسخة الويب</h3>
+                <p data-i18n="app-web-desc">استخدم Tribly من متصفحك</p>
+                <button class="download-btn featured-btn" onclick="window.location.href='index.html'">
+                    <i class="fas fa-arrow-right"></i>
+                    <span data-i18n="app-open">فتح الويب</span>
+                </button>
+                <p class="available-text" data-i18n="app-web-available">متاح بشكل فوري</p>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="features">
+            <h2 data-i18n="app-features-title">المميزات الرئيسية</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <i class="fas fa-video"></i>
+                    <h4 data-i18n="app-feature-1">مكالمات فيديو عالية الجودة</h4>
+                    <p data-i18n="app-feature-1-desc">اتصل بأصدقائك برؤية واضحة وصوت نقي</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-comments"></i>
+                    <h4 data-i18n="app-feature-2">رسائل فورية</h4>
+                    <p data-i18n="app-feature-2-desc">تبادل الرسائل والملفات بسرعة</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-users"></i>
+                    <h4 data-i18n="app-feature-3">مجموعات صديقة</h4>
+                    <p data-i18n="app-feature-3-desc">تواصل مع عدة أصدقاء في نفس الوقت</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-lock"></i>
+                    <h4 data-i18n="app-feature-4">أمان كامل</h4>
+                    <p data-i18n="app-feature-4-desc">تشفير طرف إلى طرف لجميع المحادثات</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-bell"></i>
+                    <h4 data-i18n="app-feature-5">إشعارات فورية</h4>
+                    <p data-i18n="app-feature-5-desc">لا تفوت أي رسالة مهمة</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-sync"></i>
+                    <h4 data-i18n="app-feature-6">مزامنة تلقائية</h4>
+                    <p data-i18n="app-feature-6-desc">ابقَ متزامناً عبر جميع الأجهزة</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Requirements -->
+        <div class="requirements">
+            <h3 data-i18n="app-requirements">متطلبات النظام</h3>
+            <ul>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span data-i18n="app-req-ios">iOS 13.0 أو أحدث</span>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span data-i18n="app-req-android">Android 6.0 أو أحدث</span>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span data-i18n="app-req-storage">100 ميجابايت من مساحة التخزين</span>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span data-i18n="app-req-connection">اتصال إنترنت مستقر</span>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span data-i18n="app-req-camera">كاميرا وميكروفون للمكالمات</span>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span data-i18n="app-req-permission">الموافقة على الأذونات اللازمة</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <h2 data-i18n="app-web-ready">جاهز للبدء الآن؟</h2>
+            <p data-i18n="app-web-ready-desc">استخدم Tribly مباشرة من متصفحك بدون انتظار</p>
+            <div class="btn-group">
+                <button class="btn-primary" onclick="window.location.href='index.html'">
+                    <i class="fas fa-rocket"></i>
+                    <span data-i18n="app-start-now">ابدأ الآن</span>
+                </button>
+                <button class="btn-secondary" onclick="document.querySelector('.waitlist-section').scrollIntoView({behavior: 'smooth'})">
+                    <i class="fas fa-bell"></i>
+                    <span data-i18n="app-join-waitlist">انضم لقائمة الانتظار</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Waitlist Section -->
+        <div class="waitlist-section">
+            <h2 data-i18n="app-waitlist-title">انتظر إطلاق التطبيق</h2>
+            <p data-i18n="app-waitlist-desc">كن من أول من يجرب تطبيق Tribly على هاتفك</p>
+            <form class="waitlist-form" onsubmit="handleWaitlist(event)">
+                <input type="email" id="waitlist-email" placeholder="بريدك الإلكتروني..." data-i18n-placeholder="email-placeholder" required>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-bell"></i>
+                    <span data-i18n="app-notify-me">أخبرني عند الإطلاق</span>
+                </button>
+            </form>
+            <p class="waitlist-info" data-i18n="app-waitlist-info">سننبهك فوراً عند إطلاق التطبيق</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <!-- Brand Section -->
+            <div class="footer-section">
+                <img src="img/logo icon.png" alt="Tribly" class="logo-footer">
+                <h4 data-i18n="footer-brand">Tribly</h4>
+                <p data-i18n="footer-brand-desc">تطبيق عصري للتواصل مع أصدقائك بكل سهولة</p>
+                <div class="footer-social">
+                    <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+
+            <!-- Product -->
+            <div class="footer-section">
+                <h4 data-i18n="footer-product">المنتج</h4>
+                <ul>
+                    <li><a href="#" data-i18n="footer-features">المميزات</a></li>
+                    <li><a href="#" data-i18n="footer-pricing">الأسعار</a></li>
+                    <li><a href="#" data-i18n="footer-download">التحميل</a></li>
+                    <li><a href="#" data-i18n="footer-updates">التحديثات</a></li>
+                </ul>
+            </div>
+
+            <!-- Company -->
+            <div class="footer-section">
+                <h4 data-i18n="footer-company">الشركة</h4>
+                <ul>
+                    <li><a href="about.html" data-i18n="footer-about">عن التطبيق</a></li>
+                    <li><a href="#" data-i18n="footer-blog">المدونة</a></li>
+                    <li><a href="#" data-i18n="footer-careers">الوظائف</a></li>
+                    <li><a href="contact-us.html" data-i18n="footer-contact">تواصل معنا</a></li>
+                </ul>
+            </div>
+
+            <!-- Support -->
+            <div class="footer-section">
+                <h4 data-i18n="footer-support">الدعم</h4>
+                <ul>
+                    <li><a href="support.html" data-i18n="footer-help">الدعم والمساعدة</a></li>
+                    <li><a href="faq.html" data-i18n="footer-faq">الأسئلة الشائعة</a></li>
+                    <li><a href="privacy.html" data-i18n="footer-privacy">سياسة الخصوصية</a></li>
+                    <li><a href="#" data-i18n="footer-terms">شروط الخدمة</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p data-i18n="footer-copyright">&copy; 2026 Tribly. جميع الحقوق محفوظة</p>
+        </div>
+    </footer>
+
+    <!-- I18N System -->
+    <script src="js/i18n.js"></script>
+
+    <!-- Add App-Specific Translations -->
+    <script>
+        // Extend translations with app-specific keys
+        const appTranslations = {
+            ar: {
+                'app-title': 'احصل على تطبيق Tribly',
+                'app-brand': 'Tribly',
+                'app-hero-title': 'احصل على تطبيق Tribly الآن',
+                'app-hero-desc': 'اتصل بأصدقائك في أي مكان، في أي وقت',
+                'app-ios': 'iPhone / iPad',
+                'app-ios-desc': 'متوفر على App Store',
+                'app-android': 'Android',
+                'app-android-desc': 'متوفر على Google Play',
+                'app-web': 'النسخة الويب',
+                'app-web-desc': 'استخدم Tribly من متصفحك',
+                'app-download': 'تحميل',
+                'app-open': 'فتح الويب',
+                'app-features-title': 'المميزات الرئيسية',
+                'app-feature-1': 'مكالمات فيديو عالية الجودة',
+                'app-feature-1-desc': 'اتصل بأصدقائك برؤية واضحة وصوت نقي',
+                'app-feature-2': 'رسائل فورية',
+                'app-feature-2-desc': 'تبادل الرسائل والملفات بسرعة',
+                'app-feature-3': 'مجموعات صديقة',
+                'app-feature-3-desc': 'تواصل مع عدة أصدقاء في نفس الوقت',
+                'app-feature-4': 'أمان كامل',
+                'app-feature-4-desc': 'تشفير طرف إلى طرف لجميع المحادثات',
+                'app-feature-5': 'إشعارات فورية',
+                'app-feature-5-desc': 'لا تفوت أي رسالة مهمة',
+                'app-feature-6': 'مزامنة تلقائية',
+                'app-feature-6-desc': 'ابقَ متزامناً عبر جميع الأجهزة',
+                'app-requirements': 'متطلبات النظام',
+                'app-req-ios': 'iOS 13.0 أو أحدث',
+                'app-req-android': 'Android 6.0 أو أحدث',
+                'app-req-storage': '100 ميجابايت من مساحة التخزين',
+                'app-req-connection': 'اتصال إنترنت مستقر',
+                'app-req-camera': 'كاميرا وميكروفون للمكالمات',
+                'app-req-permission': 'الموافقة على الأذونات اللازمة',
+                'app-cta-title': 'هل أنت مستعد للبدء؟',
+                'app-cta-desc': 'انضم إلى آلاف المستخدمين الذين يستمتعون بـ Tribly',
+                'app-download-now': 'حمل الآن',
+                'app-learn-more': 'تعرف على المزيد',
+                'app-coming-soon': 'قريباً',
+                'app-available-now': 'متاح الآن',
+                'app-q1-2026': 'متاح في Q1 2026',
+                'app-web-available': 'متاح بشكل فوري',
+                'app-web-ready': 'جاهز للبدء الآن؟',
+                'app-web-ready-desc': 'استخدم Tribly مباشرة من متصفحك بدون انتظار',
+                'app-start-now': 'ابدأ الآن',
+                'app-join-waitlist': 'انضم لقائمة الانتظار',
+                'app-waitlist-title': 'انتظر إطلاق التطبيق',
+                'app-waitlist-desc': 'كن من أول من يجرب تطبيق Tribly على هاتفك',
+                'app-notify-me': 'أخبرني عند الإطلاق',
+                'app-waitlist-info': 'سننبهك فوراً عند إطلاق التطبيق',
+                'email-placeholder': 'بريدك الإلكتروني...',
+            },
+            en: {
+                'app-title': 'Get Tribly App',
+                'app-brand': 'Tribly',
+                'app-hero-title': 'Get Tribly App Today',
+                'app-hero-desc': 'Connect with your friends anywhere, anytime',
+                'app-ios': 'iPhone / iPad',
+                'app-ios-desc': 'Available on App Store',
+                'app-android': 'Android',
+                'app-android-desc': 'Available on Google Play',
+                'app-web': 'Web Version',
+                'app-web-desc': 'Use Tribly from your browser',
+                'app-download': 'Download',
+                'app-open': 'Open Web',
+                'app-features-title': 'Main Features',
+                'app-feature-1': 'High-Quality Video Calls',
+                'app-feature-1-desc': 'Call your friends with crystal clear video and audio',
+                'app-feature-2': 'Instant Messages',
+                'app-feature-2-desc': 'Share messages and files instantly',
+                'app-feature-3': 'Friend Groups',
+                'app-feature-3-desc': 'Communicate with multiple friends at once',
+                'app-feature-4': 'Complete Security',
+                'app-feature-4-desc': 'End-to-end encryption for all conversations',
+                'app-feature-5': 'Instant Notifications',
+                'app-feature-5-desc': 'Never miss an important message',
+                'app-feature-6': 'Auto Sync',
+                'app-feature-6-desc': 'Stay synced across all devices',
+                'app-requirements': 'System Requirements',
+                'app-req-ios': 'iOS 13.0 or later',
+                'app-req-android': 'Android 6.0 or later',
+                'app-req-storage': '100 MB of storage space',
+                'app-req-connection': 'Stable internet connection',
+                'app-req-camera': 'Camera and microphone for calls',
+                'app-req-permission': 'Required permissions allowed',
+                'app-cta-title': 'Ready to Get Started?',
+                'app-cta-desc': 'Join thousands of users enjoying Tribly',
+                'app-download-now': 'Download Now',
+                'app-learn-more': 'Learn More',
+                'app-coming-soon': 'Coming Soon',
+                'app-available-now': 'Available Now',
+                'app-q1-2026': 'Available in Q1 2026',
+                'app-web-available': 'Available Instantly',
+                'app-web-ready': 'Ready to Start Now?',
+                'app-web-ready-desc': 'Use Tribly directly from your browser without waiting',
+                'app-start-now': 'Start Now',
+                'app-join-waitlist': 'Join Waitlist',
+                'app-waitlist-title': 'Wait for App Launch',
+                'app-waitlist-desc': 'Be among the first to try Tribly on your phone',
+                'app-notify-me': 'Notify Me at Launch',
+                'app-waitlist-info': 'We\'ll notify you immediately when the app launches',
+                'email-placeholder': 'Your email address...',
+            },
+            fr: {
+                'app-title': 'Obtenir l\'application Tribly',
+                'app-brand': 'Tribly',
+                'app-hero-title': 'Obtenez l\'application Tribly dès aujourd\'hui',
+                'app-hero-desc': 'Connectez-vous avec vos amis n\'importe où, n\'importe quand',
+                'app-ios': 'iPhone / iPad',
+                'app-ios-desc': 'Disponible sur l\'App Store',
+                'app-android': 'Android',
+                'app-android-desc': 'Disponible sur Google Play',
+                'app-web': 'Version Web',
+                'app-web-desc': 'Utilisez Tribly depuis votre navigateur',
+                'app-download': 'Télécharger',
+                'app-open': 'Ouvrir le Web',
+                'app-features-title': 'Caractéristiques Principales',
+                'app-feature-1': 'Appels vidéo haute qualité',
+                'app-feature-1-desc': 'Appelez vos amis avec une vidéo et un son cristallins',
+                'app-feature-2': 'Messages Instantanés',
+                'app-feature-2-desc': 'Partagez des messages et des fichiers instantanément',
+                'app-feature-3': 'Groupes d\'Amis',
+                'app-feature-3-desc': 'Communiquez avec plusieurs amis à la fois',
+                'app-feature-4': 'Sécurité Complète',
+                'app-feature-4-desc': 'Chiffrement de bout en bout pour toutes les conversations',
+                'app-feature-5': 'Notifications Instantanées',
+                'app-feature-5-desc': 'Ne manquez jamais un message important',
+                'app-feature-6': 'Synchronisation Automatique',
+                'app-feature-6-desc': 'Restez synchronisé sur tous vos appareils',
+                'app-requirements': 'Configuration Requise',
+                'app-req-ios': 'iOS 13.0 ou plus récent',
+                'app-req-android': 'Android 6.0 ou plus récent',
+                'app-req-storage': '100 Mo d\'espace de stockage',
+                'app-req-connection': 'Connexion Internet stable',
+                'app-req-camera': 'Caméra et microphone pour les appels',
+                'app-req-permission': 'Autorisations requises accordées',
+                'app-cta-title': 'Prêt à Commencer?',
+                'app-cta-desc': 'Rejoignez des milliers d\'utilisateurs profitant de Tribly',
+                'app-download-now': 'Télécharger Maintenant',
+                'app-learn-more': 'En Savoir Plus',
+                'app-coming-soon': 'Très Bientôt',
+                'app-available-now': 'Disponible Maintenant',
+                'app-q1-2026': 'Disponible en Q1 2026',
+                'app-web-available': 'Disponible Instantanément',
+                'app-web-ready': 'Prêt à Commencer Maintenant?',
+                'app-web-ready-desc': 'Utilisez Tribly directement depuis votre navigateur sans attendre',
+                'app-start-now': 'Commencer Maintenant',
+                'app-join-waitlist': 'Rejoindre la Liste d\'Attente',
+                'app-waitlist-title': 'Attendez le Lancement de l\'Application',
+                'app-waitlist-desc': 'Soyez parmi les premiers à essayer Tribly sur votre téléphone',
+                'app-notify-me': 'Me Notifier au Lancement',
+                'app-waitlist-info': 'Nous vous notifierons immédiatement lors du lancement de l\'application',
+                'email-placeholder': 'Votre adresse e-mail...',
+            }
+        };
+
+        // Merge app translations with existing translations
+        if (typeof translations !== 'undefined') {
+            translations.ar = { ...translations.ar, ...appTranslations.ar };
+            translations.en = { ...translations.en, ...appTranslations.en };
+            translations.fr = { ...translations.fr, ...appTranslations.fr };
+        }
+
+        // Waitlist Handler
+        function handleWaitlist(event) {
+            event.preventDefault();
+            const email = document.getElementById('waitlist-email').value;
+            if (email) {
+                // In a real app, this would send to a backend
+                const waitlist = JSON.parse(localStorage.getItem('tribly_waitlist') || '[]');
+                if (!waitlist.includes(email)) {
+                    waitlist.push(email);
+                    localStorage.setItem('tribly_waitlist', JSON.stringify(waitlist));
+                    
+                    // Show success message
+                    const btn = event.target.querySelector('button[type="submit"]');
+                    const originalText = btn.innerHTML;
+                    btn.innerHTML = '<i class="fas fa-check-circle"></i><span>تم الإضافة بنجاح</span>';
+                    btn.style.background = '#27ae60';
+                    
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                        btn.style.background = '';
+                        document.getElementById('waitlist-email').value = '';
+                    }, 3000);
+                } else {
+                    alert('هذا البريد مسجل بالفعل في قائمة الانتظار');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
