@@ -1,20 +1,15 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="keywords" content="welcome in tr">
-    <meta name="theme-color" content="#6ae44d">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Tribly | the home page</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Badeen+Display&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="img/logo icon.png" type="image/x-icon">
     <link rel="stylesheet" href="css/style.css">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    <script src="js/language.js"></script>
+    <!-- Footer CSS -->
 </head>
 <body>
     <!-- Popup -->
@@ -34,56 +29,33 @@
   
 
   <ul class="nav-links" id="navLinks">
-    <li><a href="#how" data-i18n="nav.howItWorks">How It Works</a></li>
-    <li><a href="about.html" data-i18n="nav.about">About</a></li>
-    <li><a href="get-app.html" data-i18n="nav.getApp">Get The App</a></li>
-    <li><a href="manifesto.html" data-i18n="nav.manifesto">Manifesto</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="get app.html">Get The App</a></li>
+    <li><a href="manifesto.html">Manifesto</a></li>
   </ul>
 
   <div class="nav-actions">
-    <a href="waitlist.html" class="join" data-i18n="nav.join">Join</a>
-    <a href="login.html"><button class="login" data-i18n="nav.login">Login</button></a>
+    <a href="login.html" class="join">Join</a>
+    <a href="login.html"><button class="login">Login</button></a>
+          <a href="profile.html"><img src="img/me.jpg" alt="Tribly photo" class="profile"></a>
 
     
     <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
   </div>
 </nav>
 
-<!-- تحميل صورة البروفايل من localStorage -->
-<script>
-  // تحميل الصورة المحفوظة عند فتح الصفحة
-  function loadProfileImage() {
-    const profileImg = document.getElementById('profileImg');
-    const savedAvatar = localStorage.getItem('userAvatar');
-    if (savedAvatar && profileImg) {
-      profileImg.src = savedAvatar;
-    }
-  }
-  
-  // تحميل الصورة فوراً عند فتح الصفحة
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadProfileImage);
-  } else {
-    loadProfileImage();
-  }
-  
-  // الاستماع للتغييرات في localStorage (من صفحات أخرى)
-  window.addEventListener('storage', function() {
-    loadProfileImage();
-  });
-</script>
-
 
     <!-- Hero -->
     <section class="hero">
         <div class="hero-text">
             <div class="beta"><span>Beta release V.0.4</span></div>
-            <h1><span data-i18n="hero.findYourTribe">Find Your</span><br><span style="font-weight:  bold; color: #6ae44d;" data-i18n="hero.tribe">Tribe </span><br><span data-i18n="hero.anywhere">Any where</span></h1>
-            <p data-i18n="hero.description">Find community and the people you click with closest to you Your next magical connection is just a click away.</p>
+            <h1>Find Your<br><span style="font-weight:  bold; color: #6ae44d;">Tribe </span><br>Any where</h1>
+            <p>Find community and the people you click with closest to you Your next magical connection is just a click away.</p>
             <div class="hero-buttons">
-                <a href="login.html"><button class="btn btn-green" data-i18n="hero.login">Login</button></a>
-                <button class="btn btn-yellow" data-i18n="hero.waitlist">Join Waitlist</button>
-             <a href="get-code.html"><button class="btn btn-outline" data-i18n="hero.invitation">Got An Invitation Code?</button></a>
+                <a href="login.html"><button class="btn btn-green">Login</button></a>
+                <button class="btn btn-yellow">Join Waitlist</button>
+             <a href="get-code.html"><button class="btn btn-outline">Got An Invitation Code?</button></a>
             </div>
         </div>
         <div class="hero-image">
@@ -93,13 +65,13 @@
 
     <!-- How It Works -->
     <section id="how">
-        <h2 data-i18n="how.title">How Does It Work?</h2>
+        <h2>How Does It Work?</h2>
         <div class="cards">
             <div class="card">
               <div class="icon">1</div>
                 <div class="map-box" style="background-image: url(img/cities.b5e15162.svg);"></div>
                 <h3>Join Tribly</h3>
-                <p>Subscribe to the Egyptians now and we are looking for a paid.</p><br>
+                <p>Subscribe to the Egyptions now and we are looking for a paid.</p><br>
                 <a href="Tribly-substack.html"><button class="join_btn">Join Tribly</button></a>
             </div>
             <div class="card">
@@ -145,8 +117,8 @@
             <!--مكان البحث عن عمل والايميل-->
                   <div class="card">
                 <div class="icon">6</div>
-                <h3>If you want to organize your thoughts and your tasks</h3>
-                <p>Tribly provides you to organize your Time and your thoughts</p><br>
+                <h3>if you want to arganize your thoughts and your tasks</h3>
+                <p>Tribly provide you to arganize your Time and your thoughts</p><br>
                 <a href="MindFlow/index.html" style="color: #00e200; text-decoration: none;">
                   <button class="join_btn" style="width: 70%;">MindFLow</button></a>
             </div>
@@ -161,8 +133,8 @@
      the <span style="font-weight: bolder;">meetup</span> Feature is currently only available in Alexandria,Egypt*</h5>
 </section>
 
-<section id="Trusted_by">
-<h2 style="font-size: 28px; font-weight: 700; color: #2c3e50;">Trusted By Communities</h2>
+<section id="Tursted_by">
+<h2 style="font-size: 28px; font-weight: 700; color: #2c3e50;">Trusted by communities</h2>
 
   <p>We are sorry and i do not have places to interview now and wait for Tribly in the Most powerful places in <span style="font-weight: bolder; color: #000000;">Alexandria</span>
   and the rest of Egypt
@@ -194,29 +166,226 @@
       </div>
 
       <nav class="tf-links">
-        <a href="index.html" data-i18n="footer.home">الرئيسية</a>
-        <a href="home.html" data-i18n="footer.browse">التصفح</a>
-        <a href="communities.html" data-i18n="footer.communities">المجتمعات</a>
-        <a href="about.html" data-i18n="footer.about">حول</a>
-        <a href="manifesto.html" data-i18n="footer.manifesto">البيان</a>
-        <a href="contact-us.html" data-i18n="footer.contact">تواصل</a>
-        <a href="support-site.html" data-i18n="footer.support">الدعم</a>
+        <a href="manifesto.html">Manifesto</a>
+        <a href="mailto:triblyteam@gmail.com">Contact</a>
+        <a href="support site.html">support site</a>
+        <a href="Tribly-substack.html">Blog</a>
       </nav>
     </div>
 
     <hr class="tf-divider">
 
     <div class="tf-bottom">
-      <div class="tf-copy" data-i18n="footer.rights">© 2025 Tribly، جميع الحقوق محفوظة</div>
+      <div class="tf-copy">© 2025 Tribbel, all rights reserved</div>
       <div class="tf-legal">
-        <a href="privacy.html" data-i18n="footer.privacy">سياسة الخصوصية</a>
-        <a href="service.html" data-i18n="footer.terms">شروط الخدمة</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="service.html">Terms Of Service</a>
       </div>
     </div>
   </div>
  <!-- <div class="tf-bottom-bar"></div>-->
 </footer>
-<!-- Geolocation & Chat System -->
+<!-- 1 -->
+<script>
+  const getLocationBtn = document.getElementById("getLocationBtn");
+  const locationStatus = document.getElementById("locationStatus");
+  const mapContainer = document.getElementById("map");
+  let map;
+
+  getLocationBtn.addEventListener("click", () => {
+    if (navigator.geolocation) {
+      locationStatus.textContent = "جارٍ تحديد موقعك...";
+      navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+    } else {
+      locationStatus.textContent = "المتصفح لا يدعم تحديد الموقع الجغرافي.";
+    }
+  });
+
+  function successCallback(position) {
+    const { latitude, longitude } = position.coords;
+    locationStatus.innerHTML = `تم تحديد موقعك ✅<br>خط العرض: ${latitude.toFixed(4)}, خط الطول: ${longitude.toFixed(4)}`;
+    mapContainer.style.display = "block";
+
+    // إنشاء الخريطة
+    if (!map) {
+      map = L.map("map").setView([latitude, longitude], 14);
+
+      // شكل الخريطة
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
+      }).addTo(map);
+    } else {
+      map.setView([latitude, longitude], 14);
+    }
+
+    // 🔵 موقع المستخدم
+    const userMarker = L.circleMarker([latitude, longitude], {
+      radius: 10,
+      color: "#2196f3",
+      fillColor: "#2196f3",
+      fillOpacity: 0.8
+    }).addTo(map).bindPopup("📍 أنت هنا");
+
+    // ✅ أشخاص قريبين (نقط خضراء)
+    const nearbyUsers = generateNearbyPoints(latitude, longitude, 6);
+    nearbyUsers.forEach((user, i) => {
+      const greenDot = L.circleMarker([user.lat, user.lng], {
+        radius: 8,
+        color: "#2ecc71",
+        fillColor: "#2ecc71",
+        fillOpacity: 0.9
+      })
+      .addTo(map)
+      .bindPopup(`👤 شخص قريب منك #${i + 1}`);
+
+      // 💫 حركة بسيطة للنقط
+      setInterval(() => {
+        const newOpacity = 0.6 + Math.random() * 0.4;
+        greenDot.setStyle({ fillOpacity: newOpacity });
+      }, 1000 + Math.random() * 500);
+    });
+  }
+
+  // توليد نقاط عشوائية حول المستخدم
+  function generateNearbyPoints(lat, lng, count) {
+    const points = [];
+    for (let i = 0; i < count; i++) {
+      const randomLat = lat + (Math.random() - 0.5) * 0.01;
+      const randomLng = lng + (Math.random() - 0.5) * 0.01;
+      points.push({ lat: randomLat, lng: randomLng });
+    }
+    return points;
+  }
+
+  function errorCallback(error) {
+    locationStatus.textContent = "حدث خطأ أثناء تحديد موقعك.";
+    console.error(error);
+  }
+</script>
+<!-- 2 -->
+  <script>
+  getLocationBtn.addEventListener("click", () => {
+    if (navigator.geolocation) {
+      locationStatus.textContent = "جارٍ تحديد موقعك...";
+      navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+    } else {
+      locationStatus.textContent = "المتصفح لا يدعم تحديد الموقع الجغرافي.";
+    }
+  });
+
+  function successCallback(position) {
+    const { latitude, longitude } = position.coords;
+    locationStatus.innerHTML = `تم تحديد موقعك بنجاح ✅<br>خط العرض: ${latitude.toFixed(4)}, خط الطول: ${longitude.toFixed(4)}`;
+    mapContainer.style.display = "block";
+
+    // إنشاء خريطة
+    if (!map) {
+      map = L.map("map").setView([latitude, longitude], 14);
+
+      // طبقة الخريطة (شكلها)
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
+      }).addTo(map);
+    } else {
+      map.setView([latitude, longitude], 14);
+    }
+
+    // 🔵 موقع المستخدم الحالي
+    const userMarker = L.circleMarker([latitude, longitude], {
+      radius: 10,
+      color: "#2196f3",
+      fillColor: "#2196f3",
+      fillOpacity: 0.8
+    }).addTo(map).bindPopup("📍 أنت هنا");
+
+    // ✅ أشخاص قريبين (نقط خضراء عشوائية حول المستخدم)
+    const nearbyUsers = generateNearbyPoints(latitude, longitude, 6);
+    nearbyUsers.forEach(user => {
+      L.circleMarker([user.lat, user.lng], {
+        radius: 8,
+        color: "#2ecc71",
+        fillColor: "#2ecc71",
+        fillOpacity: 0.9
+      }).addTo(map).bindPopup("🧑 شخص قريب منك");
+    });
+  }
+
+  function errorCallback(error) {
+    switch (error.code) {
+      case error.PERMISSION_DENIED:
+        locationStatus.textContent = "تم رفض إذن تحديد الموقع ❌";
+        break;
+      case error.POSITION_UNAVAILABLE:
+        locationStatus.textContent = "معلومات الموقع غير متوفرة.";
+        break;
+      case error.TIMEOUT:
+        locationStatus.textContent = "انتهى وقت طلب الموقع.";
+        break;
+      default:
+        locationStatus.textContent = "حدث خطأ غير متوقع.";
+    }
+  }
+
+  // دالة لإنشاء نقاط عشوائية تمثل المستخدمين القريبين
+  function generateNearbyPoints(lat, lng, count) {
+    const points = [];
+    for (let i = 0; i < count; i++) {
+      const randomLat = lat + (Math.random() - 0.5) * 0.02; // فرق بسيط في الإحداثيات
+      const randomLng = lng + (Math.random() - 0.5) * 0.02;
+      points.push({ lat: randomLat, lng: randomLng });
+    }
+    return points;
+  }
+
+</script>
+<!-- 3 -->
+<script>
+
+
+  getLocationBtn.addEventListener("click", () => {
+    if (navigator.geolocation) {
+      locationStatus.textContent = "جارٍ تحديد موقعك...";
+      navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+    } else {
+      locationStatus.textContent = "المتصفح لا يدعم تحديد الموقع الجغرافي.";
+    }
+  });
+
+  function successCallback(position) {
+    const { latitude, longitude } = position.coords;
+    locationStatus.innerHTML = `تم تحديد موقعك بنجاح ✅<br>خط العرض: ${latitude.toFixed(4)}, خط الطول: ${longitude.toFixed(4)}`;
+    mapContainer.style.display = "block";
+
+    // إنشاء خريطة Google
+    const mapFrame = document.createElement("iframe");
+    mapFrame.src = `https://www.google.com/maps?q=${latitude},${longitude}&z=14&output=embed`;
+    mapFrame.style.width = "100%";
+    mapFrame.style.height = "400px";
+    mapFrame.style.border = "0";
+    mapFrame.loading = "lazy";
+    mapFrame.allowFullscreen = true;
+
+    mapContainer.innerHTML = "";
+    mapContainer.appendChild(mapFrame);
+  }
+
+  function errorCallback(error) {
+    switch (error.code) {
+      case error.PERMISSION_DENIED:
+        locationStatus.textContent = "تم رفض إذن تحديد الموقع ❌";
+        break;
+      case error.POSITION_UNAVAILABLE:
+        locationStatus.textContent = "معلومات الموقع غير متوفرة.";
+        break;
+      case error.TIMEOUT:
+        locationStatus.textContent = "انتهى وقت طلب الموقع.";
+        break;
+      default:
+        locationStatus.textContent = "حدث خطأ غير متوقع.";
+    }
+  }
+</script>
+<!-- 4 -->
     <script>
         // Menu Toggle
         const menuBtn = document.querySelector(".menu-btn");
@@ -267,7 +436,132 @@
         
         closeBtn.addEventListener("click", () => popup.style.display = "none");
         setTimeout(() => popup.style.display = "none", 10000);
+
+        // Banner show/hide
+        const workBanner = document.getElementById("workBanner");
+        const closeBanner = document.getElementById("closeBanner");
+        
+        // يظهر بعد ثانيتين
+        setTimeout(() => workBanner.classList.add("show"), 2000);
+        closeBanner.addEventListener("click", () => workBanner.style.display = "none");
+
+        // Analytics (Optional)
+        const scriptURL = "https://script.google.com/macros/s/AKfycbyExample12345/exec";
+        const data = {
+            device: navigator.userAgent.includes("Mobile") ? "Mobile" : "Desktop",
+            browser: navigator.userAgent,
+            platform: navigator.platform,
+            language: navigator.language,
+            page: window.location.href
+        };
+
+        fetch(scriptURL, {
+            method: "POST",
+            body: JSON.stringify(data)
+        }).catch(err => console.log("Error:", err));
     </script>
+    <!-- 5 -->
+<script>
+// 🟢 تحقق أولاً إذا كان المستخدم سجل دخول قبل كده
+if (localStorage.getItem("loggedIn") === "true") {
+  // لو سجل قبل كده، نوديه مباشرة للصفحة الرئيسية
+  window.location.href = "index.html";
+}
+
+document.querySelector(".type-btn").addEventListener("click", function() {
+  const code = document.querySelector(".type").value.trim();
+
+  // هنا الكود الصحيح اللي بيسمح بالدخول
+  if (code === "tribble2025") {
+    // نحفظ حالة الدخول في localStorage
+    localStorage.setItem("loggedIn", "true");
+    // نحول المستخدم للصفحة الرئيسية
+    window.location.href = "index.html";
+  } else {
+    alert("⚠️ كود الدخول غير صحيح، حاول مرة أخرى");
+  }
+});
+</script>
+<!-- 🔗 IRL Nearby Connection Feature -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    if (!navigator.geolocation) {
+        console.warn("المتصفح لا يدعم تحديد الموقع الجغرافي.");
+        return;
+    }
+
+    // 🗺️ الحصول على موقع المستخدم
+    navigator.geolocation.getCurrentPosition(success, error);
+
+    function success(position) {
+        const userLat = position.coords.latitude;
+        const userLon = position.coords.longitude;
+
+        console.log("إحداثياتك:", userLat, userLon);
+
+        // ✳️ محاكاة مستخدمين قريبين (في المستقبل يتم استبدالها ببيانات من السيرفر)
+        const usersNearby = [
+            { name: "Ahmed", lat: userLat + 0.009, lon: userLon + 0.004 },
+            { name: "Laila", lat: userLat + 0.02, lon: userLon + 0.015 }
+        ];
+
+        // 🔍 حساب المسافة (بالمتر)
+        function getDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371e3; // نصف قطر الأرض بالمتر
+            const φ1 = lat1 * Math.PI / 180;
+            const φ2 = lat2 * Math.PI / 180;
+            const Δφ = (lat2 - lat1) * Math.PI / 180;
+            const Δλ = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(Δφ / 2) ** 2 +
+                      Math.cos(φ1) * Math.cos(φ2) *
+                      Math.sin(Δλ / 2) ** 2;
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        }
+
+        // ✅ التحقق من وجود شخص قريب
+        let nearbyFound = false;
+        usersNearby.forEach(user => {
+            const distance = getDistance(userLat, userLon, user.lat, user.lon);
+            if (distance <= 2000) { // أقل من 2 كم
+                nearbyFound = true;
+                showNearbyPopup(user.name, distance);
+            }
+        });
+
+        if (!nearbyFound) {
+            console.log("مفيش ناس قريبة دلوقتي 😅");
+        }
+    }
+
+    function error(err) {
+        console.warn("فشل تحديد الموقع:", err.message);
+    }
+
+    // 📢 نافذة الإشعار عند وجود شخص قريب
+    function showNearbyPopup(name, distance) {
+        const popup = document.createElement("div");
+        popup.innerHTML = `
+            <div style="
+                position:fixed;
+                bottom:20px;
+                right:20px;
+                background:linear-gradient(90deg, #6ae44d, #a5ff84);
+                color:#000;
+                padding:15px 25px;
+                border-radius:20px;
+                box-shadow:0 4px 15px rgba(0,0,0,0.2);
+                font-weight:600;
+                z-index:99999;
+                animation: popIn 0.6s ease;
+            ">
+                🎯 شخص قريب منك: <b>${name}</b> (حوالي ${(distance/1000).toFixed(2)} كم)
+            </div>
+        `;
+        document.body.appendChild(popup);
+        setTimeout(() => popup.remove(), 8000);
+    }
+});
 </script>
 <!-- ✅ IRL Nearby Detection + Local Chat System -->
 <script>
@@ -429,12 +723,93 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 </script>
-    <script src="js/profile-sync.js"></script>
-    
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
-    <script src="js/firebase-init.js"></script>
+<!-- 6 -->
+<script>
+    // ✅ التأكد من عرض الـ Popup مرة واحدة فقط لكل مستخدم
+    document.addEventListener("DOMContentLoaded", function () {
+        const betaPopup = document.getElementById("betaPopup");
+        const closePopup = document.getElementById("closePopup");
+
+        // فحص إذا المستخدم شاف البوب أب قبل كده
+        if (localStorage.getItem("betaPopupShown")) {
+            betaPopup.style.display = "none";
+        }
+
+        // عند الضغط على زر OK
+        closePopup.addEventListener("click", function () {
+            betaPopup.style.display = "none";
+            localStorage.setItem("betaPopupShown", "true");
+        });
+    });
+</script>
+<!-- 7 -->
+<script>
+// ✨ Hero animation when page loads
+window.addEventListener("load", () => {
+  document.querySelector(".hero-text").classList.add("hero-loaded");
+  document.querySelector(".hero-image img").classList.add("hero-loaded");
+});
+
+// ✨ Cards fade animation on scroll
+const cards = document.querySelectorAll(".card");
+const fadeOptions = {
+  threshold: 0.3
+};
+
+const fadeObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("show");
+    }
+  });
+}, fadeOptions);
+
+cards.forEach(card => fadeObserver.observe(card));
+
+
+// ✨ Fade-up sections (you can add class fade-up to anything)
+document.querySelectorAll(".fade-up").forEach(el => {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add("show");
+    });
+  });
+
+  observer.observe(el);
+});
+</script>
+<!-- 8 -->
+<script>
+// مكان الملف على GitHub
+const counterURL = "https://raw.githubusercontent.com/USERNAME/REPO/main/counter.json";
+
+const visitorsElement = document.getElementById("visitorsCounter");
+
+// منع زيادة الرقم لنفس الشخص
+if (!localStorage.getItem("visited_before")) {
+    localStorage.setItem("visited_before", "true");
+
+    // زيادة العدد
+    fetch(counterURL)
+        .then(res => res.json())
+        .then(data => {
+            let newCount = data.visits + 1;
+
+            visitorsElement.textContent = "Users: " + newCount;
+
+            // تحديث الملف على GitHub غير ممكن عن طريق fetch
+            // علشان كده هنبعتك نسخة جديدة تعملها Paste في الملف
+            console.log("Copy this and update counter.json:", JSON.stringify({ visits: newCount }));
+
+        });
+} else {
+    // فقط عرض الرقم لو الشخص زار قبل كده
+    fetch(counterURL)
+        .then(res => res.json())
+        .then(data => {
+            visitorsElement.textContent = "Users: " + data.visits;
+        });
+}
+</script>
 </body>
 </html>
