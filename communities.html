@@ -8,7 +8,58 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>المجتمعات - Tribly</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <script src="js/language.js"></script>
+  
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+    import { getDatabase, ref, set, get, push, onValue, update, remove, onChildAdded } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+
+    // Firebase configuration - اضبط بياناتك هنا
+    const firebaseConfig = {
+      apiKey: "AIzaSyCR4VvolsS8f3gGVnD-C77tQSZFBir_5ks",
+      authDomain: "tribly-80946.firebaseapp.com",
+      databaseURL: "https://tribly-80946-default-rtdb.firebaseio.com",
+      projectId: "tribly-80946",
+      storageBucket: "tribly-80946.firebasestorage.app",
+      messagingSenderId: "126255005792",
+      appId: "1:126255005792:web:5030587c2dcec668458305"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const auth = getAuth(app);
+    
+    // جعل Firebase متاحاً بشكل عام
+    window.firebase = {
+      app,
+      database,
+      auth,
+      db: {
+        ref, set, get, push, onValue, update, remove, onChildAdded
+      },
+      authFunctions: {
+        GoogleAuthProvider,
+        signInWithPopup,
+        signInWithEmailAndPassword,
+        createUserWithEmailAndPassword,
+        signOut,
+        onAuthStateChanged,
+        updateProfile
+      }
+    };
+    
+    console.log("✅ Firebase initialized successfully!");
+    
+    // بدء التطبيق بعد تحميل الصفحة
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof window.initApp === 'function') {
+        window.initApp();
+      }
+    });
+  </script>
+
   <style>
     * {
       margin: 0;
@@ -66,12 +117,40 @@
       gap: 1rem;
     }
 
-    .profile {
+    .user-section {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .user-avatar {
       width: 40px;
       height: 40px;
       border-radius: 50%;
+      background: linear-gradient(135deg, #6ae44d, #a5ff84);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
       cursor: pointer;
-      border: 2px solid #6ae44d;
+      border: 2px solid white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .auth-btn {
+      padding: 8px 16px;
+      background: #6ae44d;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.3s;
+    }
+
+    .auth-btn:hover {
+      background: #5ac93d;
     }
 
     /* Main Container */
@@ -307,6 +386,7 @@
       z-index: 2000;
       align-items: center;
       justify-content: center;
+      padding: 1rem;
     }
 
     .modal.active {
@@ -318,9 +398,21 @@
       border-radius: 15px;
       padding: 2rem;
       max-width: 500px;
-      width: 90%;
+      width: 100%;
       max-height: 90vh;
       overflow-y: auto;
+      animation: modalSlide 0.3s ease;
+    }
+
+    @keyframes modalSlide {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .modal-header {
@@ -343,6 +435,16 @@
       font-size: 1.5rem;
       cursor: pointer;
       color: #999;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
+    .close-btn:hover {
+      background: #f5f5f5;
     }
 
     .form-group {
@@ -357,7 +459,8 @@
     }
 
     .form-group input,
-    .form-group textarea {
+    .form-group textarea,
+    .form-group select {
       width: 100%;
       padding: 0.75rem;
       border: 2px solid #ddd;
@@ -368,7 +471,8 @@
     }
 
     .form-group input:focus,
-    .form-group textarea:focus {
+    .form-group textarea:focus,
+    .form-group select:focus {
       outline: none;
       border-color: #6ae44d;
     }
@@ -378,18 +482,16 @@
       min-height: 100px;
     }
 
-    /* Community Detail View */
-    .community-detail {
-      background: white;
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    /* Chat Modal */
+    .chat-modal .modal-content {
+      max-width: 800px;
     }
 
     .detail-header {
       background: linear-gradient(135deg, #6ae44d, #a5ff84);
       padding: 2rem;
       color: white;
+      border-radius: 15px 15px 0 0;
     }
 
     .detail-header.private {
@@ -427,12 +529,14 @@
       width: 60px;
       height: 60px;
       border-radius: 50%;
-      background: #ddd;
+      background: linear-gradient(135deg, #6ae44d, #a5ff84);
+      color: white;
       margin: 0 auto 0.5rem;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 1.5rem;
+      font-weight: bold;
     }
 
     .member-name {
@@ -447,12 +551,21 @@
       margin-top: 0.25rem;
     }
 
-    /* Messages/Posts Section */
+    /* Chat Section */
     .chat-section {
       background: #f9f9f9;
       border-radius: 15px;
       padding: 1.5rem;
       margin-top: 2rem;
+    }
+
+    .chat-container {
+      max-height: 400px;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background: white;
+      border-radius: 10px;
     }
 
     .message {
@@ -461,12 +574,23 @@
       border-radius: 10px;
       margin-bottom: 1rem;
       border-left: 4px solid #6ae44d;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .message.system {
+      border-left-color: #999;
+      background: #f8f9fa;
+    }
+
+    .message-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
     }
 
     .message-author {
       font-weight: 600;
       color: #333;
-      margin-bottom: 0.25rem;
     }
 
     .message-time {
@@ -475,7 +599,6 @@
     }
 
     .message-content {
-      margin-top: 0.5rem;
       color: #666;
       line-height: 1.5;
     }
@@ -509,23 +632,125 @@
       background: #5ac93d;
     }
 
-    .permission-badge {
-      display: inline-block;
-      padding: 0.25rem 0.75rem;
+    /* Share Section */
+    .share-section {
+      background: linear-gradient(135deg, rgba(106, 228, 77, 0.1), rgba(165, 255, 132, 0.1));
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      border: 2px dashed #6ae44d;
+    }
+
+    .share-box {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .share-box input {
+      flex: 1;
+      padding: 0.75rem;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      background: white;
+    }
+
+    .copy-btn {
+      padding: 0.75rem 1.5rem;
+      background: #6ae44d;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    .copy-btn:hover {
+      background: #5ac93d;
+    }
+
+    .copy-btn.copied {
+      background: #27ae60;
+    }
+
+    /* Auth Modal */
+    .auth-modal .modal-content {
+      max-width: 400px;
+    }
+
+    .auth-options {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .auth-option {
+      padding: 1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .auth-option:hover {
+      border-color: #6ae44d;
+      background: #f9fff9;
+      transform: translateY(-2px);
+    }
+
+    .auth-icon {
+      font-size: 1.5rem;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       background: #f0f0f0;
-      border-radius: 5px;
-      font-size: 0.75rem;
-      margin-left: 0.5rem;
+      border-radius: 8px;
     }
 
-    .permission-badge.moderator {
-      background: #ffe0e0;
-      color: #e74c3c;
+    .auth-text {
+      flex: 1;
     }
 
-    .permission-badge.member {
-      background: #e0f0ff;
-      color: #3498db;
+    .auth-title {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.25rem;
+    }
+
+    .auth-desc {
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 3rem;
+      color: #666;
+    }
+
+    .loading-spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #6ae44d;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     /* Responsive */
@@ -565,6 +790,11 @@
       .members-list {
         grid-template-columns: repeat(2, 1fr);
       }
+
+      .chat-modal .modal-content {
+        margin: 1rem;
+        max-height: 80vh;
+      }
     }
 
     @media (max-width: 480px) {
@@ -592,19 +822,44 @@
   <nav>
     <a href="index.html" class="logo">Tribly</a>
     <ul class="nav-links">
-      <li><a href="home.html" data-i18n="nav.howItWorks">التصفح</a></li>
-      <li><a href="communities.html" data-i18n="nav.about">المجتمعات</a></li>
-      <li><a href="faq.html" data-i18n="nav.about">الأسئلة</a></li>
-      <li><a href="support.html" data-i18n="nav.about">الدعم</a></li>
-      <li><a href="about.html" data-i18n="nav.about">حول</a></li>
+      <li><a href="home.html">التصفح</a></li>
+      <li><a href="communities.html" style="color: #6ae44d;">المجتمعات</a></li>
+      <li><a href="faq.html">الأسئلة</a></li>
+      <li><a href="support.html">الدعم</a></li>
+      <li><a href="about.html">حول</a></li>
     </ul>
     <div class="nav-actions">
-      <a href="profile.html"><img id="profileImg" src="img/me.jpg" alt="صورة المستخدم" class="profile"></a>
+      <div class="user-section">
+        <div class="user-avatar" id="userAvatar" onclick="toggleUserMenu()">?</div>
+        <button class="auth-btn" id="authBtn" onclick="showAuthModal()">تسجيل الدخول</button>
+      </div>
       <button class="menu-btn" id="menuBtn" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">
         <i class="fas fa-bars"></i>
       </button>
     </div>
   </nav>
+
+  <!-- Auth Modal -->
+  <div class="modal" id="authModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>مرحباً بك في Tribly</h2>
+        <button class="close-btn" onclick="hideAuthModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom: 1.5rem; color: #666; text-align: center;">سجل الدخول للانضمام للمجتمعات والتحدث مع أصدقائك</p>
+        <div class="auth-options">
+          <div class="auth-option" onclick="signInWithGoogle()">
+            <div class="auth-icon">👤</div>
+            <div class="auth-text">
+              <div class="auth-title">تسجيل سريع</div>
+              <div class="auth-desc">اختر اسم وابدأ مباشرة</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Main Content -->
   <div class="container">
@@ -626,26 +881,16 @@
       <div class="search-box">
         <input type="text" id="searchInput" placeholder="ابحث عن مجتمع..." oninput="searchCommunities(); return false;">
       </div>
-      <button class="btn btn-primary" onclick="openCreateModal(); return false;" style="width: auto;">
+      <button class="btn btn-primary" onclick="showCreateModal(); return false;" style="width: auto;">
         <i class="fas fa-plus"></i> إنشاء مجتمع
       </button>
     </div>
 
     <!-- Communities Grid -->
     <div class="communities-grid" id="communitiesGrid">
-      <!-- سيتم ملأها بواسطة JavaScript -->
-    </div>
-  </div>
-
-  <!-- Community Detail Modal -->
-  <div class="modal" id="detailModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 id="detailTitle">اسم المجتمع</h2>
-        <button class="close-btn" onclick="closeDetail()">&times;</button>
-      </div>
-      <div class="community-detail" id="detailContent">
-        <!-- سيتم ملأها بواسطة JavaScript -->
+      <div class="loading">
+        <div class="loading-spinner"></div>
+        <p>جاري تحميل المجتمعات...</p>
       </div>
     </div>
   </div>
@@ -655,7 +900,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h2 id="modalTitle">إنشاء مجتمع جديد</h2>
-        <button class="close-btn" onclick="closeCreateModal()">&times;</button>
+        <button class="close-btn" onclick="hideCreateModal()">×</button>
       </div>
       <form id="communityForm">
         <div class="form-group">
@@ -670,7 +915,7 @@
 
         <div class="form-group">
           <label>النوع *</label>
-          <select id="communityType" style="width: 100%; padding: 0.75rem; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem;">
+          <select id="communityType" style="width: 100%; padding: 0.75rem; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem;" onchange="togglePasswordField()">
             <option value="public">عام (مفتوح للجميع)</option>
             <option value="private">خاص (يتطلب كلمة سر)</option>
           </select>
@@ -686,13 +931,6 @@
           <input type="text" id="communityIcon" placeholder="مثال: 🎮 🎵 ⚽" value="👥">
         </div>
 
-        <div class="form-group">
-          <label>
-            <input type="checkbox" id="allowMemberMessaging">
-            السماح للأعضاء بالتحدث (يمكن للمشرفين تغييرها لاحقاً)
-          </label>
-        </div>
-
         <button type="submit" class="btn btn-primary" style="width: 100%;">
           إنشاء المجتمع
         </button>
@@ -700,12 +938,25 @@
     </div>
   </div>
 
+  <!-- Community Detail/Chat Modal -->
+  <div class="modal chat-modal" id="chatModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="chatTitle">اسم المجتمع</h2>
+        <button class="close-btn" onclick="hideChatModal()">×</button>
+      </div>
+      <div class="community-detail" id="chatContent">
+        <!-- سيتم ملأها بواسطة JavaScript -->
+      </div>
+    </div>
+  </div>
+
   <!-- Join Private Community Modal -->
-  <div class="modal" id="joinPrivateModal">
+  <div class="modal" id="joinModal">
     <div class="modal-content">
       <div class="modal-header">
         <h2>الانضمام إلى مجتمع خاص</h2>
-        <button class="close-btn" onclick="closeJoinModal()">&times;</button>
+        <button class="close-btn" onclick="hideJoinModal()">×</button>
       </div>
       <form id="joinForm">
         <div class="form-group">
@@ -718,359 +969,6 @@
       </form>
     </div>
   </div>
-
-  <script>
-    // بيانات المجتمعات
-    let communities = [
-      {
-        id: 1,
-        name: 'عشاق الألعاب',
-        icon: '🎮',
-        desc: 'مجتمع لمحبي الألعاب الإلكترونية والألعاب التقليدية',
-        type: 'public',
-        members: 1250,
-        posts: 450,
-        moderators: ['أحمد', 'فاطمة'],
-        allowMemberMessaging: true,
-        messages: [
-          { author: 'أحمد', text: 'هل أحد يلعب لعبة جديدة؟', time: 'قبل ساعة' },
-          { author: 'محمد', text: 'نعم! أنا بلعب اللعبة الجديدة', time: 'قبل 30 دقيقة' }
-        ]
-      },
-      {
-        id: 2,
-        name: 'موسيقى وفن',
-        icon: '🎵',
-        desc: 'مجتمع للفنانين وعشاق الموسيقى',
-        type: 'public',
-        members: 890,
-        posts: 320,
-        moderators: ['سارة', 'علي'],
-        allowMemberMessaging: true,
-        messages: []
-      },
-      {
-        id: 3,
-        name: 'البرمجة والتقنية',
-        icon: '💻',
-        desc: 'مجتمع خاص للمبرمجين والمهتمين بالتقنية',
-        type: 'private',
-        password: '1234',
-        members: 450,
-        posts: 620,
-        moderators: ['سامي'],
-        allowMemberMessaging: false,
-        messages: [
-          { author: 'سامي (مشرف)', text: 'ترحيب بجميع الأعضاء الجدد', time: 'قبل يومين' }
-        ]
-      },
-      {
-        id: 4,
-        name: 'السفر والمغامرات',
-        icon: '✈️',
-        desc: 'شارك تجاربك في السفر والمغامرات',
-        type: 'public',
-        members: 2100,
-        posts: 980,
-        moderators: ['ليلى', 'محمود'],
-        allowMemberMessaging: true,
-        messages: []
-      },
-      {
-        id: 5,
-        name: 'الطبخ والطعام',
-        icon: '🍳',
-        desc: 'مشاركة الوصفات والنقاشات عن الطعام',
-        type: 'public',
-        members: 1800,
-        posts: 1250,
-        moderators: ['هديل'],
-        allowMemberMessaging: true,
-        messages: []
-      },
-      {
-        id: 6,
-        name: 'النجاح والتطور الشخصي',
-        icon: '📚',
-        desc: 'مجتمع خاص لمحبي التطور والنمو الشخصي',
-        type: 'private',
-        password: 'success123',
-        members: 600,
-        posts: 400,
-        moderators: ['الدكتور أحمد'],
-        allowMemberMessaging: false,
-        messages: []
-      }
-    ];
-
-    let currentUser = {
-      name: 'أنت',
-      role: 'member',
-      joinedCommunities: [1, 2, 4, 5]
-    };
-
-    let currentFilter = 'all';
-
-    // تهيئة الصفحة
-    document.addEventListener('DOMContentLoaded', () => {
-      renderCommunities();
-      setupEventListeners();
-    });
-
-    function renderCommunities() {
-      const grid = document.getElementById('communitiesGrid');
-      grid.innerHTML = '';
-
-      let filtered = communities;
-
-      if (currentFilter === 'public') {
-        filtered = communities.filter(c => c.type === 'public');
-      } else if (currentFilter === 'private') {
-        filtered = communities.filter(c => c.type === 'private');
-      }
-
-      const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
-      if (searchTerm) {
-        filtered = filtered.filter(c =>
-          c.name.toLowerCase().includes(searchTerm) ||
-          c.desc.toLowerCase().includes(searchTerm)
-        );
-      }
-
-      filtered.forEach(community => {
-        const isJoined = currentUser.joinedCommunities.includes(community.id);
-        const card = document.createElement('div');
-        card.className = 'community-card';
-
-        const badgeClass = community.type === 'public' ? 'public' : 'private';
-        const badgeIcon = community.type === 'public' ? '🌍' : '🔒';
-        const badgeText = community.type === 'public' ? 'عام' : 'خاص';
-
-        card.innerHTML = `
-          <div class="community-header ${community.type}">
-            <div class="community-badge ${badgeClass}">
-              ${badgeIcon} ${badgeText}
-            </div>
-            <div class="community-icon">${community.icon}</div>
-          </div>
-          <div class="community-info">
-            <div class="community-name">${community.name}</div>
-            <div class="community-desc">${community.desc}</div>
-            <div class="community-stats">
-              <div class="stat">
-                <div class="stat-number">${community.members}</div>
-                <div class="stat-label">عضو</div>
-              </div>
-              <div class="stat">
-                <div class="stat-number">${community.posts}</div>
-                <div class="stat-label">منشور</div>
-              </div>
-              <div class="stat">
-                <div class="stat-number">${community.moderators.length}</div>
-                <div class="stat-label">مشرف</div>
-              </div>
-            </div>
-            <div class="community-footer">
-              <button class="btn ${isJoined ? 'btn-secondary' : 'btn-primary'}"
-                      onclick="handleCommunityAction('${community.id}', ${isJoined})">
-                <i class="fas fa-${isJoined ? 'check' : 'plus'}"></i>
-                ${isJoined ? 'عضو' : 'انضم الآن'}
-              </button>
-              <button class="btn btn-secondary" onclick="showCommunityDetail('${community.id}')">
-                <i class="fas fa-arrow-left"></i> عرض
-              </button>
-            </div>
-          </div>
-        `;
-
-        grid.appendChild(card);
-      });
-
-      if (filtered.length === 0) {
-        grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 2rem;">لم يتم العثور على مجتمعات</div>';
-      }
-    }
-
-    function filterCommunities(type) {
-      currentFilter = type;
-      document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.remove('active');
-      });
-      event.currentTarget?.classList.add('active');
-      renderCommunities();
-      return false;
-    }
-
-    function searchCommunities() {
-      renderCommunities();
-      return false;
-    }
-
-    function handleCommunityAction(communityId, isJoined) {
-      const community = communities.find(c => c.id == communityId);
-      
-      if (isJoined) {
-        currentUser.joinedCommunities = currentUser.joinedCommunities.filter(id => id != communityId);
-        renderCommunities();
-      } else {
-        if (community.type === 'private') {
-          openJoinModal(communityId);
-        } else {
-          currentUser.joinedCommunities.push(communityId);
-          renderCommunities();
-        }
-      }
-    }
-
-    function showCommunityDetail(communityId) {
-      const community = communities.find(c => c.id == communityId);
-      const modal = document.getElementById('detailModal');
-      const isJoined = currentUser.joinedCommunities.includes(parseInt(communityId));
-
-      document.getElementById('detailTitle').textContent = `${community.icon} ${community.name}`;
-
-      let membersHtml = community.moderators.map(mod => `
-        <div class="member-card">
-          <div class="member-avatar"><i class="fas fa-user-shield"></i></div>
-          <div class="member-name">${mod}</div>
-          <div class="member-role">مشرف</div>
-        </div>
-      `).join('');
-
-      let messagesHtml = community.messages.map(msg => `
-        <div class="message">
-          <div class="message-author">${msg.author}</div>
-          <div class="message-time">${msg.time}</div>
-          <div class="message-content">${msg.content || msg.text}</div>
-        </div>
-      `).join('');
-
-      const canMessage = isJoined && (community.allowMemberMessaging || community.moderators.includes(currentUser.name));
-
-      document.getElementById('detailContent').innerHTML = `
-        <div class="detail-header ${community.type}">
-          <h1>${community.icon} ${community.name}</h1>
-          <p>${community.desc}</p>
-        </div>
-        <div class="detail-content">
-          <div class="detail-section">
-            <h3>حول المجتمع</h3>
-            <p><strong>النوع:</strong> ${community.type === 'public' ? '🌍 عام' : '🔒 خاص'}</p>
-            <p><strong>الأعضاء:</strong> ${community.members}</p>
-            <p><strong>المنشورات:</strong> ${community.posts}</p>
-            <p><strong>حالة التحدث:</strong> ${community.allowMemberMessaging ? '✅ الأعضاء يمكنهم التحدث' : '🔇 فقط المشرفون'}</p>
-          </div>
-
-          <div class="detail-section">
-            <h3>المشرفون</h3>
-            <div class="members-list">
-              ${membersHtml}
-            </div>
-          </div>
-
-          ${isJoined ? `
-          <div class="detail-section">
-            <h3>الرسائل الأخيرة</h3>
-            <div class="chat-section">
-              ${messagesHtml || '<p style="text-align: center; color: #999;">لا توجد رسائل حتى الآن</p>'}
-              ${canMessage ? `
-              <div class="message-input">
-                <input type="text" placeholder="اكتب رسالتك..." id="msgInput">
-                <button onclick="sendMessage(${community.id})">إرسال</button>
-              </div>
-              ` : '<p style="color: #999; font-size: 0.9rem;">أنت لا تملك صلاحية التحدث في هذا المجتمع</p>'}
-            </div>
-          </div>
-          ` : ''}
-        </div>
-      `;
-
-      modal.classList.add('active');
-    }
-
-    function closeDetail() {
-      document.getElementById('detailModal').classList.remove('active');
-    }
-
-    function openCreateModal() {
-      document.getElementById('modalTitle').textContent = 'إنشاء مجتمع جديد';
-      document.getElementById('communityForm').reset();
-      document.getElementById('createModal').classList.add('active');
-    }
-
-    function closeCreateModal() {
-      document.getElementById('createModal').classList.remove('active');
-    }
-
-    function openJoinModal(communityId) {
-      document.getElementById('joinForm').dataset.communityId = communityId;
-      document.getElementById('joinPrivateModal').classList.add('active');
-    }
-
-    function closeJoinModal() {
-      document.getElementById('joinPrivateModal').classList.remove('active');
-    }
-
-    function setupEventListeners() {
-      document.getElementById('communityType')?.addEventListener('change', (e) => {
-        const passwordGroup = document.getElementById('passwordGroup');
-        passwordGroup.style.display = e.target.value === 'private' ? 'block' : 'none';
-      });
-
-      document.getElementById('communityForm')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const newCommunity = {
-          id: communities.length + 1,
-          name: document.getElementById('communityName').value,
-          desc: document.getElementById('communityDesc').value,
-          icon: document.getElementById('communityIcon').value || '👥',
-          type: document.getElementById('communityType').value,
-          password: document.getElementById('communityPassword').value,
-          members: 1,
-          posts: 0,
-          moderators: ['أنت'],
-          allowMemberMessaging: document.getElementById('allowMemberMessaging').checked,
-          messages: []
-        };
-
-        communities.push(newCommunity);
-        currentUser.joinedCommunities.push(newCommunity.id);
-        closeCreateModal();
-        renderCommunities();
-        alert('✅ تم إنشاء المجتمع بنجاح!');
-      });
-
-      document.getElementById('joinForm')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const communityId = parseInt(document.getElementById('joinForm').dataset.communityId);
-        const community = communities.find(c => c.id === communityId);
-        const password = document.getElementById('joinPassword').value;
-
-        if (community.password === password) {
-          currentUser.joinedCommunities.push(communityId);
-          closeJoinModal();
-          renderCommunities();
-          alert('✅ تم الانضمام بنجاح!');
-        } else {
-          alert('❌ كلمة السر خاطئة!');
-        }
-      });
-    }
-
-    function sendMessage(communityId) {
-      const msgInput = document.getElementById('msgInput');
-      if (msgInput.value.trim()) {
-        const community = communities.find(c => c.id === communityId);
-        community.messages.push({
-          author: currentUser.name,
-          text: msgInput.value,
-          time: 'الآن'
-        });
-        msgInput.value = '';
-        showCommunityDetail(communityId);
-      }
-    }
-  </script>
 
   <!-- Footer -->
   <footer style="background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%); color: #6ae44d; padding: 3rem 2rem; text-align: center; margin-top: 3rem;">
@@ -1110,6 +1008,843 @@
     </div>
   </footer>
 
-  <script src="js/profile-sync.js"></script>
+  <!-- Main JavaScript -->
+  <script>
+    // المتغيرات العامة
+    let currentUser = null;
+    let communities = {};
+    let currentCommunityId = null;
+    let currentFilter = 'all';
+    let joinedCommunities = {};
+    let messageListener = null;
+
+    // تهيئة التطبيق
+    window.initApp = async function() {
+      try {
+        console.log("🚀 Starting app initialization...");
+        
+        // مراقبة حالة المصادقة
+        window.firebase.authFunctions.onAuthStateChanged(window.firebase.auth, async (user) => {
+          if (user) {
+            await handleUserSignedIn(user);
+          } else {
+            handleUserSignedOut();
+          }
+        });
+        
+      } catch (error) {
+        console.error("❌ App initialization error:", error);
+        showError('حدث خطأ في تحميل التطبيق');
+      }
+    };
+
+    // التعامل مع تسجيل دخول المستخدم
+    async function handleUserSignedIn(user) {
+      try {
+        currentUser = {
+          uid: user.uid,
+          name: user.displayName || user.email?.split('@')[0] || 'مستخدم',
+          email: user.email,
+          avatar: user.photoURL || (user.displayName ? user.displayName.charAt(0).toUpperCase() : '?')
+        };
+        
+        console.log("✅ User signed in:", currentUser.name);
+        
+        updateUserUI();
+        await loadAllData();
+        hideAuthModal();
+        
+        // التحقق من الروابط
+        checkUrlForCommunity();
+        
+      } catch (error) {
+        console.error("❌ Error handling sign in:", error);
+      }
+    }
+
+    // التعامل مع تسجيل خروج المستخدم
+    function handleUserSignedOut() {
+      console.log("👋 User signed out");
+      
+      currentUser = null;
+      communities = {};
+      joinedCommunities = {};
+      currentCommunityId = null;
+      
+      // إزالة المستمعين
+      if (messageListener) {
+        messageListener();
+        messageListener = null;
+      }
+      
+      updateUserUI();
+      renderCommunities();
+    }
+
+    // تحميل جميع البيانات
+    async function loadAllData() {
+      try {
+        showCommunitiesLoading();
+        
+        // تحميل المجتمعات
+        await loadCommunities();
+        
+        // تحميل المجتمعات المنضم لها
+        if (currentUser) {
+          await loadJoinedCommunities();
+        }
+        
+        renderCommunities();
+        
+      } catch (error) {
+        console.error("❌ Error loading data:", error);
+        showError('حدث خطأ في تحميل البيانات');
+      }
+    }
+
+    // تحميل المجتمعات من Firebase
+    async function loadCommunities() {
+      try {
+        const dbRef = window.firebase.db.ref(window.firebase.database, 'communities');
+        const snapshot = await window.firebase.db.get(dbRef);
+        
+        if (snapshot.exists()) {
+          communities = snapshot.val();
+          console.log("📊 Loaded", Object.keys(communities).length, "communities");
+        } else {
+          communities = {};
+          console.log("ℹ️ No communities found");
+        }
+      } catch (error) {
+        console.error("❌ Error loading communities:", error);
+        throw error;
+      }
+    }
+
+    // تحميل المجتمعات المنضم لها
+    async function loadJoinedCommunities() {
+      try {
+        const dbRef = window.firebase.db.ref(window.firebase.database, `userCommunities/${currentUser.uid}`);
+        const snapshot = await window.firebase.db.get(dbRef);
+        
+        if (snapshot.exists()) {
+          joinedCommunities = snapshot.val();
+          console.log("📋 User joined", Object.keys(joinedCommunities).length, "communities");
+        } else {
+          joinedCommunities = {};
+        }
+      } catch (error) {
+        console.error("❌ Error loading joined communities:", error);
+      }
+    }
+
+    // تحديث واجهة المستخدم
+    function updateUserUI() {
+      const avatar = document.getElementById('userAvatar');
+      const authBtn = document.getElementById('authBtn');
+      
+      if (currentUser) {
+        avatar.textContent = currentUser.avatar;
+        authBtn.textContent = currentUser.name;
+        avatar.title = `مرحباً ${currentUser.name}`;
+      } else {
+        avatar.textContent = '?';
+        authBtn.textContent = 'تسجيل الدخول';
+        avatar.title = 'زائر';
+      }
+    }
+
+    // عرض المجتمعات
+    function renderCommunities() {
+      const grid = document.getElementById('communitiesGrid');
+      
+      if (!communities || Object.keys(communities).length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
+            <div style="font-size: 48px; margin-bottom: 20px;">🏢</div>
+            <h3 style="color: #4a5568; margin-bottom: 10px;">لا توجد مجتمعات بعد</h3>
+            <p style="color: #718096;">${currentUser ? 'كن أول من ينشئ مجتمعاً!' : 'سجل الدخول لترى المجتمعات'}</p>
+          </div>
+        `;
+        return;
+      }
+
+      let filteredCommunities = Object.entries(communities);
+
+      // تطبيق التصفية
+      if (currentFilter === 'public') {
+        filteredCommunities = filteredCommunities.filter(([id, community]) => community.type === 'public');
+      } else if (currentFilter === 'private') {
+        filteredCommunities = filteredCommunities.filter(([id, community]) => community.type === 'private');
+      }
+
+      // تطبيق البحث
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      if (searchTerm) {
+        filteredCommunities = filteredCommunities.filter(([id, community]) =>
+          community.name.toLowerCase().includes(searchTerm) ||
+          (community.desc || '').toLowerCase().includes(searchTerm)
+        );
+      }
+
+      // فرز حسب التاريخ
+      filteredCommunities.sort((a, b) => (b[1].createdAt || 0) - (a[1].createdAt || 0));
+
+      // إنشاء الكروت
+      let html = '';
+      filteredCommunities.forEach(([id, community]) => {
+        const isJoined = currentUser && joinedCommunities && joinedCommunities[id];
+        
+        html += `
+          <div class="community-card">
+            <div class="community-header ${community.type}">
+              <div class="community-badge ${community.type}">
+                ${community.type === 'public' ? '🌍 عام' : '🔒 خاص'}
+              </div>
+              <div class="community-icon">${community.icon || '👥'}</div>
+            </div>
+            <div class="community-info">
+              <div class="community-name">${community.name}</div>
+              <div class="community-desc">${community.desc || 'لا يوجد وصف'}</div>
+              <div class="community-stats">
+                <div class="stat">
+                  <div class="stat-number">${community.members || 1}</div>
+                  <div class="stat-label">عضو</div>
+                </div>
+                <div class="stat">
+                  <div class="stat-number">${community.posts || community.messageCount || 0}</div>
+                  <div class="stat-label">رسائل</div>
+                </div>
+                <div class="stat">
+                  <div class="stat-number">${community.createdBy ? 1 : 0}</div>
+                  <div class="stat-label">مشرف</div>
+                </div>
+              </div>
+              <div class="community-footer">
+                <button class="btn ${isJoined ? 'btn-secondary' : 'btn-primary'}"
+                        onclick="handleCommunityAction('${id}')"
+                        ${!currentUser ? 'disabled' : ''}>
+                  <i class="fas fa-${isJoined ? 'check' : 'plus'}"></i>
+                  ${isJoined ? 'عضو' : 'انضم الآن'}
+                </button>
+                <button class="btn btn-secondary" onclick="showCommunityDetail('${id}')">
+                  <i class="fas fa-arrow-left"></i> عرض
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      grid.innerHTML = html || `
+        <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #718096;">
+          لا توجد مجتمعات تطابق بحثك
+        </div>
+      `;
+    }
+
+    // تصفية المجتمعات
+    function filterCommunities(type) {
+      currentFilter = type;
+      
+      // تحديث الأزرار النشطة
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      renderCommunities();
+      return false;
+    }
+
+    // بحث المجتمعات
+    function searchCommunities() {
+      renderCommunities();
+      return false;
+    }
+
+    // تسجيل الدخول السريع
+    async function signInWithGoogle() {
+      try {
+        const userName = prompt('أدخل اسمك (ممكن تخليه مستعار):');
+        if (userName && userName.trim()) {
+          currentUser = {
+            uid: Date.now().toString(),
+            name: userName.trim(),
+            avatar: userName.charAt(0).toUpperCase()
+          };
+          
+          localStorage.setItem('currentUser', JSON.stringify(currentUser));
+          updateUserUI();
+          hideAuthModal();
+          showSuccess(`مرحباً ${userName}!`);
+          
+          // تحميل البيانات
+          await loadAllData();
+        }
+      } catch (error) {
+        console.error("❌ Sign in error:", error);
+        showError('حدث خطأ في تسجيل الدخول');
+      }
+    }
+
+    // التعامل مع انضمام/مغادرة المجتمع
+    async function handleCommunityAction(communityId) {
+      if (!currentUser) {
+        showAuthModal();
+        return;
+      }
+
+      const community = communities[communityId];
+      if (!community) return;
+
+      const isJoined = joinedCommunities && joinedCommunities[communityId];
+
+      if (isJoined) {
+        // مغادرة المجتمع
+        if (confirm('هل تريد مغادرة هذا المجتمع؟')) {
+          await leaveCommunity(communityId);
+        }
+      } else {
+        // الانضمام للمجتمع
+        if (community.type === 'private') {
+          currentCommunityId = communityId;
+          showJoinModal();
+        } else {
+          await joinCommunity(communityId);
+        }
+      }
+    }
+
+    // الانضمام للمجتمع
+    async function joinCommunity(communityId) {
+      try {
+        const communityRef = window.firebase.db.ref(window.firebase.database, `communities/${communityId}`);
+        
+        // تحديث عدد الأعضاء
+        const community = communities[communityId];
+        const newMemberCount = (community.members || 1) + 1;
+        
+        await window.firebase.db.update(communityRef, {
+          members: newMemberCount
+        });
+
+        // إضافة المستخدم للمجتمعات المنضم لها
+        const userCommunityRef = window.firebase.db.ref(window.firebase.database, `userCommunities/${currentUser.uid}/${communityId}`);
+        await window.firebase.db.set(userCommunityRef, true);
+        
+        // تحديث البيانات المحلية
+        communities[communityId].members = newMemberCount;
+        joinedCommunities[communityId] = true;
+        
+        renderCommunities();
+        showSuccess('تم الانضمام للمجتمع بنجاح!');
+        
+        // فتح المحادثة
+        showCommunityDetail(communityId);
+        
+      } catch (error) {
+        console.error("❌ Error joining community:", error);
+        showError('حدث خطأ أثناء الانضمام');
+      }
+    }
+
+    // مغادرة المجتمع
+    async function leaveCommunity(communityId) {
+      try {
+        const communityRef = window.firebase.db.ref(window.firebase.database, `communities/${communityId}`);
+        
+        // تقليل عدد الأعضاء
+        const community = communities[communityId];
+        const newMemberCount = Math.max(0, (community.members || 1) - 1);
+        
+        await window.firebase.db.update(communityRef, {
+          members: newMemberCount
+        });
+
+        // إزالة المستخدم من المجتمعات المنضم لها
+        const userCommunityRef = window.firebase.db.ref(window.firebase.database, `userCommunities/${currentUser.uid}/${communityId}`);
+        await window.firebase.db.remove(userCommunityRef);
+        
+        // تحديث البيانات المحلية
+        communities[communityId].members = newMemberCount;
+        delete joinedCommunities[communityId];
+        
+        renderCommunities();
+        showSuccess('تم مغادرة المجتمع');
+        
+        // إغلاق المحادثة إذا كانت مفتوحة
+        if (currentCommunityId === communityId) {
+          hideChatModal();
+        }
+        
+      } catch (error) {
+        console.error("❌ Error leaving community:", error);
+        showError('حدث خطأ أثناء المغادرة');
+      }
+    }
+
+    // إنشاء مجتمع جديد
+    document.getElementById('communityForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      if (!currentUser) {
+        showAuthModal();
+        return;
+      }
+      
+      const name = document.getElementById('communityName').value.trim();
+      const description = document.getElementById('communityDesc').value.trim();
+      const type = document.getElementById('communityType').value;
+      const password = type === 'private' ? document.getElementById('communityPassword').value : null;
+      
+      if (!name) {
+        showError('يرجى إدخال اسم المجتمع');
+        return;
+      }
+      
+      if (type === 'private' && !password) {
+        showError('يرجى إدخال كلمة سر للمجتمع الخاص');
+        return;
+      }
+      
+      try {
+        const communityId = Date.now().toString();
+        const communityRef = window.firebase.db.ref(window.firebase.database, `communities/${communityId}`);
+        
+        const newCommunity = {
+          id: communityId,
+          name: name,
+          desc: description || 'لا يوجد وصف',
+          type: type,
+          icon: document.getElementById('communityIcon').value || '👥',
+          members: 1,
+          posts: 0,
+          messageCount: 0,
+          createdAt: Date.now(),
+          createdBy: currentUser.uid,
+          createdByName: currentUser.name
+        };
+        
+        if (type === 'private' && password) {
+          newCommunity.password = password;
+        }
+        
+        // حفظ المجتمع في Firebase
+        await window.firebase.db.set(communityRef, newCommunity);
+        
+        // إضافة المستخدم كعضو
+        const userCommunityRef = window.firebase.db.ref(window.firebase.database, `userCommunities/${currentUser.uid}/${communityId}`);
+        await window.firebase.db.set(userCommunityRef, true);
+        
+        // إضافة رسالة ترحيب
+        const messageRef = window.firebase.db.ref(window.firebase.database, `messages/${communityId}`);
+        await window.firebase.db.push(messageRef, {
+          userId: 'system',
+          userName: 'النظام',
+          text: `🎉 تم إنشاء المجتمع "${name}" بواسطة ${currentUser.name}!`,
+          timestamp: Date.now(),
+          type: 'system'
+        });
+        
+        // تحديث عدد الرسائل
+        await window.firebase.db.update(communityRef, {
+          messageCount: 1
+        });
+        
+        // تحديث البيانات المحلية
+        communities[communityId] = newCommunity;
+        joinedCommunities[communityId] = true;
+        
+        hideCreateModal();
+        renderCommunities();
+        showSuccess(`تم إنشاء المجتمع "${name}" بنجاح!`);
+        
+        // فتح المحادثة
+        setTimeout(() => showCommunityDetail(communityId), 500);
+        
+      } catch (error) {
+        console.error("❌ Error creating community:", error);
+        showError('حدث خطأ أثناء إنشاء المجتمع');
+      }
+    });
+
+    // عرض تفاصيل المجتمع
+    async function showCommunityDetail(communityId) {
+      const community = communities[communityId];
+      if (!community) return;
+      
+      currentCommunityId = communityId;
+      const isJoined = currentUser && joinedCommunities && joinedCommunities[communityId];
+      
+      // تحديث العنوان
+      document.getElementById('chatTitle').textContent = community.name;
+      
+      // تحميل الرسائل
+      const messages = await loadMessages(communityId);
+      
+      // إنشاء رابط المشاركة
+      const link = `${window.location.origin}${window.location.pathname}?community=${communityId}`;
+      
+      let membersHtml = '';
+      if (community.createdByName) {
+        membersHtml = `
+          <div class="member-card">
+            <div class="member-avatar">${community.createdByName.charAt(0)}</div>
+            <div class="member-name">${community.createdByName}</div>
+            <div class="member-role">مؤسس المجتمع</div>
+          </div>
+        `;
+      }
+      
+      let messagesHtml = '';
+      if (messages && messages.length > 0) {
+        messagesHtml = messages.map(msg => {
+          const isSystem = msg.type === 'system';
+          return `
+            <div class="message ${isSystem ? 'system' : ''}">
+              <div class="message-header">
+                <span class="message-author">${msg.userName}</span>
+                <span class="message-time">${formatTime(msg.timestamp)}</span>
+              </div>
+              <div class="message-content">${msg.text}</div>
+            </div>
+          `;
+        }).join('');
+      }
+      
+      const canMessage = isJoined;
+      
+      document.getElementById('chatContent').innerHTML = `
+        <div class="detail-header ${community.type}">
+          <h1>${community.icon || '👥'} ${community.name}</h1>
+          <p>${community.desc || 'لا يوجد وصف'}</p>
+        </div>
+        <div class="detail-content">
+          ${isJoined ? `
+          <div class="share-section">
+            <div class="share-header">
+              <i class="fas fa-share-alt"></i> شارك الرابط مع أصدقائك
+            </div>
+            <div class="share-box">
+              <input type="text" value="${link}" readonly id="communityLinkInput">
+              <button class="copy-btn" onclick="copyCommunityLink('${link}')">
+                <i class="fas fa-copy"></i> نسخ الرابط
+              </button>
+            </div>
+          </div>
+          ` : ''}
+          
+          <div class="detail-section">
+            <h3>ℹ️ حول المجتمع</h3>
+            <p><strong>النوع:</strong> ${community.type === 'public' ? '🌍 عام' : '🔒 خاص'}</p>
+            <p><strong>الأعضاء:</strong> ${community.members || 1}</p>
+            <p><strong>الرسائل:</strong> ${community.messageCount || 0}</p>
+            <p><strong>تاريخ الإنشاء:</strong> ${formatDate(community.createdAt)}</p>
+          </div>
+
+          <div class="detail-section">
+            <h3>👥 المشرفون</h3>
+            <div class="members-list">
+              ${membersHtml || '<p style="color: #999; text-align: center;">لا يوجد معلومات</p>'}
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <h3>💬 المحادثة</h3>
+            <div class="chat-section">
+              <div class="chat-container" id="chatContainer">
+                ${messagesHtml || '<p style="text-align: center; color: #999; padding: 2rem;">لا توجد رسائل بعد</p>'}
+              </div>
+              ${isJoined ? `
+              <div class="message-input">
+                <input type="text" placeholder="اكتب رسالتك..." id="msgInput" onkeypress="handleEnter(event, '${communityId}')">
+                <button onclick="sendMessage('${communityId}')">إرسال</button>
+              </div>
+              ` : '<p style="color: #999; font-size: 0.9rem; text-align: center; padding: 1rem; background: #f5f5f5; border-radius: 8px;">انضم للمجتمع لإرسال الرسائل</p>'}
+            </div>
+          </div>
+        </div>
+      `;
+      
+      document.getElementById('chatModal').classList.add('active');
+      
+      // إعداد الاستماع للرسائل الجديدة
+      setupMessageListener(communityId);
+      
+      // تمرير التركيز للرسائل
+      setTimeout(() => {
+        const container = document.getElementById('chatContainer');
+        if (container) {
+          container.scrollTop = container.scrollHeight;
+        }
+      }, 100);
+    }
+
+    // تحميل الرسائل
+    async function loadMessages(communityId) {
+      try {
+        const dbRef = window.firebase.db.ref(window.firebase.database, `messages/${communityId}`);
+        const snapshot = await window.firebase.db.get(dbRef);
+        
+        if (snapshot.exists()) {
+          const messages = snapshot.val();
+          return Object.values(messages).sort((a, b) => a.timestamp - b.timestamp);
+        }
+        return [];
+      } catch (error) {
+        console.error("❌ Error loading messages:", error);
+        return [];
+      }
+    }
+
+    // إعداد الاستماع للرسائل الجديدة
+    function setupMessageListener(communityId) {
+      if (messageListener) {
+        messageListener();
+      }
+      
+      const dbRef = window.firebase.db.ref(window.firebase.database, `messages/${communityId}`);
+      messageListener = window.firebase.db.onChildAdded(dbRef, (snapshot) => {
+        const msg = snapshot.val();
+        const container = document.getElementById('chatContainer');
+        
+        if (container && !container.innerHTML.includes('لا توجد رسائل')) {
+          const isSystem = msg.type === 'system';
+          const messageHtml = `
+            <div class="message ${isSystem ? 'system' : ''}">
+              <div class="message-header">
+                <span class="message-author">${msg.userName}</span>
+                <span class="message-time">${formatTime(msg.timestamp)}</span>
+              </div>
+              <div class="message-content">${msg.text}</div>
+            </div>
+          `;
+          
+          container.innerHTML += messageHtml;
+          container.scrollTop = container.scrollHeight;
+        }
+      });
+    }
+
+    // إرسال رسالة
+    async function sendMessage(communityId) {
+      if (!currentUser || !communityId) return;
+      
+      const input = document.getElementById('msgInput');
+      const message = input.value.trim();
+      
+      if (!message) return;
+      
+      if (!joinedCommunities[communityId]) {
+        showError('يجب الانضمام للمجتمع أولاً');
+        return;
+      }
+      
+      try {
+        const messageRef = window.firebase.db.ref(window.firebase.database, `messages/${communityId}`);
+        
+        await window.firebase.db.push(messageRef, {
+          userId: currentUser.uid,
+          userName: currentUser.name,
+          text: message,
+          timestamp: Date.now(),
+          type: 'message'
+        });
+
+        // تحديث عدد الرسائل
+        const communityRef = window.firebase.db.ref(window.firebase.database, `communities/${communityId}`);
+        const community = communities[communityId];
+        const newMessageCount = (community.messageCount || 0) + 1;
+        
+        await window.firebase.db.update(communityRef, {
+          messageCount: newMessageCount
+        });
+        
+        // تحديث البيانات المحلية
+        communities[communityId].messageCount = newMessageCount;
+        
+        input.value = '';
+        input.focus();
+        
+      } catch (error) {
+        console.error("❌ Error sending message:", error);
+        showError('حدث خطأ في إرسال الرسالة');
+      }
+    }
+
+    // نسخ رابط المجتمع
+    function copyCommunityLink(link) {
+      navigator.clipboard.writeText(link)
+        .then(() => {
+          const btn = event.target;
+          btn.innerHTML = '<i class="fas fa-check"></i> تم النسخ!';
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.innerHTML = '<i class="fas fa-copy"></i> نسخ الرابط';
+            btn.classList.remove('copied');
+          }, 2000);
+        })
+        .catch(err => {
+          showError('حدث خطأ في نسخ الرابط');
+        });
+    }
+
+    // التحقق من الروابط
+    function checkUrlForCommunity() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const communityId = urlParams.get('community');
+      
+      if (communityId && communities[communityId]) {
+        const community = communities[communityId];
+        
+        if (community.type === 'public') {
+          showCommunityDetail(communityId);
+        } else if (currentUser && joinedCommunities[communityId]) {
+          showCommunityDetail(communityId);
+        } else {
+          currentCommunityId = communityId;
+          setTimeout(() => showJoinModal(), 1000);
+        }
+      }
+    }
+
+    // معالجة Enter
+    function handleEnter(event, communityId) {
+      if (event.key === 'Enter') {
+        sendMessage(communityId);
+      }
+    }
+
+    // تنسيق الوقت
+    function formatTime(timestamp) {
+      if (!timestamp) return 'الآن';
+      
+      const date = new Date(timestamp);
+      const now = new Date();
+      const diff = now - date;
+      
+      const seconds = Math.floor(diff / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+      
+      if (seconds < 60) return 'الآن';
+      if (minutes < 60) return `قبل ${minutes} دقيقة`;
+      if (hours < 24) return `قبل ${hours} ساعة`;
+      if (days < 7) return `قبل ${days} يوم`;
+      
+      return date.toLocaleDateString('ar-SA');
+    }
+
+    // تنسيق التاريخ
+    function formatDate(timestamp) {
+      if (!timestamp) return 'غير معروف';
+      return new Date(timestamp).toLocaleDateString('ar-SA');
+    }
+
+    // وظائف العرض/الإخفاء
+    function showAuthModal() {
+      document.getElementById('authModal').classList.add('active');
+    }
+
+    function hideAuthModal() {
+      document.getElementById('authModal').classList.remove('active');
+    }
+
+    function showCreateModal() {
+      if (!currentUser) {
+        showAuthModal();
+        return;
+      }
+      document.getElementById('createModal').classList.add('active');
+    }
+
+    function hideCreateModal() {
+      document.getElementById('createModal').classList.remove('active');
+      document.getElementById('communityForm').reset();
+      document.getElementById('passwordGroup').style.display = 'none';
+    }
+
+    function showJoinModal() {
+      if (!currentUser) {
+        showAuthModal();
+        return;
+      }
+      document.getElementById('joinModal').classList.add('active');
+    }
+
+    function hideJoinModal() {
+      document.getElementById('joinModal').classList.remove('active');
+      document.getElementById('joinPassword').value = '';
+    }
+
+    function hideChatModal() {
+      document.getElementById('chatModal').classList.remove('active');
+      currentCommunityId = null;
+      if (messageListener) {
+        messageListener();
+        messageListener = null;
+      }
+    }
+
+    // معالجة الانضمام لمجتمع خاص
+    document.getElementById('joinForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      if (!currentUser || !currentCommunityId) return;
+      
+      const password = document.getElementById('joinPassword').value;
+      const community = communities[currentCommunityId];
+      
+      if (community.password === password) {
+        await joinCommunity(currentCommunityId);
+        hideJoinModal();
+      } else {
+        showError('كلمة السر غير صحيحة');
+      }
+    });
+
+    function togglePasswordField() {
+      const type = document.getElementById('communityType').value;
+      document.getElementById('passwordGroup').style.display = type === 'private' ? 'block' : 'none';
+    }
+
+    function showCommunitiesLoading() {
+      const grid = document.getElementById('communitiesGrid');
+      grid.innerHTML = `
+        <div class="loading" style="grid-column: 1/-1;">
+          <div class="loading-spinner"></div>
+          <p>جاري تحميل المجتمعات...</p>
+        </div>
+      `;
+    }
+
+    function showError(message) {
+      alert(`❌ ${message}`);
+    }
+
+    function showSuccess(message) {
+      alert(`✅ ${message}`);
+    }
+
+    // إغلاق النوافذ
+    document.querySelectorAll('.modal').forEach(modal => {
+      modal.addEventListener('click', function(e) {
+        if (e.target === this) {
+          this.classList.remove('active');
+          if (this.id === 'chatModal') {
+            currentCommunityId = null;
+            if (messageListener) {
+              messageListener();
+              messageListener = null;
+            }
+          }
+        }
+      });
+    });
+
+    console.log("🚀 App initialized and ready!");
+  </script>
 </body>
 </html>
