@@ -6,12 +6,292 @@
     <meta name="keywords" content="welcome in tr">
     <title>Tribly | the home page</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- استخدام أيقونة عامة كـ Placeholder في حال عدم وجود الصورة -->
     <link rel="icon" href="img/logo icon.png" type="image/x-icon">
-    <link rel="stylesheet" href="css/style.css">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    <!-- Footer CSS -->
+
+    <style>
+        /* --- General Reset & Variables --- */
+        :root {
+            --primary-color: #6ae44d;
+            --text-dark: #333;
+            --text-light: #fff;
+            --bg-light: #f9f9f9;
+            --nav-height: 80px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Inter', sans-serif;
+        }
+
+        body {
+            overflow-x: hidden;
+            background-color: #fff;
+        }
+
+        a { text-decoration: none; transition: 0.3s; }
+        ul { list-style: none; }
+        button { cursor: pointer; border: none; outline: none; font-family: inherit; }
+
+        /* --- Navbar Styling --- */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: fixed; /* Fixed for scroll effect */
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            height: var(--nav-height);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Logo */
+        .logo a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 24px;
+            font-weight: 800;
+            color: #000;
+        }
+        .logo img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+        .logo a:hover { color: var(--primary-color); }
+
+        /* Nav Links (Desktop) */
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links li a {
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 16px;
+        }
+        .nav-links li a:hover { color: var(--primary-color); }
+
+        /* Nav Actions (Language + Buttons) */
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Language Switcher */
+        .lang-switcher {
+            position: relative;
+        }
+
+        .lang-toggle {
+            padding: 8px 16px;
+            background: #f0f0f0;
+            color: #000;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.3s;
+        }
+        .lang-toggle:hover { background: #e0e0e0; }
+
+        .lang-dropdown {
+            position: absolute;
+            top: 120%;
+            right: 0; /* RTL alignment */
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            min-width: 150px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1001;
+        }
+
+        .lang-dropdown.show { display: flex; animation: fadeIn 0.2s ease; }
+
+        .lang-option {
+            width: 100%;
+            padding: 12px 16px;
+            text-align: right;
+            background: #fff;
+            border: none;
+            font-size: 14px;
+            color: #333;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .lang-option:hover { background: #f9f9f9; color: var(--primary-color); }
+        .lang-option:first-child:hover { border-radius: 8px 8px 0 0; }
+        .lang-option:last-child:hover { border-radius: 0 0 8px 8px; }
+
+        /* Buttons */
+        .join {
+            color: #000;
+            font-weight: 600;
+            font-size: 15px;
+        }
+        .join:hover { color: var(--primary-color); }
+
+        .login-btn {
+            padding: 10px 24px;
+            background: var(--primary-color);
+            color: #000;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .login-btn:hover {
+            background: #5bc43e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(106, 228, 77, 0.3);
+        }
+
+        /* Mobile Menu Button */
+        .menu-btn {
+            display: none;
+            font-size: 24px;
+            color: #000;
+            background: transparent;
+        }
+
+        /* --- Responsive Design (Mobile) --- */
+        @media (max-width: 992px) {
+            .menu-btn { display: block; }
+            
+            .nav-links {
+                position: fixed;
+                top: var(--nav-height);
+                left: 0;
+                width: 100%;
+                height: calc(100vh - var(--nav-height));
+                background: #fff;
+                flex-direction: column;
+                padding: 40px 20px;
+                gap: 25px;
+                transform: translateX(100%); /* Hide off-screen */
+                transition: transform 0.4s ease;
+                z-index: 999;
+                border-top: 1px solid #eee;
+                align-items: center; /* Center items vertically */
+            }
+
+            .nav-links.active {
+                transform: translateX(0);
+            }
+
+            .nav-actions {
+                /* On mobile, keep lang switcher visible, move login/join into menu if preferred, 
+                   or keep them. Let's keep them but simplify */
+                gap: 10px;
+            }
+            .join { display: none; } /* Hide text link on mobile, keep button */
+            .login-btn { padding: 8px 16px; font-size: 13px; }
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Popup Styling --- */
+        #betaPopup {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .popup-content {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .popup-content button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: var(--primary-color);
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        /* --- Hero Section (Basic Styling for presentation) --- */
+        .hero {
+            padding: 120px 5% 60px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 80vh;
+        }
+        .hero-text { flex: 1; min-width: 300px; padding: 20px; }
+        .hero-text h1 { font-size: 48px; margin-bottom: 20px; line-height: 1.2; }
+        .hero-text p { font-size: 18px; color: #666; margin-bottom: 30px; }
+        .hero-image { flex: 1; min-width: 300px; text-align: center; }
+        .hero-image img { max-width: 100%; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .beta {
+            background: #e0f7fa; color: #006064;
+            display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 15px;
+        }
+        .hero-buttons { display: flex; gap: 15px; flex-wrap: wrap; }
+        .btn { padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .btn-green { background: var(--primary-color); color: #000; }
+        .btn-yellow { background: #ffeb3b; color: #000; }
+        .btn-outline { border: 2px solid #000; color: #000; background: transparent; }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+
+        /* --- Cards Section --- */
+        .cards { display: flex; gap: 20px; overflow-x: auto; padding: 40px 5%; scroll-behavior: smooth; }
+        .card {
+            min-width: 280px;
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: 0.3s;
+            opacity: 0; /* For animation */
+            transform: translateY(20px);
+        }
+        .card.show { opacity: 1; transform: translateY(0); }
+        .card:hover { border-color: var(--primary-color); }
+        .icon { font-size: 24px; font-weight: bold; color: var(--primary-color); margin-bottom: 10px; }
+        .interests { display: flex; flex-wrap: wrap; gap: 5px; margin: 10px 0; }
+        .interest { padding: 4px 8px; background: #eee; border-radius: 4px; font-size: 12px; }
+        .star { cursor: pointer; font-size: 24px; color: #ddd; }
+        .star.active { color: #ffc107; }
+
+        /* Footer CSS */
+        footer { margin-top: 60px; }
+    </style>
 </head>
 <body>
+
     <!-- Popup -->
     <div id="betaPopup">
         <div class="popup-content">
@@ -21,470 +301,306 @@
         </div>
     </div>
 
-<!-- Navbar -->
-<nav style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 5%; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 999;">
-  <div class="logo" style="display: flex; align-items: center; gap: 10px;">
-   <a href="index.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none; font-size: 24px; font-weight: 800; color: #000; transition: all 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#000'">
-     <img src="img/logo icon.png" alt="Tribly" style="width: 40px; height: 40px; object-fit: contain; border-radius: 50%; display: block;">
-     <span>Tribly</span>
-   </a>
-  </div>
-  
-
-  <ul class="nav-links" id="navLinks" style="display: flex; list-style: none; gap: 30px; margin: 0; padding: 0;">
-    <li><a href="#how" data-i18n="nav-how" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s; cursor: pointer;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#333'">How It Works</a></li>
-    <li><a href="about.html" data-i18n="nav-about" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s; cursor: pointer;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#333'">About</a></li>
-    <li><a href="get app.html" data-i18n="nav-app" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s; cursor: pointer;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#333'">Get The App</a></li>
-    <li><a href="manifesto.html" data-i18n="nav-manifesto" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s; cursor: pointer;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#333'">Manifesto</a></li>
-  </ul>
-  </ul>
-
-  <div class="nav-actions">
-    <div id="languageSwitcher" style="position: relative; display: inline-block;">
-      <button class="lang-toggle" style="padding: 8px 16px; background: #6ae44d; color: #000; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s; display: flex; align-items: center; gap: 6px;">
-        <i class="fas fa-globe"></i>
-        <span id="currentLang">العربية</span>
-        <i class="fas fa-chevron-down"></i>
-      </button>
-      <div id="langDropdown" style="position: absolute; top: 100%; right: 0; background: #fff; border: 1px solid #6ae44d; border-radius: 6px; min-width: 150px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: none; z-index: 1000; overflow: hidden;">
-        <button class="lang-option" data-lang="ar" style="width: 100%; padding: 12px 16px; text-align: right; background: #f5f5f5; border: none; cursor: pointer; transition: all 0.3s; font-size: 14px; color: #000; font-weight: 600;">🇸🇦 العربية</button>
-        <button class="lang-option" data-lang="en" style="width: 100%; padding: 12px 16px; text-align: left; background: #fff; border: none; cursor: pointer; transition: all 0.3s; font-size: 14px; color: #000; border-top: 1px solid #eee;">🇬🇧 English</button>
-        <button class="lang-option" data-lang="fr" style="width: 100%; padding: 12px 16px; text-align: left; background: #fff; border: none; cursor: pointer; transition: all 0.3s; font-size: 14px; color: #000; border-top: 1px solid #eee;">🇫🇷 Français</button>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="logo">
+       <a href="index.html">
+         <!-- Placeholder for logo -->
+         <img src="img/logo icon.png" onerror="this.src='https://picsum.photos/seed/logo/40/40'" alt="Tribly">
+         <span>Tribly</span>
+       </a>
       </div>
-    </div>
-    <a href="login.html" class="join" data-i18n="nav-join">Join</a>
-    <a href="login.html"><button class="login" data-i18n="nav-login">Login</button></a>
-    <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
-  </div>
-</nav>
+  
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#how">How It Works</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="get app.html">Get The App</a></li>
+        <li><a href="manifesto.html">Manifesto</a></li>
+        <!-- Mobile Only Login/Join inside menu -->
+        <li style="display: block;" class="mobile-only-item">
+            <a href="login.html" style="color:var(--primary-color); font-weight:bold;">Login / Join</a>
+        </li>
+      </ul>
+
+      <div class="nav-actions">
+        <div class="lang-switcher">
+          <button class="lang-toggle" id="langToggle">
+            <i class="fas fa-globe"></i>
+            <span id="currentLang">العربية</span>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="lang-dropdown" id="langDropdown">
+            <button class="lang-option" data-lang="ar">🇸🇦 العربية</button>
+            <button class="lang-option" data-lang="en">🇬🇧 English</button>
+            <button class="lang-option" data-lang="fr">🇫🇷 Français</button>
+          </div>
+        </div>
+        <a href="login.html" class="join">Join</a>
+        <a href="login.html"><button class="login-btn">Login</button></a>
+        
+        <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+      </div>
+    </nav>
 
 
     <!-- Hero -->
     <section class="hero">
         <div class="hero-text">
             <div class="beta"><span>Beta release V.0.4</span></div>
-            <h1><span data-i18n="hero-title-1">Find Your</span><br><span style="font-weight: bold; color: #6ae44d;" data-i18n="hero-title-2">Tribe</span><br><span data-i18n="hero-title-3">Anywhere</span></h1>
-            <p data-i18n="hero-desc">Find community and the people you click with closest to you Your next magical connection is just a click away.</p>
+            <h1>Find Your<br><span style="font-weight: bold; color: #6ae44d;">Tribe</span><br>Anywhere</h1>
+            <p>Find community and the people you click with closest to you. Your next magical connection is just a click away.</p>
             <div class="hero-buttons">
-                <a href="login.html"><button class="btn btn-green" data-i18n="hero-login">Login</button></a>
-                <button class="btn btn-yellow" data-i18n="hero-waitlist">Join Waitlist</button>
-             <a href="get-code.html"><button class="btn btn-outline" data-i18n="hero-invite">Got An Invitation Code?</button></a>
+                <a href="login.html"><button class="btn btn-green">Login</button></a>
+                <button class="btn btn-yellow">Join Waitlist</button>
+             <a href="get-code.html"><button class="btn btn-outline">Got An Invitation Code?</button></a>
             </div>
         </div>
         <div class="hero-image">
-            <img src="img/hero-image-base.webp" alt="friends having dinner" >
-        </div>
+            <!-- Placeholder for hero image -->
+            </div>
     </section> 
 
     <!-- How It Works -->
-    <section id="how">
-        <h2 data-i18n="how-title">How Does It Work?</h2>
+    <section id="how" style="padding: 60px 20px; text-align: center;">
+        <h2 style="margin-bottom: 40px;">How Does It Work?</h2>
         <div class="cards">
             <div class="card">
               <div class="icon">1</div>
-                <div class="map-box" style="background-image: url(img/cities.b5e15162.svg);"></div>
-                <h3 data-i18n="card-1-title">Join Tribly</h3>
-                <p data-i18n="card-1-desc">Subscribe to Tribly and join our growing community.</p><br>
-                <a href="login.html"><button class="join_btn">Join Tribly</button></a>
+                <div class="map-box" style="background-image: url(img/cities.b5e15162.svg); height: 100px; background-size: cover; border-radius: 8px; margin-bottom: 10px; background: #eee;"></div>
+                <h3>Join Tribly</h3>
+                <p>Subscribe to Tribly and join our growing community.</p><br>
+                <a href="login.html"><button class="login-btn" style="width: 100%;">Join Tribly</button></a>
             </div>
             <div class="card">
                 <div class="icon">2</div>
-                <h3 data-i18n="card-2-title">Fill in your interests</h3>
-                <p data-i18n="card-2-desc">Tell us what you love, and we'll do the rest.</p>
+                <h3>Fill in your interests</h3>
+                <p>Tell us what you love, and we'll do the rest.</p>
                 <div class="interests">
-                    <div class="interest" style="background: #7df6ff; color: #000000;"><span style="color: #000000;">Music</span>✓</div>
-                    <div class="interest"><span>Sports</span>+</div>
-                    <div class="interest" style="background: #7df6ff; color: #000000;"><span style="color: #000000;">Gaming</span>✓</div>
-                    <div class="interest"><span>Traveling</span>+</div>
-                    <div class="interest"><span>reading</span>+</div>
-                    <div class="interest" style="background: #7df6ff; color: #000000;"><span  style="color: #000000;">listening</span>✓</div>
-                    <div class="interest" style="background: #7df6ff; color: #000000;"><span  style="color: #000000;">gymnastic</span>✓</div>
-                    <div class="interest"><span>football</span>+</div>
-                    <div class="interest" style="background: #7df6ff; color: #000000;"><span  style="color: #000000;">Swimming</span>✓</div>
+                    <div class="interest" style="background: #7df6ff; color: #000;">Music ✓</div>
+                    <div class="interest">Sports +</div>
+                    <div class="interest" style="background: #7df6ff; color: #000;">Gaming ✓</div>
+                    <div class="interest">Reading+</div>
+                    <div class="interest" style="background: #7df6ff; color: #000;">programming+</div>
+                    <div class="interest">swimming+</div>
+                    <div class="interest" style="background: #7df6ff; color: #000;">interviews +</div>
+                    <div class="interest">run +</div>
                 </div>
             </div>
             <div class="card">
                 <div class="icon" >3</div>
-                <h3 data-i18n="card-3-title">Get Recommendations</h3>
-                <p data-i18n="card-3-desc">Tribly AI will suggest communities to join and activities to enjoy in person</p>
-                <img src="img/hero-image-base.jpg" alt="Events" style="width:100%;margin-top:10px;">
+                <h3>Get Recommendations</h3>
+                <p>Tribly AI will suggest communities to join.</p>
+                <img src="img/hero-image-base.jpg" onerror="this.src='https://picsum.photos/seed/card3/250/150'" alt="Events" style="width:100%;margin-top:10px; border-radius: 8px;">
             </div>
             <div class="card">
                 <div class="icon">4</div>
-                <h3 data-i18n="card-4-title">Meet IRL</h3>
-                <p data-i18n="card-4-desc">Go out and connect with people we're sure you'll click with.</p>
+                <h3>Meet IRL</h3>
+                <p>Go out and connect with people we're sure you'll click with.</p>
             </div>
             <div class="card">
                 <div class="icon">5</div>
-                <h3 data-i18n="card-5-title">Rate your Experience</h3>
-                <p data-i18n="card-5-desc">Help Tribly AI improve its recommendations and make every connection even better.</p>
-                <div class="stars">
+                <h3>Rate your Experience</h3>
+                <p>Help Tribly AI improve its recommendations.</p>
+                <div class="stars" style="font-size: 24px; color: #ddd;">
                     <span class="star" data-value="1">★</span>
                     <span class="star" data-value="2">★</span>
                     <span class="star" data-value="3">★</span>
                     <span class="star" data-value="4">★</span>
                     <span class="star" data-value="5">★</span>
                 </div>
-                <p id="rating-text" style="margin-top:10px;color:gray;">Click a star to rate!</p>
+                <p id="rating-text" style="margin-top:10px;color:gray; font-size: 12px;">Click a star to rate!</p>
             </div>
         </div>
     </section>
 
 
 <section id="nearby" style="padding: 60px 20px; background: linear-gradient(125deg,#effaff, #dbf4ff); text-align: center;">
-  <h2 style="font-size: 28px; font-weight: 700; color: #2c3e50;" data-i18n="cities-title">cities</h2>
-  <img src="img/cities.b5e15162.svg" alt="map" style="width: 100%;  border-radius: 2px;"><br>
-  <h5 style="color: #000000;" data-i18n="cities-desc">* You Can use Tribly from Anywhere but
-     the <span style="font-weight: bolder;">meetup</span> Feature is currently only available in Alexandria,Egypt*</h5>
+  <h2 style="font-size: 28px; font-weight: 700; color: #2c3e50;">Cities</h2>
+  <!-- Placeholder map -->
+  <img src="img/cities.b5e15162.svg" onerror="this.src='https://picsum.photos/seed/map/800/300'" alt="map" style="width: 100%; max-width: 800px; border-radius: 2px;"><br>
+  <h5 style="color: #000;">* You Can use Tribly from Anywhere but the <span style="font-weight: bolder;">meetup</span> Feature is currently only available in Alexandria, Egypt*</h5>
 </section>
 
-<section id="Tursted_by">
-<h2 style="font-size: 28px; font-weight: 700; color: #2c3e50;" data-i18n="trusted-title">Trusted by communities</h2>
-
-  <p>We are sorry and i do not have places to interview now and wait for Tribly in the Most powerful places in <span style="font-weight: bolder; color: #000000;">Alexandria</span>
-  and the rest of Egypt
-  </p>
- <!--<img src="img/community1.9e05c9ab.svg" alt="map" style="width:200px;">
-  <img src="img/community2.cb0b43f2.svg" alt="map" style="width:200px;"><br>
-  <img src="img/community3.2f93702e.svg" alt="map" style="width:200px">
-  <img src="img/community4.528be1fc.svg" alt="map" style="width:200px;">--> 
+<section id="Tursted_by" style="padding: 60px 20px; text-align: center;">
+<h2 style="font-size: 28px; font-weight: 700; color: #2c3e50;">Trusted by communities</h2>
+<p>We are building connections in <span style="font-weight: bolder; color: #000;">Alexandria</span> and the rest of Egypt.</p>
 </section>
 
 <!-- Footer HTML -->
-<footer style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #fff; padding: 60px 20px 30px; margin-top: 80px; border-top: 2px solid #6ae44d;">
+<footer style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #fff; padding: 60px 20px 30px;">
   <div style="max-width: 1200px; margin: 0 auto;">
-    <!-- Top Section -->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 50px;">
-      
       <!-- Brand -->
       <div>
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-          <img src="img/logo icon.png" alt="Tribly" style="width: 50px; height: 50px; object-fit: contain; border-radius: 50%; display: block;">
+          <img src="img/logo icon.png" onerror="this.src='https://picsum.photos/seed/logo/50/50'" alt="Tribly" style="width: 50px; height: 50px; object-fit: contain; border-radius: 50%; background: #fff;">
           <h3 style="font-size: 28px; font-weight: 700; color: #6ae44d; margin: 0;">Tribly</h3>
         </div>
         <p style="color: #aaa; line-height: 1.8;">Find your tribe, connect with people you click with, and build meaningful communities wherever you are.</p>
-        <div style="display: flex; gap: 12px; margin-top: 20px;">
-          <a href="#" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: rgba(106, 228, 77, 0.2); color: #6ae44d; border-radius: 50%; text-decoration: none; transition: all 0.3s; cursor: pointer;" onmouseover="this.style.background='#6ae44d'; this.style.color='#000';" onmouseout="this.style.background='rgba(106, 228, 77, 0.2)'; this.style.color='#6ae44d';"><i class="fab fa-facebook-f"></i></a>
-          <a href="#" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: rgba(106, 228, 77, 0.2); color: #6ae44d; border-radius: 50%; text-decoration: none; transition: all 0.3s; cursor: pointer;" onmouseover="this.style.background='#6ae44d'; this.style.color='#000';" onmouseout="this.style.background='rgba(106, 228, 77, 0.2)'; this.style.color='#6ae44d';"><i class="fab fa-twitter"></i></a>
-          <a href="#" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: rgba(106, 228, 77, 0.2); color: #6ae44d; border-radius: 50%; text-decoration: none; transition: all 0.3s; cursor: pointer;" onmouseover="this.style.background='#6ae44d'; this.style.color='#000';" onmouseout="this.style.background='rgba(106, 228, 77, 0.2)'; this.style.color='#6ae44d';"><i class="fab fa-instagram"></i></a>
-          <a href="#" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: rgba(106, 228, 77, 0.2); color: #6ae44d; border-radius: 50%; text-decoration: none; transition: all 0.3s; cursor: pointer;" onmouseover="this.style.background='#6ae44d'; this.style.color='#000';" onmouseout="this.style.background='rgba(106, 228, 77, 0.2)'; this.style.color='#6ae44d';"><i class="fab fa-linkedin-in"></i></a>
-        </div>
       </div>
-
-      <!-- Product -->
+      <!-- Links -->
       <div>
         <h4 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 20px;">Product</h4>
-        <ul style="list-style: none; padding: 0; margin: 0;">
-          <li style="margin-bottom: 12px;"><a href="index.html" style="color: #aaa; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#aaa'">Home</a></li>
-          <li style="margin-bottom: 12px;"><a href="about.html" style="color: #aaa; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#aaa'">About Us</a></li>
-          <li style="margin-bottom: 12px;"><a href="get-app.html" style="color: #aaa; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#aaa'">Get The App</a></li>
-          <li style="margin-bottom: 12px;"><a href="waitlist.html" style="color: #aaa; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#aaa'">Waitlist</a></li>
+        <ul style="color: #aaa; line-height: 2;">
+            <li><a href="index.html" style="color:#aaa; text-decoration:none;">Home</a></li>
+            <li><a href="about.html" style="color:#aaa; text-decoration:none;">About Us</a></li>
+            <li><a href="get-app.html" style="color:#aaa; text-decoration:none;">Get The App</a></li>
         </ul>
       </div>
-
-      <!-- Company -->
-      <div>
+       <div>
         <h4 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 20px;">Company</h4>
-        <ul style="list-style: none; padding: 0; margin: 0;">
-          <li style="margin-bottom: 12px;"><a href="manifesto.html" style="color: #aaa; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#aaa'">Manifesto</a></li>
-          <li style="margin-bottom: 12px;"><a href="Tribly-substack.html" style="color: #aaa; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#aaa'">Blog</a></li>
-          <li style="margin-bottom: 12px;"><a href="communities.html" style="color: #aaa; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#aaa'">Communities</a></li>
-          <li style="margin-bottom: 12px;"><a href="mailto:triblyteam@gmail.com" style="color: #aaa; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#aaa'">Contact</a></li>
-        </ul>
-      </div>
-
-      <!-- Support -->
-      <div>
-        <h4 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 20px;">Support</h4>
-        <ul style="list-style: none; padding: 0; margin: 0;">
-          <li style="margin-bottom: 12px;"><a href="faq.html" style="color: #aaa; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#aaa'">FAQ</a></li>
-          <li style="margin-bottom: 12px;"><a href="support.html" style="color: #aaa; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#aaa'">Help Center</a></li>
-          <li style="margin-bottom: 12px;"><a href="contact-us.html" style="color: #aaa; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#aaa'">Contact Us</a></li>
-          <li style="margin-bottom: 12px;"><a href="service.html" style="color: #aaa; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#aaa'">Terms of Service</a></li>
+        <ul style="color: #aaa; line-height: 2;">
+            <li><a href="manifesto.html" style="color:#aaa; text-decoration:none;">Manifesto</a></li>
+            <li><a href="communities.html" style="color:#aaa; text-decoration:none;">Communities</a></li>
+            <li><a href="mailto:triblyteam@gmail.com" style="color:#aaa; text-decoration:none;">Contact</a></li>
         </ul>
       </div>
     </div>
 
-    <!-- Divider -->
-    <div style="height: 1px; background: rgba(106, 228, 77, 0.2); margin-bottom: 30px;"></div>
-
     <!-- Bottom Section -->
+    <div style="height: 1px; background: rgba(106, 228, 77, 0.2); margin-bottom: 30px;"></div>
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
       <div style="color: #888; font-size: 14px;">
         © 2026 Tribly. All rights reserved. Made with <span style="color: #6ae44d;">❤️</span> for communities.
       </div>
-      <div style="display: flex; gap: 30px; flex-wrap: wrap;">
-        <a href="privacy.html" style="color: #aaa; text-decoration: none; font-size: 14px; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#aaa'">Privacy Policy</a>
-        <a href="service.html" style="color: #aaa; text-decoration: none; font-size: 14px; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#aaa'">Terms of Service</a>
-        <a href="contact-us.html" style="color: #aaa; text-decoration: none; font-size: 14px; transition: color 0.3s;" onmouseover="this.style.color='#6ae44d'" onmouseout="this.style.color='#aaa'">Accessibility</a>
-      </div>
     </div>
   </div>
 </footer>
-<script src="js/i18n.js"></script>
-<!-- 1 -->
+
+<!-- Scripts -->
 <script>
-  const getLocationBtn = document.getElementById("getLocationBtn");
-  const locationStatus = document.getElementById("locationStatus");
-  const mapContainer = document.getElementById("map");
-  let map;
+    // --- 1. Mobile Menu Toggle ---
+    const menuBtn = document.getElementById("menuBtn");
+    const navLinks = document.getElementById("navLinks");
+    const navbar = document.querySelector(".navbar");
 
-  getLocationBtn.addEventListener("click", () => {
-    if (navigator.geolocation) {
-      locationStatus.textContent = "جارٍ تحديد موقعك...";
-      navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-    } else {
-      locationStatus.textContent = "المتصفح لا يدعم تحديد الموقع الجغرافي.";
-    }
-  });
-
-  function successCallback(position) {
-    const { latitude, longitude } = position.coords;
-    locationStatus.innerHTML = `تم تحديد موقعك ✅<br>خط العرض: ${latitude.toFixed(4)}, خط الطول: ${longitude.toFixed(4)}`;
-    mapContainer.style.display = "block";
-
-    // إنشاء الخريطة
-    if (!map) {
-      map = L.map("map").setView([latitude, longitude], 14);
-
-      // شكل الخريطة
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
-      }).addTo(map);
-    } else {
-      map.setView([latitude, longitude], 14);
-    }
-
-    // 🔵 موقع المستخدم
-    const userMarker = L.circleMarker([latitude, longitude], {
-      radius: 10,
-      color: "#2196f3",
-      fillColor: "#2196f3",
-      fillOpacity: 0.8
-    }).addTo(map).bindPopup("📍 أنت هنا");
-
-    // ✅ أشخاص قريبين (نقط خضراء)
-    const nearbyUsers = generateNearbyPoints(latitude, longitude, 6);
-    nearbyUsers.forEach((user, i) => {
-      const greenDot = L.circleMarker([user.lat, user.lng], {
-        radius: 8,
-        color: "#2ecc71",
-        fillColor: "#2ecc71",
-        fillOpacity: 0.9
-      })
-      .addTo(map)
-      .bindPopup(`👤 شخص قريب منك #${i + 1}`);
-
-      // 💫 حركة بسيطة للنقط
-      setInterval(() => {
-        const newOpacity = 0.6 + Math.random() * 0.4;
-        greenDot.setStyle({ fillOpacity: newOpacity });
-      }, 1000 + Math.random() * 500);
+    menuBtn.addEventListener("click", (e) => {
+        e.stopPropagation(); // Prevent immediate closing
+        navLinks.classList.toggle("active");
+        
+        // Toggle Icon
+        const icon = menuBtn.querySelector("i");
+        if (navLinks.classList.contains("active")) {
+            icon.classList.remove("fa-bars");
+            icon.classList.add("fa-times");
+        } else {
+            icon.classList.remove("fa-times");
+            icon.classList.add("fa-bars");
+        }
     });
-  }
 
-  // توليد نقاط عشوائية حول المستخدم
-  function generateNearbyPoints(lat, lng, count) {
-    const points = [];
-    for (let i = 0; i < count; i++) {
-      const randomLat = lat + (Math.random() - 0.5) * 0.01;
-      const randomLng = lng + (Math.random() - 0.5) * 0.01;
-      points.push({ lat: randomLat, lng: randomLng });
-    }
-    return points;
-  }
-
-  function errorCallback(error) {
-    locationStatus.textContent = "حدث خطأ أثناء تحديد موقعك.";
-    console.error(error);
-  }
-</script>
-<!-- 4 -->
-  <script>
-  getLocationBtn.addEventListener("click", () => {
-    if (navigator.geolocation) {
-      locationStatus.textContent = "جارٍ تحديد موقعك...";
-      navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-    } else {
-      locationStatus.textContent = "المتصفح لا يدعم تحديد الموقع الجغرافي.";
-    }
-  });
-
-  function successCallback(position) {
-    const { latitude, longitude } = position.coords;
-    locationStatus.innerHTML = `تم تحديد موقعك بنجاح ✅<br>خط العرض: ${latitude.toFixed(4)}, خط الطول: ${longitude.toFixed(4)}`;
-    mapContainer.style.display = "block";
-
-    // إنشاء خريطة
-    if (!map) {
-      map = L.map("map").setView([latitude, longitude], 14);
-
-      // طبقة الخريطة (شكلها)
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
-      }).addTo(map);
-    } else {
-      map.setView([latitude, longitude], 14);
-    }
-
-    // 🔵 موقع المستخدم الحالي
-    const userMarker = L.circleMarker([latitude, longitude], {
-      radius: 10,
-      color: "#2196f3",
-      fillColor: "#2196f3",
-      fillOpacity: 0.8
-    }).addTo(map).bindPopup("📍 أنت هنا");
-
-    // ✅ أشخاص قريبين (نقط خضراء عشوائية حول المستخدم)
-    const nearbyUsers = generateNearbyPoints(latitude, longitude, 6);
-    nearbyUsers.forEach(user => {
-      L.circleMarker([user.lat, user.lng], {
-        radius: 8,
-        color: "#2ecc71",
-        fillColor: "#2ecc71",
-        fillOpacity: 0.9
-      }).addTo(map).bindPopup("🧑 شخص قريب منك");
+    // Close menu when clicking a link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove("active");
+            menuBtn.querySelector("i").classList.remove("fa-times");
+            menuBtn.querySelector("i").classList.add("fa-bars");
+        });
     });
-  }
 
-  function errorCallback(error) {
-    switch (error.code) {
-      case error.PERMISSION_DENIED:
-        locationStatus.textContent = "تم رفض إذن تحديد الموقع ❌";
-        break;
-      case error.POSITION_UNAVAILABLE:
-        locationStatus.textContent = "معلومات الموقع غير متوفرة.";
-        break;
-      case error.TIMEOUT:
-        locationStatus.textContent = "انتهى وقت طلب الموقع.";
-        break;
-      default:
-        locationStatus.textContent = "حدث خطأ غير متوقع.";
-    }
-  }
+    // --- 2. Language Switcher Logic ---
+    const langToggle = document.getElementById("langToggle");
+    const langDropdown = document.getElementById("langDropdown");
+    const currentLangSpan = document.getElementById("currentLang");
+    const langOptions = document.querySelectorAll(".lang-option");
 
-  // دالة لإنشاء نقاط عشوائية تمثل المستخدمين القريبين
-  function generateNearbyPoints(lat, lng, count) {
-    const points = [];
-    for (let i = 0; i < count; i++) {
-      const randomLat = lat + (Math.random() - 0.5) * 0.02; // فرق بسيط في الإحداثيات
-      const randomLng = lng + (Math.random() - 0.5) * 0.02;
-      points.push({ lat: randomLat, lng: randomLng });
-    }
-    return points;
-  }
-
-</script>
-<!-- 4 -->
-    <script>
-        // Menu Toggle
-        const menuBtn = document.querySelector(".menu-btn");
-        const navLinks = document.querySelector(".nav-links");
-        
-        menuBtn.addEventListener("click", () => {
-            navLinks.classList.toggle("active");
-            menuBtn.innerHTML = navLinks.classList.contains("active") ? 
-                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
-        });
-
-        // Close menu when clicking on a link
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            });
-        });
-
-        // Navbar Hide/Show on Scroll
-        let lastScrollTop = 0;
-        const navbar = document.querySelector("nav");
-        
-        window.addEventListener("scroll", function() {
-            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            navbar.style.top = (scrollTop > lastScrollTop) ? "-5rem" : "0";
-            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-        }, false);
-
-        // Star Rating
-        const stars = document.querySelectorAll('.star');
-        const ratingText = document.getElementById('rating-text');
-        
-        stars.forEach((star, index) => {
-            star.addEventListener('click', () => {
-                stars.forEach(s => s.classList.remove('active'));
-                for(let i = 0; i <= index; i++) {
-                    stars[i].classList.add('active');
-                }
-                ratingText.textContent = `You rated ${index+1} star${index ? 's' : ''}!`;
-                ratingText.style.color = 'green';
-            });
-        });
-
-        // Popup
-        const popup = document.getElementById("betaPopup");
-        const closeBtn = document.getElementById("closePopup");
-        
-        closeBtn.addEventListener("click", () => popup.style.display = "none");
-        setTimeout(() => popup.style.display = "none", 10000);
-
-        // Banner show/hide
-        const workBanner = document.getElementById("workBanner");
-        const closeBanner = document.getElementById("closeBanner");
-        
-        // يظهر بعد ثانيتين
-        setTimeout(() => workBanner.classList.add("show"), 2000);
-        closeBanner.addEventListener("click", () => workBanner.style.display = "none");
-
-        // Analytics (Optional)
-        const scriptURL = "https://script.google.com/macros/s/AKfycbyExample12345/exec";
-        const data = {
-            device: navigator.userAgent.includes("Mobile") ? "Mobile" : "Desktop",
-            browser: navigator.userAgent,
-            platform: navigator.platform,
-            language: navigator.language,
-            page: window.location.href
-        };
-
-        fetch(scriptURL, {
-            method: "POST",
-            body: JSON.stringify(data)
-        }).catch(err => console.log("Error:", err));
-    </script>
-    <!-- 7 -->
-<script>
-// ✨ Hero animation when page loads
-window.addEventListener("load", () => {
-  document.querySelector(".hero-text").classList.add("hero-loaded");
-  document.querySelector(".hero-image img").classList.add("hero-loaded");
-});
-
-// ✨ Cards fade animation on scroll
-const cards = document.querySelectorAll(".card");
-const fadeOptions = {
-  threshold: 0.3
-};
-
-const fadeObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add("show");
-    }
-  });
-}, fadeOptions);
-
-cards.forEach(card => fadeObserver.observe(card));
-
-
-// ✨ Fade-up sections (you can add class fade-up to anything)
-document.querySelectorAll(".fade-up").forEach(el => {
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) entry.target.classList.add("show");
+    // Toggle Dropdown
+    langToggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        langDropdown.classList.toggle("show");
     });
-  });
 
-  observer.observe(el);
-});
+    // Select Language
+    langOptions.forEach(opt => {
+        opt.addEventListener("click", () => {
+            const selectedLang = opt.getAttribute("data-lang");
+            const langText = opt.innerText; // e.g., "🇸🇦 العربية"
+            
+            // Update Text
+            currentLangSpan.innerText = langText.split(" ")[1] || langText; // Just take text part
+            langDropdown.classList.remove("show");
+            
+            // Here you would add logic to actually change the page language
+            console.log("Language switched to: " + selectedLang);
+        });
+    });
+
+    // Close Dropdown when clicking outside
+    window.addEventListener("click", (e) => {
+        if (!langToggle.contains(e.target) && !langDropdown.contains(e.target)) {
+            langDropdown.classList.remove("show");
+        }
+        // Also close mobile menu if clicked outside
+        if (window.innerWidth <= 992 && !navbar.contains(e.target) && navLinks.classList.contains("active")) {
+            navLinks.classList.remove("active");
+            menuBtn.querySelector("i").classList.remove("fa-times");
+            menuBtn.querySelector("i").classList.add("fa-bars");
+        }
+    });
+
+    // --- 3. Navbar Hide/Show on Scroll ---
+    let lastScrollTop = 0;
+    
+    window.addEventListener("scroll", function() {
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        // Scroll Down -> Hide
+        if (scrollTop > lastScrollTop && scrollTop > 100) {
+            navbar.style.transform = "translateY(-100%)";
+        } 
+        // Scroll Up -> Show
+        else {
+            navbar.style.transform = "translateY(0)";
+        }
+        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+    }, false);
+
+    // --- 4. Star Rating Logic ---
+    const stars = document.querySelectorAll('.star');
+    const ratingText = document.getElementById('rating-text');
+    
+    stars.forEach((star, index) => {
+        star.addEventListener('click', () => {
+            stars.forEach(s => s.classList.remove('active'));
+            for(let i = 0; i <= index; i++) {
+                stars[i].classList.add('active');
+            }
+            ratingText.textContent = `You rated ${index+1} star${index !== 0 ? 's' : ''}!`;
+            ratingText.style.color = 'green';
+        });
+    });
+
+    // --- 5. Popup Logic ---
+    const popup = document.getElementById("betaPopup");
+    const closeBtn = document.getElementById("closePopup");
+    
+    closeBtn.addEventListener("click", () => {
+        popup.style.opacity = "0";
+        setTimeout(() => popup.style.display = "none", 300);
+    });
+    
+    // Auto hide after 10 seconds
+    setTimeout(() => {
+        if(popup.style.display !== 'none') {
+            popup.style.opacity = "0";
+            setTimeout(() => popup.style.display = "none", 300);
+        }
+    }, 10000);
+
+    // --- 6. Scroll Animation for Cards ---
+    const cards = document.querySelectorAll(".card");
+    const fadeOptions = { threshold: 0.2 };
+
+    const fadeObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("show");
+            }
+        });
+    }, fadeOptions);
+
+    cards.forEach(card => fadeObserver.observe(card));
 </script>
+
 </body>
 </html>

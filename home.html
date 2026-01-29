@@ -2,639 +2,1060 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
-    <meta name="theme-color" content="#6ae44d">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Tribly - أوجد قبيلتك</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tribly - منصة للتواصل الاجتماعي لايجاد الأشخاص الذين يتشاركون نفس الاهتمامات والقيم">
+    <title>Tribly | أوجد قبيلتك</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* --- Variables & Reset --- */
+        :root {
+            --primary: #6ae44d;
+            --primary-dark: #4cb93b;
+            --dark: #1a1a2e;
+            --light: #f9f9f9;
+            --white: #ffffff;
+            --gray: #f4f4f4;
+            --text-dark: #2d3436;
+            --text-light: #636e72;
+            --shadow: 0 10px 30px rgba(0,0,0,0.05);
+            --shadow-hover: 0 20px 40px rgba(106, 228, 77, 0.2);
+            --radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f7fa;
-            color: #333;
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--white);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            line-height: 1.6;
         }
 
-        /* Navbar */
-        nav {
-            background: white;
-            padding: 1rem 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        img { max-width: 100%; height: auto; }
+
+        /* --- THE NEW BUTTONS STYLE --- */
+        button { all: unset; }
+
+        .button {
+            position: relative;
+            display: inline-flex;
+            height: 3.5rem;
+            align-items: center;
+            border-radius: 9999px;
+            padding-left: 2.5rem;
+            padding-right: 2.5rem;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1d1d1f;
+            letter-spacing: -0.03em;
+            cursor: pointer;
+            transition: transform 0.2s;
+            overflow: hidden;
+        }
+
+        .button:active { transform: scale(0.95); }
+
+        .button-bg {
+            border-color: rgba(255, 208, 116);
+            background-color: rgba(255, 208, 116);
+        }
+        
+        .button-green .button-bg {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .button-white .button-bg {
+            background-color: #fff;
+            border-color: #ddd;
+        }
+
+        .button-inner, .button-inner-hover, .button-inner-static {
+            pointer-events: none;
+            display: block;
+        }
+
+        .button-inner { position: relative; }
+
+        .button-inner-hover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transform: translateY(70%);
+        }
+
+        .button-bg {
+            overflow: hidden;
+            border-radius: 2rem;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: scale(1);
+            transition: transform 1.8s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .button-bg, .button-bg-layer, .button-bg-layers { display: block; }
+
+        .button-bg-layers {
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%);
+            top: -60%;
+            aspect-ratio: 1 / 1;
+            width: max(200%, 10rem);
+        }
+
+        .button-bg-layer {
+            border-radius: 9999px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: scale(0);
+        }
+
+        .button-green .button-bg-layer.-layer-1 { background-color: rgba(255, 255, 255, 0.6); }
+        .button-green .button-bg-layer.-layer-2 { background-color: rgba(165, 255, 132, 0.8); }
+        .button-green .button-bg-layer.-layer-3 { background-color: rgba(106, 228, 77, 1); }
+
+        .button-yellow .button-bg-layer.-layer-1 { background-color: rgba(163, 116, 255); }
+        .button-yellow .button-bg-layer.-layer-2 { background-color: rgba(23, 241, 209); }
+        .button-yellow .button-bg-layer.-layer-3 { background-color: rgba(255, 208, 116); }
+
+        .button:hover .button-inner-static {
+            opacity: 0;
+            transform: translateY(-70%);
+            transition: transform 1.4s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.3s linear;
+        }
+
+        .button:hover .button-inner-hover {
+            opacity: 1;
+            transform: translateY(0);
+            transition: transform 1.4s cubic-bezier(0.19, 1, 0.22, 1), opacity 1.4s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .button:hover .button-bg-layer {
+            transition: transform 1.3s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.3s linear;
+        }
+
+        .button:hover .button-bg-layer-1 { transform: scale(1); }
+        .button:hover .button-bg-layer-2 { transition-delay: 0.1s; transform: scale(1); }
+        .button:hover .button-bg-layer-3 { transition-delay: 0.2s; transform: scale(1); }
+
+        /* --- Navbar --- */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1rem 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: sticky;
-            top: 0;
             z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled {
+            padding: 0.8rem 5%;
+            box-shadow: var(--shadow);
         }
 
         .logo {
             font-size: 1.8rem;
-            font-weight: bold;
-            color: #6ae44d;
-            text-decoration: none;
+            font-weight: 900;
+            color: var(--dark);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 10px;
         }
+        .logo i { color: var(--primary); font-size: 1.6rem; }
 
         .nav-links {
             display: flex;
-            list-style: none;
             gap: 2rem;
         }
 
-        .nav-links a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            transition: color 0.3s;
+        .nav-link {
+            font-weight: 600;
+            color: var(--text-dark);
+            position: relative;
+            transition: var(--transition);
         }
 
-        .nav-links a:hover {
-            color: #6ae44d;
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            right: 0;
+            width: 0;
+            height: 3px;
+            background: var(--primary);
+            transition: width 0.3s;
+            border-radius: 2px;
         }
+
+        .nav-link:hover { color: var(--primary); }
+        .nav-link:hover::after { width: 100%; }
 
         .nav-actions {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 15px;
         }
 
-        .profile {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
             cursor: pointer;
-            border: 2px solid #6ae44d;
+            color: var(--dark);
         }
 
-        /* Hero Section */
+        /* --- User Profile Section (Hidden by default) --- */
+        .user-profile {
+            display: none; /* JS will change this */
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            line-height: 1.2;
+        }
+
+        .user-name {
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .user-status {
+            font-size: 0.75rem;
+            color: var(--primary);
+        }
+
+        .profile-img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .profile-img:hover { transform: scale(1.1); }
+
+        .btn-logout {
+            padding: 8px 16px;
+            border: 1px solid #ff4757;
+            color: #ff4757;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: 600;
+        }
+        .btn-logout:hover { background: #ff4757; color: white; }
+
+
+        /* --- Hero Section --- */
         .hero {
-            background: linear-gradient(135deg, #6ae44d 0%, #a5ff84 100%);
-            padding: 4rem 2rem;
-            text-align: center;
-            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 120px 5% 50px;
+            background: linear-gradient(135deg, #fff 50%, #f0fff4 100%);
+            position: relative;
+            overflow: hidden;
         }
 
-        .hero h1 {
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -100px; left: -100px;
+            width: 400px; height: 400px;
+            background: var(--primary);
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            z-index: 0;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -100px; right: -100px;
+            width: 300px; height: 300px;
+            background: #ffd700;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .hero-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .hero-text h1 {
             font-size: 3.5rem;
-            margin-bottom: 1rem;
-            font-weight: 800;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
         }
 
-        .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            opacity: 0.95;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+        .hero-text h1 span {
+            color: var(--primary);
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero-text h1 span::before {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            width: 100%;
+            height: 15px;
+            background: rgba(106, 228, 77, 0.3);
+            z-index: -1;
+            transform: skewX(-15deg);
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 2.5rem;
+            max-width: 90%;
         }
 
         .hero-buttons {
             display: flex;
-            gap: 1rem;
-            justify-content: center;
+            gap: 1.5rem;
             flex-wrap: wrap;
-            margin-bottom: 2rem;
         }
 
-        .btn {
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 1rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-primary {
-            background: white;
-            color: #6ae44d;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: white;
-            border: 2px solid white;
-        }
-
-        .btn-secondary:hover {
-            background: white;
-            color: #6ae44d;
-        }
-
-        /* Stats Section */
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 3rem 2rem;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: all 0.3s;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(106, 228, 77, 0.2);
-        }
-
-        .stat-icon {
-            font-size: 3rem;
-            color: #6ae44d;
-            margin-bottom: 1rem;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #6ae44d;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            font-size: 1rem;
-            color: #666;
-        }
-
-        /* Features Section */
-        .features {
-            background: white;
-            padding: 4rem 2rem;
-        }
-
-        .features-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            font-size: 2.5rem;
-            text-align: center;
-            margin-bottom: 3rem;
-            color: #222;
-            font-weight: 800;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .feature-card {
-            background: linear-gradient(135deg, rgba(106, 228, 77, 0.1), rgba(165, 255, 132, 0.05));
-            padding: 2rem;
-            border-radius: 15px;
-            border: 2px solid rgba(106, 228, 77, 0.2);
-            transition: all 0.3s;
-        }
-
-        .feature-card:hover {
-            border-color: #6ae44d;
-            box-shadow: 0 8px 25px rgba(106, 228, 77, 0.15);
-            transform: translateY(-5px);
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            color: #6ae44d;
-            margin-bottom: 1rem;
-        }
-
-        .feature-title {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #222;
-            margin-bottom: 0.75rem;
-        }
-
-        .feature-desc {
-            color: #666;
-            line-height: 1.6;
-        }
-
-        /* How It Works */
-        .how-it-works {
-            background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
-            padding: 4rem 2rem;
-        }
-
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .step {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            text-align: center;
+        .hero-image {
             position: relative;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero-image img {
+            width: 100%;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            border: 5px solid rgba(255,255,255,0.5);
+        }
+
+        .floating-badge {
+            position: absolute;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 700;
+            bottom: 40px;
+            right: -20px;
+            animation: float 5s ease-in-out infinite reverse;
+        }
+        
+        .floating-badge i {
+            background: var(--primary);
+            color: white;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* --- Stats Section --- */
+        .stats {
+            padding: 4rem 5%;
+            background: white;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            margin-top: -3rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .stat-item h3 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+        .stat-item p { color: var(--text-light); font-weight: 600; }
+
+        /* --- How It Works --- */
+        .section { padding: 6rem 5%; }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .section-header p {
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .step-card {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            border-top: 4px solid transparent;
+        }
+
+        .step-card:hover {
+            transform: translateY(-10px);
+            border-top-color: var(--primary);
         }
 
         .step-number {
-            width: 50px;
-            height: 50px;
-            background: #6ae44d;
-            color: white;
+            font-size: 4rem;
+            font-weight: 900;
+            color: rgba(106, 228, 77, 0.1);
+            position: absolute;
+            top: -10px;
+            left: 10px;
+        }
+
+        .step-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(106, 228, 77, 0.1);
+            color: var(--primary);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
-            font-weight: bold;
-            margin: 0 auto 1rem;
+            margin: 0 auto 1.5rem;
+            position: relative;
+            z-index: 2;
         }
 
-        .step-title {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #222;
-            margin-bottom: 0.5rem;
-        }
+        .step-card h3 { margin-bottom: 1rem; }
+        .step-card p { font-size: 0.9rem; color: var(--text-light); }
 
-        .step-desc {
-            color: #666;
-            line-height: 1.6;
-        }
+        /* --- Features Section --- */
+        .features { background: var(--light); }
 
-        /* CTA Section */
-        .cta {
-            background: linear-gradient(135deg, #6ae44d 0%, #a5ff84 100%);
-            color: white;
-            padding: 3rem 2rem;
-            text-align: center;
+        .feature-row {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+            margin-bottom: 4rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
         }
+        
+        .feature-row:nth-child(even) { flex-direction: row-reverse; }
 
-        .cta-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
+        .feature-img { flex: 1; }
+        .feature-img img { border-radius: var(--radius); box-shadow: var(--shadow); }
 
-        .cta h2 {
+        .feature-content { flex: 1; }
+
+        .feature-content h3 {
             font-size: 2rem;
             margin-bottom: 1rem;
+            color: var(--dark);
         }
 
-        .cta p {
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            opacity: 0.95;
+        .feature-list {
+            margin-top: 1.5rem;
         }
 
-        /* Footer */
+        .feature-list li {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-light);
+        }
+
+        .feature-list li i { color: var(--primary); }
+
+        /* --- CTA Section --- */
+        .cta {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            border-radius: 30px;
+            margin: 4rem 5%;
+            padding: 4rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-content { position: relative; z-index: 2; }
+
+        .cta h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .cta p { color: rgba(255,255,255,0.7); margin-bottom: 2rem; }
+        
+        .cta-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #2c3e50 0%, #1a1a2e 100%);
+            z-index: 1;
+        }
+        
+        .cta-shape {
+            position: absolute;
+            width: 300px; height: 300px;
+            background: var(--primary);
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.2;
+            top: -50px; right: -50px;
+        }
+
+        /* --- Footer --- */
         footer {
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-            color: #6ae44d;
-            padding: 3rem 2rem;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
+            background: white;
+            padding: 4rem 5% 2rem;
+            border-top: 1px solid #eee;
         }
 
         .footer-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
             gap: 2rem;
-            margin-bottom: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            margin-bottom: 3rem;
         }
 
-        .footer-column h4 {
-            color: #6ae44d;
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
+        .footer-col h4 {
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
         }
 
-        .footer-column ul {
-            list-style: none;
-        }
+        .footer-col ul li { margin-bottom: 0.8rem; }
+        .footer-col ul li a { color: var(--text-light); transition: 0.3s; }
+        .footer-col ul li a:hover { color: var(--primary); padding-right: 5px; }
 
-        .footer-column ul li {
-            margin-bottom: 0.5rem;
+        .social-links { display: flex; gap: 10px; margin-top: 1rem; }
+        .social-links a {
+            width: 35px; height: 35px;
+            background: #eee;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%;
+            transition: 0.3s;
         }
+        .social-links a:hover { background: var(--primary); color: white; }
 
-        .footer-column ul li a {
-            color: #ccc;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .footer-column ul li a:hover {
-            color: #6ae44d;
-        }
-
-        .footer-bottom {
-            border-top: 1px solid rgba(106, 228, 77, 0.3);
-            padding-top: 2rem;
+        .copyright {
             text-align: center;
-            color: #999;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            padding-top: 2rem;
+            border-top: 1px solid #eee;
         }
 
-        /* Responsive */
+        /* --- Animation Classes --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Mobile Responsive --- */
+        @media (max-width: 992px) {
+            .hero-container { grid-template-columns: 1fr; text-align: center; }
+            .hero-text p { margin: 0 auto 2.5rem; }
+            .hero-buttons { justify-content: center; }
+            .hero-image { margin-top: 3rem; }
+            .feature-row, .feature-row:nth-child(even) { flex-direction: column; text-align: center; }
+            .feature-list { justify-content: center; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+
         @media (max-width: 768px) {
-            nav {
-                padding: 1rem;
-            }
-
             .nav-links {
-                display: none;
-            }
-
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .hero p {
-                font-size: 1rem;
-            }
-
-            .hero-buttons {
+                position: fixed;
+                top: 0; right: -100%;
+                width: 80%; height: 100vh;
+                background: white;
                 flex-direction: column;
+                justify-content: center;
                 align-items: center;
+                box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+                transition: 0.4s;
+                z-index: 999;
             }
-
-            .hero-buttons .btn {
-                width: 100%;
-                max-width: 300px;
-            }
-
-            .section-title {
-                font-size: 1.8rem;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .stats {
-                grid-template-columns: 1fr;
-            }
-
-            .steps {
-                grid-template-columns: 1fr;
-            }
-
-            .cta h2 {
-                font-size: 1.5rem;
-            }
-
-            .footer-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero h1 {
-                font-size: 1.5rem;
-            }
-
-            .hero p {
-                font-size: 0.95rem;
-            }
-
-            .btn {
-                padding: 0.75rem 1.5rem;
-                font-size: 0.9rem;
-            }
-
-            .section-title {
-                font-size: 1.5rem;
-            }
+            .nav-links.active { right: 0; }
+            .menu-toggle { display: block; z-index: 1001; }
+            .stats { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+            .hero h1 { font-size: 2.5rem; }
+            .footer-grid { grid-template-columns: 1fr; text-align: center; }
+            .social-links { justify-content: center; }
+            
+            /* Hide profile extra info on small mobile */
+            .user-info { display: none; }
         }
     </style>
-
 </head>
 <body>
+
     <!-- Navbar -->
-    <nav>
-        <a href="index.html" class="logo">
-            <i class="fas fa-fire"></i> Tribly
-        </a>
-        <ul class="nav-links">
-            <li><a href="home.html">الرئيسية</a></li>
-            <li><a href="match.html">الأشخاص</a></li>
-            <li><a href="communities.html">المجتمعات</a></li>
-            <li><a href="faq.html">الأسئلة</a></li>
-            <li><a href="about.html">حول</a></li>
+    <nav class="navbar" id="navbar">
+        <div class="logo">
+            <i class="fas fa-leaf"></i>
+            Tribly
+        </div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#home" class="nav-link">الرئيسية</a></li>
+            <li><a href="#how" class="nav-link">كيف يعمل؟</a></li>
+            <li><a href="#features" class="nav-link">المميزات</a></li>
+            <li><a href="communities.html" class="nav-link">المجتمعات</a></li>
         </ul>
         <div class="nav-actions">
-            <a href="profile.html"><img id="profileImg" src="img/me.jpg" alt="صورة المستخدم" class="profile"></a>
-            <button class="menu-btn" id="menuBtn" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">
+            
+            <!-- زر تسجيل الدخول (يظهر للزوار فقط) -->
+            <div id="guest-actions">
+                <a href="login.html">
+                    <button class="button button-yellow">
+                        <span class="button-bg">
+                            <span class="button-bg-layers">
+                                <span class="button-bg-layer -layer-1"></span>
+                                <span class="button-bg-layer -layer-2"></span>
+                                <span class="button-bg-layer -layer-3"></span>
+                            </span>
+                        </span>
+                        <span class="button-inner">
+                            <span class="button-inner-static">دخول</span>
+                            <span class="button-inner-hover">دخول</span>
+                        </span>
+                    </button>
+                </a>
+                <a href="login.html">
+                    <button class="button button-green">
+                        <span class="button-bg">
+                            <span class="button-bg-layers">
+                                <span class="button-bg-layer -layer-1"></span>
+                                <span class="button-bg-layer -layer-2"></span>
+                                <span class="button-bg-layer -layer-3"></span>
+                            </span>
+                        </span>
+                        <span class="button-inner">
+                            <span class="button-inner-static">ابدأ الآن</span>
+                            <span class="button-inner-hover">ابدأ الآن</span>
+                        </span>
+                    </button>
+                </a>
+            </div>
+
+            <!-- بروفايل المستخدم (يظهر عند تسجيل الدخول) -->
+            <div id="user-actions" class="user-profile">
+                <div class="user-info">
+                    <span class="user-name" id="display-name">اسم المستخدم</span>
+                    <span class="user-status">نشط الآن</span>
+                </div>
+                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="profile-img" alt="Profile">
+                <button class="btn-logout" onclick="logout()">خروج</button>
+            </div>
+
+            <div class="menu-toggle" id="menuToggle">
                 <i class="fas fa-bars"></i>
-            </button>
+            </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero">
-        <h1>🌍 أوجد قبيلتك</h1>
-        <p>التقِ بأشخاص يشاركونك نفس الاهتمامات والقيم، وانضم إلى مجتمعات تثير شغفك</p>
-        <div class="hero-buttons">
-            <a href="match.html" class="btn btn-primary">
-                <i class="fas fa-rocket"></i> اكتشف الأشخاص
-            </a>
-            <a href="communities.html" class="btn btn-secondary">
-                <i class="fas fa-users"></i> استكشف المجتمعات
-            </a>
-        </div>
-    </section>
-
-    <!-- Stats Section -->
-    <section class="stats">
-        <div class="stat-card">
-            <div class="stat-icon">👥</div>
-            <div class="stat-number">5,000+</div>
-            <div class="stat-label">مستخدم نشط</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon">🌐</div>
-            <div class="stat-number">150+</div>
-            <div class="stat-label">مجتمع مختلف</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon">🤝</div>
-            <div class="stat-number">50,000+</div>
-            <div class="stat-label">اتصالات مشكلة</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon">⭐</div>
-            <div class="stat-number">4.8/5</div>
-            <div class="stat-label">تقييم المستخدمين</div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features">
-        <div class="features-container">
-            <h2 class="section-title">✨ مميزات Tribly</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">🎯</div>
-                    <div class="feature-title">تطابق ذكي</div>
-                    <div class="feature-desc">خوارزمية متقدمة تجد لك الأشخاص والمجتمعات التي تناسبك بناءً على اهتماماتك الحقيقية</div>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">💬</div>
-                    <div class="feature-title">تواصل مباشر</div>
-                    <div class="feature-desc">تحدث مع الأشخاص والمجتمعات مباشرة، شارك أفكارك وخبراتك بحرية</div>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">🔒</div>
-                    <div class="feature-title">خصوصية آمنة</div>
-                    <div class="feature-desc">بيانات آمنة وخصوصية محمية، تحكم كامل في ما تريد مشاركته</div>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">🌟</div>
-                    <div class="feature-title">مجتمعات متنوعة</div>
-                    <div class="feature-desc">من الرياضة إلى الفن والبرمجة، اختر المجتمعات التي تهمك</div>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">📱</div>
-                    <div class="feature-title">متوفر في كل مكان</div>
-                    <div class="feature-desc">استخدم Tribly على هاتفك أو حاسوبك، متزامن بشكل كامل</div>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">🎉</div>
-                    <div class="feature-title">أحداث ولقاءات</div>
-                    <div class="feature-desc">اكتشف أحداث وفعاليات في مجتمعاتك والتقِ بأعضائها مباشرة</div>
+    <header class="hero" id="home">
+        <div class="hero-container">
+            <div class="hero-text reveal">
+                <h1>ابحث عن <br><span>قبيلتك الحقيقية</span></h1>
+                <p>المنصة الأولى التي تربطك بأشخاص يتشاركونك نفس الاهتمامات والقيم في الواقع. كن على تواصل مع مجتمعك المحلي بطريقة لم تعهدها من قبل.</p>
+                <div class="hero-buttons">
+                    <a href="login.html">
+                        <button class="button button-green" style="width: 100%;">
+                            <span class="button-bg">
+                                <span class="button-bg-layers">
+                                    <span class="button-bg-layer -layer-1"></span>
+                                    <span class="button-bg-layer -layer-2"></span>
+                                    <span class="button-bg-layer -layer-3"></span>
+                                </span>
+                            </span>
+                            <span class="button-inner">
+                                <span class="button-inner-static">انضم للمجتمع <i class="fas fa-arrow-left" style="margin-right:8px;"></i></span>
+                                <span class="button-inner-hover">انضم للمجتمع <i class="fas fa-arrow-left" style="margin-right:8px;"></i></span>
+                            </span>
+                        </button>
+                    </a>
+                    <a href="#how">
+                        <button class="button button-white" style="width: 100%;">
+                            <span class="button-bg">
+                                <span class="button-bg-layers">
+                                    <span class="button-bg-layer -layer-1" style="background-color: #eee;"></span>
+                                    <span class="button-bg-layer -layer-2" style="background-color: #ddd;"></span>
+                                    <span class="button-bg-layer -layer-3" style="background-color: #ccc;"></span>
+                                </span>
+                            </span>
+                            <span class="button-inner">
+                                <span class="button-inner-static">اكتشف المزيد</span>
+                                <span class="button-inner-hover">اكتشف المزيد</span>
+                            </span>
+                        </button>
+                    </a>
                 </div>
             </div>
+            <div class="hero-image reveal">
+                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Group of friends">
+                <div class="floating-badge">
+                    <i class="fas fa-users"></i>
+                    <div>
+                        <div style="font-size: 0.9rem; color:#888;">نشط الآن</div>
+                        <div>+10k مستخدم</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Stats Section -->
+    <section class="stats reveal">
+        <div class="stat-item">
+            <h3 data-target="10000">0</h3>
+            <p>مستخدم نشط</p>
+        </div>
+        <div class="stat-item">
+            <h3 data-target="500">0</h3>
+            <p>فعالية شهرية</p>
+        </div>
+        <div class="stat-item">
+            <h3 data-target="350">0</h3>
+            <p>مجتمع متنوع</p>
+        </div>
+        <div class="stat-item">
+            <h3 data-target="15">0</h3>
+            <p>مدينة</p>
         </div>
     </section>
 
     <!-- How It Works -->
-    <section class="how-it-works">
-        <div class="features-container">
-            <h2 class="section-title">كيف يعمل Tribly؟</h2>
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <div class="step-title">أنشئ حسابك</div>
-                    <div class="step-desc">سجل حسابك واخبرنا عن اهتماماتك الحقيقية</div>
-                </div>
+    <section class="section" id="how">
+        <div class="section-header reveal">
+            <h2>كيف يعمل Tribly؟</h2>
+            <p>ثلاث خطوات بسيطة تفصلك عن اكتشاف عالم جديد من الصداقات الحقيقية.</p>
+        </div>
+        <div class="steps-grid">
+            <div class="step-card reveal">
+                <div class="step-number">1</div>
+                <div class="step-icon"><i class="fas fa-user-plus"></i></div>
+                <h3>أنشئ ملفك</h3>
+                <p>حدد اهتماماتك، هواياتك، ونوع التجارلات التي تبحث عنها لتتمكن من الوصول إليك.</p>
+            </div>
+            <div class="step-card reveal">
+                <div class="step-number">2</div>
+                <div class="step-icon"><i class="fas fa-search-location"></i></div>
+                <h3>اكتشف القريبين</h3>
+                <p>تقنيتنا الذكية تقترح عليك أشخاصاً ومجموعات تقع في نفس منطقتك الجغرافية.</p>
+            </div>
+            <div class="step-card reveal">
+                <div class="step-number">3</div>
+                <div class="step-icon"><i class="fas fa-handshake"></i></div>
+                <h3>تواصل وتفاعل</h3>
+                <p>انضم للفعاليات، ابدأ محادثات، والتقِ بأشخاص جدد يشاركونك نفس الشغف.</p>
+            </div>
+        </div>
+    </section>
 
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <div class="step-title">اكتشف الأشخاص</div>
-                    <div class="step-desc">ابحث عن أشخاص يشاركونك نفس الاهتمامات</div>
-                </div>
+    <!-- Features Section -->
+    <section class="section features" id="features">
+        <div class="section-header reveal">
+            <h2>لماذا تختار Tribly؟</h2>
+            <p>نحن لا نربطك فقط، بل نضمن لك تجربة اجتماعية آمنة وممتعة.</p>
+        </div>
 
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <div class="step-title">انضم للمجتمعات</div>
-                    <div class="step-desc">اختر المجتمعات التي تناسبك وابدأ الحوار</div>
-                </div>
+        <div class="feature-row reveal">
+            <div class="feature-img">
+                <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Community">
+            </div>
+            <div class="feature-content">
+                <h3>مجتمعات مبنية على الاهتمامات</h3>
+                <p>لا تضيع وقتك في البحث العشوائي. Tribly يستخدم الذكاء الاصطناعي ليقترح لك المجتمعات التي تناسب شخصيتك 100%.</p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check-circle"></i> توصيات ذكية ومخصصة</li>
+                    <li><i class="fas fa-check-circle"></i> تصفية دقيقة حسب العمر والموقع</li>
+                    <li><i class="fas fa-check-circle"></i> مجموعات خاصة وعامة</li>
+                </ul>
+            </div>
+        </div>
 
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <div class="step-title">بناء علاقات</div>
-                    <div class="step-desc">شارك أفكارك وتعلم من الآخرين بناء صداقات حقيقية</div>
-                </div>
+        <div class="feature-row reveal">
+            <div class="feature-img">
+                <img src="https://images.unsplash.com/photo-1560439514-4e9645039924?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Events">
+            </div>
+            <div class="feature-content">
+                <h3>فعاليات حقيقية (IRL)</h3>
+                <p>لا تبقَ خلف الشاشة فقط. اكتشف الفعاليات والأنشطة التي تقام في مدينتا وانضم إليها بضغطة زر.</p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-map-marked-alt"></i> خريطة تفاعلية للفعاليات</li>
+                    <li><i class="fas fa-ticket-alt"></i> حجز سهل ومباشر</li>
+                    <li><i class="fas fa-star"></i> تقييمات حقيقية من المشاركين</li>
+                </ul>
             </div>
         </div>
     </section>
 
     <!-- CTA Section -->
-    <section class="cta">
-        <div class="cta-container">
-            <h2>🚀 هل أنت مستعد لأيجاد قبيلتك؟</h2>
-            <p>انضم لآلاف الأشخاص الذين وجدوا مجتمعاتهم على Tribly</p>
-            <a href="profile.html" class="btn btn-primary">
-                <i class="fas fa-check"></i> ابدأ مجاناً الآن
-            </a>
+    <section class="section">
+        <div class="cta reveal">
+            <div class="cta-bg"></div>
+            <div class="cta-shape"></div>
+            <div class="cta-content">
+                <h2>جاهز للانضمام إلى قبيلتك؟</h2>
+                <p>ألوف الأشخاص ينتظرونك للبدء في هذه الرحلة. لا تفوت الفرصة.</p>
+                <a href="login.html">
+                    <button class="button button-green" style="font-size: 1.2rem; padding-left: 3rem; padding-right: 3rem;">
+                        <span class="button-bg">
+                            <span class="button-bg-layers">
+                                <span class="button-bg-layer -layer-1"></span>
+                                <span class="button-bg-layer -layer-2"></span>
+                                <span class="button-bg-layer -layer-3"></span>
+                            </span>
+                        </span>
+                        <span class="button-inner">
+                            <span class="button-inner-static">احصل على دعوة الآن</span>
+                            <span class="button-inner-hover">احصل على دعوة الآن</span>
+                        </span>
+                    </button>
+                </a>
+            </div>
         </div>
     </section>
 
     <!-- Footer -->
     <footer>
-        <div class="footer-content">
-            <div class="footer-grid">
-                <div class="footer-column">
-                    <h4>🔥 Tribly</h4>
-                    <p style="color: #ccc;">أوجد قبيلتك والتقِ بالأشخاص الذين يشبهونك</p>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="logo" style="margin-bottom: 1rem;">
+                    <i class="fas fa-leaf"></i> Tribly
                 </div>
-
-                <div class="footer-column">
-                    <h4>الروابط الرئيسية</h4>
-                    <ul>
-                        <li><a href="index.html">الرئيسية</a></li>
-                        <li><a href="match.html">الأشخاص</a></li>
-                        <li><a href="communities.html">المجتمعات</a></li>
-                        <li><a href="profile.html">الملف الشخصي</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-column">
-                    <h4>معلومات</h4>
-                    <ul>
-                        <li><a href="about.html">حول</a></li>
-                        <li><a href="manifesto.html">البيان</a></li>
-                        <li><a href="faq.html">الأسئلة الشائعة</a></li>
-                        <li><a href="support.html">الدعم</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-column">
-                    <h4>سياسات</h4>
-                    <ul>
-                        <li><a href="privacy.html">سياسة الخصوصية</a></li>
-                        <li><a href="service.html">شروط الخدمة</a></li>
-                        <li><a href="contact-us.html">تواصل معنا</a></li>
-                    </ul>
+                <p style="color: var(--text-light);">نحن هنا لمساعدتك في العثور على أشخاص يشاركونك شغفك وبناء صداقات تدوم للعمر.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
-
-            <div class="footer-bottom">
-                <p>&copy; 2025 Tribly - جميع الحقوق محفوظة</p>
-                <p style="margin-top: 1rem; font-size: 0.9rem;">صُنع بـ ❤️ لربط الناس بقبائلهم</p>
+            <div class="footer-col">
+                <h4>الشركة</h4>
+                <ul>
+                    <li><a href="#">عن Tribly</a></li>
+                    <li><a href="#">الوظائف</a></li>
+                    <li><a href="#">المدونة</a></li>
+                </ul>
             </div>
+            <div class="footer-col">
+                <h4>المصادر</h4>
+                <ul>
+                    <li><a href="#">مركز المساعدة</a></li>
+                    <li><a href="#">الشروط والأحكام</a></li>
+                    <li><a href="#">سياسة الخصوصية</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>تواصل معنا</h4>
+                <ul>
+                    <li><a href="mailto:support@tribly.com">support@tribly.com</a></li>
+                    <li>الإسكندرية، مصر</li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            © 2026 Tribly. جميع الحقوق محفوظة.
         </div>
     </footer>
 
-    <script src="js/profile-sync.js"></script>
-    
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
-    <script src="js/firebase-init.js"></script>
+    <!-- Scripts -->
+    <script>
+        // 1. Mobile Menu Toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+        const icon = menuToggle.querySelector('i');
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            if (navLinks.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+                document.body.style.overflow = 'hidden';
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+                document.body.style.overflow = 'auto';
+            });
+        });
+
+        // 2. Navbar Sticky Effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // 3. Scroll Reveal Animation
+        const revealElements = document.querySelectorAll('.reveal');
+
+        const revealOnScroll = () => {
+            const windowHeight = window.innerHeight;
+            const elementVisible = 150;
+
+            revealElements.forEach((reveal) => {
+                const elementTop = reveal.getBoundingClientRect().top;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveal.classList.add('active');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll();
+
+        // 4. Number Counter Animation
+        const stats = document.querySelectorAll('.stat-item h3');
+        let hasAnimated = false;
+
+        const animateStats = () => {
+            const statsSection = document.querySelector('.stats');
+            const sectionPos = statsSection.getBoundingClientRect().top;
+            const screenPos = window.innerHeight / 1.3;
+
+            if (sectionPos < screenPos && !hasAnimated) {
+                stats.forEach(stat => {
+                    const target = +stat.getAttribute('data-target');
+                    const increment = target / 100;
+                    
+                    const updateCount = () => {
+                        const count = +stat.innerText.replace('+', '').replace('k', '000');
+                        if (count < target) {
+                            stat.innerText = Math.ceil(count + increment);
+                            setTimeout(updateCount, 20);
+                        } else {
+                            if (target > 1000) {
+                                stat.innerText = (target / 1000) + 'k+';
+                            } else {
+                                stat.innerText = target + '+';
+                            }
+                        }
+                    };
+                    updateCount();
+                });
+                hasAnimated = true;
+            }
+        };
+
+        window.addEventListener('scroll', animateStats);
+
+        // --- NEW: Login State Logic ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = localStorage.getItem("tribble_user");
+            const guestActions = document.getElementById("guest-actions");
+            const userActions = document.getElementById("user-actions");
+            const displayName = document.getElementById("display-name");
+
+            if (currentUser) {
+                // User is logged in
+                guestActions.style.display = "none";
+                userActions.style.display = "flex";
+                displayName.textContent = currentUser;
+            } else {
+                // User is guest
+                guestActions.style.display = "flex";
+                userActions.style.display = "none";
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem("tribble_user");
+            // Reload to show login buttons
+            window.location.reload();
+        }
+
+    </script>
 </body>
 </html>
