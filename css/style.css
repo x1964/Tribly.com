@@ -410,7 +410,7 @@ footer img:hover, nav .logo img:hover {
 
         .cards .card:nth-child(1) { animation-delay: 0.2s; }
         .cards .card:nth-child(2) { animation-delay: 0.4s; }
-        .cards .card:nth-child(3) { animation-delay: 0.6s; }
+        .cards .card:nth-child(3) { animation-delay: 0.6s; min-height: 500px; }
         .cards .card:nth-child(4) { animation-delay: 0.8s; }
         .cards .card:nth-child(5) { animation-delay: 1s; }
 
@@ -1080,7 +1080,7 @@ footer img:hover, nav .logo img:hover {
                 width: 100%;
                 padding: 0.7rem 0.8rem;
                 font-size: 0.8rem;
-                border-radius: 8px;
+                border-radius: 30px;
             }
             
             .hero-image img {
@@ -1158,7 +1158,7 @@ footer img:hover, nav .logo img:hover {
             }
             
             .hero-buttons .btn {
-                font-size: 0.75rem;
+                font-size: 0.5rem;
                 padding: 0.6rem;
             }
             
