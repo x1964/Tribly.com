@@ -4,1134 +4,673 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#6ae44d">
-    <title>رمز دعوة Tribly</title>
+    <title>قائمة الانتظار | Tribly</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* CSS Variables */
+        /* --- Variables & Theme --- */
         :root {
-            --primary-color: #6ae44d;
+            --primary: #6ae44d;
             --primary-dark: #4bc72d;
-            --secondary-color: #ffd166;
-            --accent-color: #ef476f;
-            --dark-bg: #1a1a2e;
-            --light-bg: #f8f9fa;
-            --text-dark: #2d3436;
-            --text-light: #636e72;
-            --success-color: #00b894;
-            --warning-color: #fdcb6e;
-            --border-radius: 12px;
-            --box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --secondary: #ffd166;
+            --text-main: #2d3436;
+            --text-muted: #636e72;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            --radius: 24px;
+            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        /* Reset & Base */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* --- Global Reset --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
-            color: var(--text-dark);
-            line-height: 1.6;
+            font-family: 'Cairo', 'Poppins', sans-serif;
+            background-color: #f0f2f5;
+            /* خلفية نقاط ناعمة */
+            background-image: radial-gradient(#6ae44d 1px, transparent 1px);
+            background-size: 40px 40px;
+            color: var(--text-main);
             min-height: 100vh;
-            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            overflow-x: hidden;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+        /* --- Layout --- */
+        .wrapper {
+            width: 100%;
+            max-width: 1100px;
+            position: relative;
+            z-index: 2;
         }
 
-        /* Header */
+        /* --- Header --- */
         .header {
             text-align: center;
-            padding: 40px 0 30px;
-            position: relative;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.8s ease-out;
         }
 
-        .logo {
+        .logo-area {
             display: inline-flex;
             align-items: center;
             gap: 12px;
+            background: white;
+            padding: 8px 20px 8px 8px;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             margin-bottom: 20px;
-            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .logo-area:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+
+        .logo-area img {
+            width: 40px; height: 40px; border-radius: 50%; object-fit: contain;
         }
 
-        .logo img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: 3px solid var(--primary-color);
-            box-shadow: 0 4px 15px rgba(106, 228, 77, 0.3);
-        }
-
-        .logo span {
-            font-size: 28px;
+        .header h1 {
+            font-size: 3rem;
             font-weight: 800;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+        
+        .header h1 span { color: var(--primary); }
+
+        .header p { color: var(--text-muted); font-size: 1.1rem; }
+
+        /* --- Main Grid --- */
+        .grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .grid { grid-template-columns: 1fr; }
+            .header h1 { font-size: 2.2rem; }
+        }
+
+        /* --- Glass Cards --- */
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 40px;
+            box-shadow: var(--glass-shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* --- Left: Input Section --- */
+        .input-card {
+            min-height: 550px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .step-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(106, 228, 77, 0.15);
+            color: #2d6a1e;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+            width: fit-content;
+        }
+
+        .code-container {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 30px 0;
+        }
+
+        .digit-box {
+            width: 60px;
+            height: 75px;
+            background: white;
+            border: 2px solid #e1e1e1;
+            border-radius: 16px;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-main);
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .digit-box:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 5px rgba(106, 228, 77, 0.15);
+            transform: translateY(-5px);
+            outline: none;
+        }
+
+        .digit-box.filled {
+            border-color: var(--primary);
+            background: #f6fff0;
+            color: var(--primary-dark);
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 10px 25px rgba(106, 228, 77, 0.4);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(106, 228, 77, 0.5);
+        }
+
+        .submit-btn:active { transform: scale(0.98); }
+
+        /* --- Waitlist Success State (Hidden) --- */
+        .waitlist-ui {
+            display: none;
+            text-align: center;
+            animation: scaleIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .rank-hero {
+            position: relative;
+            margin: 20px auto 40px;
+            width: 160px;
+            height: 160px;
+        }
+
+        .rank-circle {
+            width: 100%;
+            height: 100%;
+            background: conic-gradient(from 0deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 50px rgba(106, 228, 77, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .rank-circle::before {
+            content: '';
+            position: absolute;
+            inset: 6px;
+            background: white;
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        .rank-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--primary-dark), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            color: var(--text-dark);
-        }
-
-        .header p {
-            font-size: 1.1rem;
-            color: var(--text-light);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* Main Layout */
-        .main-layout {
+        .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin: 30px 0;
-        }
-
-        @media (max-width: 992px) {
-            .main-layout {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Code Entry Section */
-        .code-section {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 40px;
-            box-shadow: var(--box-shadow);
-            border: 2px solid rgba(106, 228, 77, 0.1);
-        }
-
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 25px;
-            color: var(--text-dark);
-        }
-
-        .section-title i {
-            color: var(--primary-color);
-            font-size: 1.5rem;
-        }
-
-        .section-title h2 {
-            font-size: 1.8rem;
-        }
-
-        /* Code Input */
-        .code-input-container {
-            margin: 30px 0;
-        }
-
-        .code-input {
-            display: flex;
             gap: 15px;
-            justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
-        .code-digit {
-            width: 60px;
-            height: 70px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            text-align: center;
-            font-size: 28px;
-            font-weight: bold;
-            color: var(--text-dark);
-            transition: var(--transition);
-            background: white;
-        }
-
-        .code-digit:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(106, 228, 77, 0.2);
-            outline: none;
-            transform: translateY(-2px);
-        }
-
-        .code-digit.filled {
-            border-color: var(--primary-color);
-            background: rgba(106, 228, 77, 0.05);
-        }
-
-        /* Buttons */
-        .btn {
-            padding: 16px 32px;
-            border: none;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: white;
-            box-shadow: 0 4px 15px rgba(106, 228, 77, 0.4);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(106, 228, 77, 0.5);
-        }
-
-        .btn-secondary {
-            background: var(--light-bg);
-            color: var(--text-dark);
-            border: 2px solid #e0e0e0;
-        }
-
-        .btn-secondary:hover {
-            background: #e9ecef;
-            border-color: var(--primary-color);
-        }
-
-        .btn-disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        /* Gift Info Card */
-        .gift-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: var(--border-radius);
-            padding: 35px;
-            box-shadow: var(--box-shadow);
-            position: relative;
-            overflow: hidden;
-            min-height: 300px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .gift-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100px;
-            height: 100px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-        }
-
-        .gift-card::after {
-            content: '';
-            position: absolute;
-            bottom: -50px;
-            left: -50px;
-            width: 150px;
-            height: 150px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 50%;
-        }
-
-        .gift-icon {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-
-        .gift-title {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-
-        .gift-desc {
-            font-size: 1rem;
-            opacity: 0.9;
-            margin-bottom: 25px;
-            line-height: 1.7;
-        }
-
-        /* Invite Status */
-        .invite-status {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 30px;
-            margin-top: 30px;
-            box-shadow: var(--box-shadow);
-        }
-
-        .status-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .status-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .status-item {
-            text-align: center;
+        .stat-item {
+            background: rgba(255, 255, 255, 0.6);
             padding: 20px;
-            border-radius: 10px;
-            background: var(--light-bg);
-            transition: var(--transition);
-        }
-
-        .status-item:hover {
-            transform: translateY(-5px);
-            background: white;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-
-        .status-number {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--primary-color);
-            margin-bottom: 10px;
-        }
-
-        .status-label {
-            color: var(--text-light);
-            font-size: 0.9rem;
-        }
-
-        /* Share Section */
-        .share-section {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 40px;
-            margin-top: 30px;
-            box-shadow: var(--box-shadow);
-        }
-
-        .share-buttons {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-top: 25px;
-        }
-
-        .share-btn {
-            flex: 1;
-            min-width: 120px;
-            padding: 15px;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .share-facebook {
-            background: #1877f2;
-            color: white;
-        }
-
-        .share-twitter {
-            background: #1da1f2;
-            color: white;
-        }
-
-        .share-whatsapp {
-            background: #25d366;
-            color: white;
-        }
-
-        .share-link {
-            background: var(--light-bg);
-            color: var(--text-dark);
-        }
-
-        .share-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        /* Copy Code */
-        .copy-section {
-            background: rgba(106, 228, 77, 0.1);
-            border: 2px dashed var(--primary-color);
-            border-radius: var(--border-radius);
-            padding: 25px;
-            margin-top: 25px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-        }
-
-        .code-display {
-            font-family: 'Courier New', monospace;
-            font-size: 1.2rem;
-            font-weight: bold;
-            letter-spacing: 3px;
-            color: var(--text-dark);
-            background: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            flex-grow: 1;
-            text-align: center;
-        }
-
-        .copy-btn {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: var(--transition);
-        }
-
-        .copy-btn:hover {
-            background: var(--primary-dark);
-            transform: scale(1.05);
-        }
-
-        /* Generated Codes */
-        .generated-codes {
-            margin-top: 40px;
-        }
-
-        .codes-list {
-            display: grid;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .code-item {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-            border-left: 4px solid var(--primary-color);
-            transition: var(--transition);
-        }
-
-        .code-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.12);
-        }
-
-        .code-value {
-            font-family: 'Courier New', monospace;
-            font-weight: bold;
-            letter-spacing: 2px;
-            color: var(--text-dark);
-        }
-
-        .code-status {
-            padding: 5px 15px;
             border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
+            text-align: center;
         }
 
-        .status-used {
-            background: #ffeaa7;
-            color: #e17055;
+        .stat-val { font-size: 1.8rem; font-weight: 800; color: var(--text-main); }
+        .stat-lbl { font-size: 0.9rem; color: var(--text-muted); }
+
+        /* --- Right: Visual/Live Queue --- */
+        .visual-card {
+            background: linear-gradient(135deg, #2d3436, #000);
+            color: white;
+            border: none;
+            min-height: 400px;
         }
 
-        .status-available {
-            background: #d1f7c4;
-            color: #00b894;
+        .visual-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* Notifications */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 20px 25px;
-            border-radius: var(--border-radius);
-            background: white;
-            box-shadow: var(--box-shadow);
+        .live-dot {
+            width: 10px; height: 10px;
+            background: #ff4757;
+            border-radius: 50%;
+            box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7);
+            animation: pulse-red 2s infinite;
+        }
+
+        .queue-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .queue-row {
             display: flex;
             align-items: center;
             gap: 15px;
-            transform: translateX(120%);
-            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            z-index: 1000;
-            max-width: 400px;
+            background: rgba(255,255,255,0.08);
+            padding: 12px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.05);
+            backdrop-filter: blur(5px);
+            transition: var(--transition);
+            animation: slideInLeft 0.5s ease-out forwards;
+            opacity: 0;
         }
 
-        .notification.show {
-            transform: translateX(0);
+        .queue-row:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateX(-5px);
         }
 
-        .notification.success {
-            border-right: 5px solid var(--success-color);
+        /* Staggered animation delays */
+        .queue-row:nth-child(1) { animation-delay: 0.1s; }
+        .queue-row:nth-child(2) { animation-delay: 0.3s; }
+        .queue-row:nth-child(3) { animation-delay: 0.5s; }
+        .queue-row:nth-child(4) { animation-delay: 0.7s; }
+
+        .q-avatar {
+            width: 45px; height: 45px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.2);
+            position: relative;
         }
 
-        .notification.error {
-            border-right: 5px solid var(--accent-color);
+        .q-info {
+            flex: 1;
         }
 
-        .notification-icon {
-            font-size: 1.5rem;
+        .q-status {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.6);
+            display: block;
         }
 
-        .notification.success .notification-icon {
-            color: var(--success-color);
+        .q-rank {
+            background: var(--primary);
+            color: black;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.85rem;
         }
 
-        .notification.error .notification-icon {
-            color: var(--accent-color);
-        }
-
-        /* Loading Animation */
-        .loading {
+        /* --- Loading Overlay --- */
+        .loader-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
             display: none;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 40px;
+            flex-direction: column;
+            z-index: 10;
+            border-radius: var(--radius);
         }
 
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--primary-color);
+        .spinner {
+            width: 50px; height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        /* --- Animations Keyframes --- */
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 71, 87, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes scaleIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+        @keyframes slideInLeft { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
 
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 40px 0 20px;
-            color: var(--text-light);
-            font-size: 0.9rem;
-            border-top: 1px solid #eee;
-            margin-top: 50px;
+        /* --- Confetti --- */
+        .confetti {
+            position: absolute;
+            width: 10px; height: 10px;
+            background-color: #f00;
+            animation: fall linear forwards;
         }
+        @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
 
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin: 20px 0;
-        }
-
-        .footer-links a {
-            color: var(--text-light);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .footer-links a:hover {
-            color: var(--primary-color);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .code-digit {
-                width: 50px;
-                height: 60px;
-                font-size: 24px;
-            }
-            
-            .code-section, .gift-card, .invite-status, .share-section {
-                padding: 25px;
-            }
-            
-            .share-buttons {
-                flex-direction: column;
-            }
-            
-            .share-btn {
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .code-digit {
-                width: 40px;
-                height: 50px;
-                font-size: 20px;
-            }
-            
-            .header h1 {
-                font-size: 1.7rem;
-            }
-            
-            .section-title h2 {
-                font-size: 1.5rem;
-            }
-        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
+
+    <div class="wrapper">
         <header class="header">
-            <a href="index.html" class="logo">
-                <img src="img/logo icon.png" alt="Tribly Logo">
-                <span>Tribly</span>
-            </a>
-            <h1>🎁 رمز دعوة هدية</h1>
-            <p>أدخل رمز الدعوة الخاص بك للحصول على مميزات حصرية وانضم إلى مجتمع Tribly</p>
+            <div class="logo-area">
+                <img src="img/logo icon.png" onerror="this.src='https://picsum.photos/50/50'" alt="Tribly">
+                <span style="font-weight: 800; font-size: 1.2rem; color: #2d3436;">Tribly</span>
+            </div>
+            <h1>انضم لقائمة <span>الانتظار</span></h1>
+            <p>أدخل رمز دعوتك للحصول على رتبة مميزة في أقرب وقت.</p>
         </header>
 
-        <!-- Main Layout -->
-        <div class="main-layout">
-            <!-- Left Column: Code Entry -->
-            <div class="code-section">
-                <div class="section-title">
-                    <i class="fas fa-key"></i>
-                    <h2>أدخل رمز الدعوة</h2>
-                </div>
+        <div class="grid">
+            
+            <!-- Left Column: Interactive -->
+            <div class="card input-card">
                 
-                <div class="code-input-container">
-                    <div class="code-input" id="codeInput">
-                        <input type="text" class="code-digit" maxlength="1" data-index="0" inputmode="numeric">
-                        <input type="text" class="code-digit" maxlength="1" data-index="1" inputmode="numeric">
-                        <input type="text" class="code-digit" maxlength="1" data-index="2" inputmode="numeric">
-                        <input type="text" class="code-digit" maxlength="1" data-index="3" inputmode="numeric">
-                        <span style="font-size: 24px; color: #ccc; align-self: center;">-</span>
-                        <input type="text" class="code-digit" maxlength="1" data-index="4" inputmode="numeric">
-                        <input type="text" class="code-digit" maxlength="1" data-index="5" inputmode="numeric">
-                        <input type="text" class="code-digit" maxlength="1" data-index="6" inputmode="numeric">
-                        <input type="text" class="code-digit" maxlength="1" data-index="7" inputmode="numeric">
+                <!-- Loader -->
+                <div class="loader-overlay" id="loader">
+                    <div class="spinner"></div>
+                    <h3 style="color: var(--text-main); font-size: 1.2rem;">جاري الحجز...</h3>
+                </div>
+
+                <!-- Input Section -->
+                <div id="inputSection">
+                    <div class="step-badge">
+                        <i class="fas fa-lock-open"></i>
+                        الرمز مطلوب للانضمام
+                    </div>
+                    <h2 style="font-size: 1.8rem; margin-bottom: 10px;">أدخل رمز الدعوة</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 30px;">
+                        تأكد من أن الرمز مكون من 8 خانات أرقام وحروف.
+                    </p>
+
+                    <div class="code-container" id="codeInputs">
+                        <input type="text" class="digit-box" maxlength="1" inputmode="numeric">
+                        <input type="text" class="digit-box" maxlength="1" inputmode="numeric">
+                        <input type="text" class="digit-box" maxlength="1" inputmode="numeric">
+                        <input type="text" class="digit-box" maxlength="1" inputmode="numeric">
+                        <span style="align-self: center; color: #ccc; font-size: 1.5rem;">-</span>
+                        <input type="text" class="digit-box" maxlength="1" inputmode="numeric">
+                        <input type="text" class="digit-box" maxlength="1" inputmode="numeric">
+                        <input type="text" class="digit-box" maxlength="1" inputmode="numeric">
+                        <input type="text" class="digit-box" maxlength="1" inputmode="numeric">
+                    </div>
+
+                    <button class="submit-btn" id="joinBtn">
+                        تفعيل الرمز <i class="fas fa-arrow-left" style="font-size: 0.9rem;"></i>
+                    </button>
+                </div>
+
+                <!-- Result Section (Success) -->
+                <div id="waitlistSection" class="waitlist-ui">
+                    <div class="rank-hero">
+                        <div class="rank-circle">
+                            <div class="rank-number" id="finalRank">#1</div>
+                        </div>
                     </div>
                     
-                    <button class="btn btn-primary" id="validateCode">
-                        <i class="fas fa-check-circle"></i>
-                        تفعيل الرمز
-                    </button>
-                    
-                    <button class="btn btn-secondary" id="generateCode">
-                        <i class="fas fa-gift"></i>
-                        إنشاء رمز جديد
-                    </button>
-                </div>
+                    <h2 style="font-size: 1.8rem; margin-bottom: 5px;">تم الحجز بنجاح!</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 30px;">أنت الآن في قائمة الانتظار الحصرية</p>
 
-                <!-- Copy Code Section -->
-                <div class="copy-section">
-                    <div class="code-display" id="generatedCodeDisplay">
-                        انقر على "إنشاء رمز جديد"
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-val">#405</div>
+                            <div class="stat-lbl">مكانك المحلي</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-val">#12K</div>
+                            <div class="stat-lbl">عالمياً</div>
+                        </div>
                     </div>
-                    <button class="copy-btn" id="copyCodeBtn">
-                        <i class="fas fa-copy"></i>
-                        نسخ
-                    </button>
+
+                    <div style="background: #fff3cd; padding: 15px; border-radius: 12px; color: #856404; font-size: 0.9rem; display: flex; gap: 10px; align-items: center;">
+                        <i class="fas fa-clock"></i>
+                        <span>متوقع دخولك خلال <strong>أقل من 48 ساعة</strong></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Column: Visual (Live Queue) -->
+            <div class="card visual-card">
+                <div class="visual-header">
+                    <div>
+                        <h3 style="font-size: 1.2rem;">نشاط القائمة</h3>
+                        <span style="font-size: 0.8rem; color: rgba(255,255,255,0.5);">آخر الانضمامات</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: bold;">
+                        <div class="live-dot"></div>
+                        LIVE
+                    </div>
+                </div>
+
+                <div class="queue-list" id="queueList">
+                    <!-- Dynamic Generation or Static Mockup -->
+                    <div class="queue-row">
+                        <div class="q-avatar">
+                            <img src="https://picsum.photos/seed/1/50/50" alt="Avatar">
+                        </div>
+                        <div class="q-info">
+                            <span class="q-status">تم الانضمام للتو</span>
+                            <span style="font-size: 0.7rem; color: rgba(255,255,255,0.4);">Alexandria, EG</span>
+                        </div>
+                        <div class="q-rank">#405</div>
+                    </div>
+
+                    <div class="queue-row">
+                        <div class="q-avatar">
+                            <img src="https://picsum.photos/seed/2/50/50" alt="Avatar">
+                        </div>
+                        <div class="q-info">
+                            <span class="q-status">منذ 2 دقيقة</span>
+                            <span style="font-size: 0.7rem; color: rgba(255,255,255,0.4);">Cairo, EG</span>
+                        </div>
+                        <div class="q-rank">#404</div>
+                    </div>
+
+                    <div class="queue-row">
+                        <div class="q-avatar">
+                            <img src="https://picsum.photos/seed/3/50/50" alt="Avatar">
+                        </div>
+                        <div class="q-info">
+                            <span class="q-status">منذ 5 دقائق</span>
+                            <span style="font-size: 0.7rem; color: rgba(255,255,255,0.4);">Riyadh, SA</span>
+                        </div>
+                        <div class="q-rank">#403</div>
+                    </div>
+
+                    <div class="queue-row">
+                        <div class="q-avatar">
+                            <img src="https://picsum.photos/seed/4/50/50" alt="Avatar">
+                        </div>
+                        <div class="q-info">
+                            <span class="q-status">منذ 8 دقائق</span>
+                            <span style="font-size: 0.7rem; color: rgba(255,255,255,0.4);">Dubai, UAE</span>
+                        </div>
+                        <div class="q-rank">#402</div>
+                    </div>
                 </div>
             </div>
-
-            <!-- Right Column: Gift Info -->
-            <div class="gift-card">
-                <div class="gift-icon">
-                    <i class="fas fa-gift"></i>
-                </div>
-                <h3 class="gift-title">ماذا تحصل عليه؟</h3>
-                <div class="gift-desc">
-                    <p>✨ <strong>30 يوم مجاناً:</strong> استمتع بكامل الميزات المميزة</p>
-                    <p>🚀 <strong>500 نقطة:</strong> ابدأ بمخزون نقاط للاستخدام في الميزات المميزة</p>
-                    <p>👑 <strong>رتبة VIP:</strong> احصل على رتبة VIP لمدة أسبوعين</p>
-                    <p>🎯 <strong>وصول مبكر:</strong> كن أول من يجرب الميزات الجديدة</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Invite Status -->
-        <div class="invite-status">
-            <div class="section-title">
-                <i class="fas fa-chart-line"></i>
-                <h2>إحصائيات دعواتك</h2>
-            </div>
-            
-            <div class="status-grid">
-                <div class="status-item">
-                    <div class="status-number" id="totalCodes">5</div>
-                    <div class="status-label">رموز متاحة</div>
-                </div>
-                <div class="status-item">
-                    <div class="status-number" id="usedCodes">12</div>
-                    <div class="status-label">تم استخدامها</div>
-                </div>
-                <div class="status-item">
-                    <div class="status-number" id="remainingCodes">3</div>
-                    <div class="status-label">متبقية</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Share Section -->
-        <div class="share-section">
-            <div class="section-title">
-                <i class="fas fa-share-alt"></i>
-                <h2>شارك رمز الدعوة</h2>
-            </div>
-            
-            <div class="share-buttons">
-                <button class="share-btn share-facebook" data-platform="facebook">
-                    <i class="fab fa-facebook-f"></i>
-                    Facebook
-                </button>
-                <button class="share-btn share-twitter" data-platform="twitter">
-                    <i class="fab fa-twitter"></i>
-                    Twitter
-                </button>
-                <button class="share-btn share-whatsapp" data-platform="whatsapp">
-                    <i class="fab fa-whatsapp"></i>
-                    WhatsApp
-                </button>
-                <button class="share-btn share-link" data-platform="link">
-                    <i class="fas fa-link"></i>
-                    نسخ الرابط
-                </button>
-            </div>
-        </div>
-
-        <!-- Generated Codes List -->
-        <div class="generated-codes">
-            <div class="section-title">
-                <i class="fas fa-list"></i>
-                <h2>رموز الدعوة الخاصة بي</h2>
-            </div>
-            
-            <div class="codes-list" id="codesList">
-                <!-- Codes will be populated by JavaScript -->
-            </div>
-        </div>
-
-        <!-- Loading State -->
-        <div class="loading" id="loading">
-            <div class="loading-spinner"></div>
-            <p>جاري معالجة طلبك...</p>
-        </div>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="footer-links">
-                <a href="privacy.html">سياسة الخصوصية</a>
-                <a href="terms.html">شروط الاستخدام</a>
-                <a href="support.html">الدعم الفني</a>
-                <a href="contact.html">اتصل بنا</a>
-            </div>
-            <p>© 2024 Tribly. جميع الحقوق محفوظة.</p>
-            <p style="margin-top: 10px; font-size: 0.8rem; color: #aaa;">
-                رمز الدعوة صالح لمدة 30 يوماً من تاريخ الإنشاء
-            </p>
-        </footer>
-    </div>
-
-    <!-- Notification -->
-    <div class="notification" id="notification">
-        <i class="fas notification-icon"></i>
-        <div class="notification-content">
-            <strong class="notification-title"></strong>
-            <p class="notification-message"></p>
         </div>
     </div>
 
     <script>
         // DOM Elements
-        const codeDigits = document.querySelectorAll('.code-digit');
-        const validateBtn = document.getElementById('validateCode');
-        const generateBtn = document.getElementById('generateCode');
-        const copyBtn = document.getElementById('copyCodeBtn');
-        const codeDisplay = document.getElementById('generatedCodeDisplay');
-        const shareButtons = document.querySelectorAll('.share-btn');
-        const codesList = document.getElementById('codesList');
-        const notification = document.getElementById('notification');
-        const loading = document.getElementById('loading');
+        const inputs = document.querySelectorAll('.digit-box');
+        const joinBtn = document.getElementById('joinBtn');
+        const inputSection = document.getElementById('inputSection');
+        const waitlistSection = document.getElementById('waitlistSection');
+        const loader = document.getElementById('loader');
 
-        // Sample Data
-        let userInvites = {
-            total: 5,
-            used: 12,
-            remaining: 3,
-            codes: [
-                { code: "A1B2C3D4", status: "available", created: "2024-01-15", expires: "2024-02-15" },
-                { code: "E5F6G7H8", status: "used", created: "2024-01-10", expires: "2024-02-10" },
-                { code: "I9J0K1L2", status: "available", created: "2024-01-20", expires: "2024-02-20" },
-                { code: "M3N4O5P6", status: "used", created: "2024-01-05", expires: "2024-02-05" },
-                { code: "Q7R8S9T0", status: "available", created: "2024-01-25", expires: "2024-02-25" }
-            ]
-        };
+        // Input Logic
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                const val = e.target.value.toUpperCase();
+                if (!val) {
+                    input.classList.remove('filled');
+                    return;
+                }
+                
+                // Allow only alphanumeric
+                if (!/[A-Z0-9]/.test(val)) {
+                    e.target.value = '';
+                    return;
+                }
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            updateStats();
-            renderCodesList();
-            setupEventListeners();
-            
-            // Initialize code input
-            codeDigits[0].focus();
+                input.classList.add('filled');
+                e.target.value = val;
+
+                if (index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !input.value && index > 0) {
+                    inputs[index - 1].focus();
+                    inputs[index - 1].value = '';
+                    inputs[index - 1].classList.remove('filled');
+                }
+            });
+
+            // Paste handling
+            input.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const text = (e.clipboardData || window.clipboardData).getData('text').toUpperCase().replace(/[^A-Z0-9]/g, '');
+                const arr = text.split('');
+                
+                arr.forEach((char, i) => {
+                    if (inputs[i]) {
+                        inputs[i].value = char;
+                        inputs[i].classList.add('filled');
+                    }
+                });
+                
+                // Focus last filled input
+                const lastFilled = Math.min(arr.length, inputs.length) - 1;
+                if (lastFilled >= 0) inputs[lastFilled].focus();
+            });
         });
 
-        function setupEventListeners() {
-            // Code input navigation
-            codeDigits.forEach((digit, index) => {
-                digit.addEventListener('input', function(e) {
-                    const value = e.target.value.toUpperCase();
-                    
-                    // Only allow alphanumeric characters
-                    if (!/^[A-Z0-9]$/.test(value)) {
-                        e.target.value = '';
-                        return;
-                    }
-                    
-                    e.target.value = value;
-                    e.target.classList.add('filled');
-                    
-                    // Auto-focus next input
-                    if (value && index < codeDigits.length - 1) {
-                        codeDigits[index + 1].focus();
-                    }
-                    
-                    // Validate if all digits are filled
-                    validateCodeInput();
-                });
-                
-                digit.addEventListener('keydown', function(e) {
-                    if (e.key === 'Backspace' && !e.target.value && index > 0) {
-                        codeDigits[index - 1].focus();
-                        codeDigits[index - 1].value = '';
-                        codeDigits[index - 1].classList.remove('filled');
-                    }
-                    
-                    // Allow navigation with arrow keys
-                    if (e.key === 'ArrowRight' && index < codeDigits.length - 1) {
-                        codeDigits[index + 1].focus();
-                    }
-                    if (e.key === 'ArrowLeft' && index > 0) {
-                        codeDigits[index - 1].focus();
-                    }
-                });
-                
-                // Handle paste
-                digit.addEventListener('paste', function(e) {
-                    e.preventDefault();
-                    const pastedText = (e.clipboardData || window.clipboardData).getData('text').toUpperCase();
-                    const cleanedText = pastedText.replace(/[^A-Z0-9]/g, '').slice(0, 8);
-                    
-                    if (cleanedText.length === 8) {
-                        cleanedText.split('').forEach((char, idx) => {
-                            if (codeDigits[idx]) {
-                                codeDigits[idx].value = char;
-                                codeDigits[idx].classList.add('filled');
-                            }
-                        });
-                        codeDigits[7].focus();
-                    } else {
-                        showNotification('error', 'رمز غير صالح', 'الرجاء إدخال رمز مكون من 8 أحرف/أرقام');
-                    }
-                });
-            });
-            
-            // Validate Code Button
-            validateBtn.addEventListener('click', function() {
-                const code = getEnteredCode();
-                if (!code || code.length !== 8) {
-                    showNotification('error', 'رمز غير مكتمل', 'يرجى إدخال رمز مكون من 8 أحرف/أرقام');
-                    return;
-                }
-                
-                validateInviteCode(code);
-            });
-            
-            // Generate Code Button
-            generateBtn.addEventListener('click', generateInviteCode);
-            
-            // Copy Code Button
-            copyBtn.addEventListener('click', copyGeneratedCode);
-            
-            // Share Buttons
-            shareButtons.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const platform = this.dataset.platform;
-                    shareCode(platform);
-                });
-            });
-        }
-        
-        function getEnteredCode() {
+        // Join Button Logic
+        joinBtn.addEventListener('click', () => {
             let code = '';
-            codeDigits.forEach(digit => {
-                code += digit.value;
-            });
-            return code;
-        }
-        
-        function validateCodeInput() {
-            const code = getEnteredCode();
-            validateBtn.disabled = code.length !== 8;
-            validateBtn.classList.toggle('btn-disabled', code.length !== 8);
-        }
-        
-        function validateInviteCode(code) {
-            showLoading(true);
-            
-            // Simulate API call
-            setTimeout(() => {
-                showLoading(false);
-                
-                // Mock validation
-                const isValid = code === "VALIDCODE" || Math.random() > 0.5;
-                
-                if (isValid) {
-                    showNotification('success', 'تم التفعيل بنجاح!', 'تم تفعيل رمز الدعوة بنجاح. استمتع بمميزاتك الجديدة!');
-                    
-                    // Update stats
-                    userInvites.used++;
-                    userInvites.remaining--;
-                    updateStats();
-                    
-                    // Clear inputs
-                    codeDigits.forEach(d => {
-                        d.value = '';
-                        d.classList.remove('filled');
-                    });
-                    codeDigits[0].focus();
-                    
-                    // Add animation effect
-                    validateBtn.innerHTML = '<i class="fas fa-check-circle"></i> تم التفعيل!';
-                    validateBtn.style.background = 'linear-gradient(135deg, #00b894, #00a085)';
-                    
-                    setTimeout(() => {
-                        validateBtn.innerHTML = '<i class="fas fa-check-circle"></i> تفعيل الرمز';
-                        validateBtn.style.background = '';
-                    }, 2000);
-                    
-                } else {
-                    showNotification('error', 'رمز غير صالح', 'الرمز الذي أدخلته غير صالح أو تم استخدامه مسبقاً');
-                    
-                    // Shake animation for error
-                    const style = document.createElement('style');
-                    style.textContent = `
-                        @keyframes shake {
-                            0%, 100% { transform: translateX(0); }
-                            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-                            20%, 40%, 60%, 80% { transform: translateX(5px); }
-                        }
-                    `;
-                    document.head.appendChild(style);
-                    
-                    codeDigits.forEach(d => {
-                        d.style.animation = 'shake 0.5s';
-                        setTimeout(() => {
-                            d.style.animation = '';
-                        }, 500);
-                    });
-                }
-            }, 1500);
-        }
-        
-        function generateInviteCode() {
-            showLoading(true);
-            
-            // Generate random code: 8 characters (letters and numbers)
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let code = '';
-            for (let i = 0; i < 8; i++) {
-                code += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            
-            // Format as XXXX-XXXX
-            const formattedCode = code.slice(0, 4) + '-' + code.slice(4);
-            
-            // Simulate API delay
-            setTimeout(() => {
-                showLoading(false);
-                
-                // Update display
-                codeDisplay.textContent = formattedCode;
-                codeDisplay.style.fontWeight = 'bold';
-                codeDisplay.style.color = '#6ae44d';
-                
-                // Add to user's codes
-                const today = new Date();
-                const expiryDate = new Date(today);
-                expiryDate.setDate(today.getDate() + 30);
-                
-                userInvites.codes.unshift({
-                    code: code,
-                    status: 'available',
-                    created: formatDate(today),
-                    expires: formatDate(expiryDate)
-                });
-                
-                userInvites.total++;
-                userInvites.remaining++;
-                
-                // Update UI
-                updateStats();
-                renderCodesList();
-                
-                showNotification('success', 'تم إنشاء الرمز', `تم إنشاء رمز الدعوة: ${formattedCode}`);
-                
-                // Enable copy button
-                copyBtn.disabled = false;
-            }, 1000);
-        }
-        
-        function formatDate(date) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
-        
-        function copyGeneratedCode() {
-            const code = codeDisplay.textContent.replace('-', '');
-            
-            if (code === 'انقر على "إنشاء رمز جديد"') {
-                showNotification('error', 'لا يوجد رمز', 'يرجى إنشاء رمز دعوة أولاً');
+            inputs.forEach(i => code += i.value);
+
+            if (code.length < 8) {
+                // Shake Effect
+                const container = document.querySelector('.code-container');
+                container.style.transform = 'translateX(10px)';
+                setTimeout(() => container.style.transform = 'translateX(-10px)', 100);
+                setTimeout(() => container.style.transform = 'translateX(10px)', 200);
+                setTimeout(() => container.style.transform = 'translateX(0)', 300);
                 return;
             }
-            
-            navigator.clipboard.writeText(code).then(() => {
-                // Show copied feedback
-                const originalText = copyBtn.innerHTML;
-                copyBtn.innerHTML = '<i class="fas fa-check"></i> تم النسخ!';
-                copyBtn.style.background = '#00b894';
-                
-                showNotification('success', 'تم النسخ', 'تم نسخ رمز الدعوة إلى الحافظة');
-                
-                setTimeout(() => {
-                    copyBtn.innerHTML = originalText;
-                    copyBtn.style.background = '';
-                }, 2000);
-            }).catch(err => {
-                showNotification('error', 'خطأ في النسخ', 'تعذر نسخ الرمز، يرجى المحاولة مرة أخرى');
-            });
-        }
-        
-        function shareCode(platform) {
-            const code = codeDisplay.textContent;
-            
-            if (code === 'انقر على "إنشاء رمز جديد"') {
-                showNotification('error', 'لا يوجد رمز', 'يرجى إنشاء رمز دعوة أولاً');
-                return;
-            }
-            
-            const shareText = `انضم إلى Tribly باستخدام رمز الدعوة الخاص بي: ${code}\nاحصل على مميزات حصرية!`;
-            const shareUrl = `https://tribly.com/invite?code=${code.replace('-', '')}`;
-            
-            let shareLink = '';
-            
-            switch(platform) {
-                case 'facebook':
-                    shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
-                    break;
-                case 'twitter':
-                    shareLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
-                    break;
-                case 'whatsapp':
-                    shareLink = `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
-                    break;
-                case 'link':
-                    navigator.clipboard.writeText(shareUrl).then(() => {
-                        showNotification('success', 'تم النسخ', 'تم نسخ رابط الدعوة إلى الحافظة');
-                    });
-                    return;
-            }
-            
-            if (shareLink) {
-                window.open(shareLink, '_blank', 'width=600,height=400');
-            }
-        }
-        
-        function updateStats() {
-            document.getElementById('totalCodes').textContent = userInvites.total;
-            document.getElementById('usedCodes').textContent = userInvites.used;
-            document.getElementById('remainingCodes').textContent = userInvites.remaining;
-        }
-        
-        function renderCodesList() {
-            codesList.innerHTML = '';
-            
-            userInvites.codes.forEach(item => {
-                const codeElement = document.createElement('div');
-                codeElement.className = 'code-item';
-                
-                const formattedCode = item.code.slice(0, 4) + '-' + item.code.slice(4);
-                
-                codeElement.innerHTML = `
-                    <div>
-                        <div class="code-value">${formattedCode}</div>
-                        <small style="color: #888; font-size: 0.85rem;">
-                            ${item.created} → ${item.expires}
-                        </small>
-                    </div>
-                    <div class="code-status ${item.status === 'used' ? 'status-used' : 'status-available'}">
-                        ${item.status === 'used' ? 'تم الاستخدام' : 'متاح'}
-                    </div>
-                `;
-                
-                codesList.appendChild(codeElement);
-            });
-        }
-        
-        function showNotification(type, title, message) {
-            const icon = notification.querySelector('.notification-icon');
-            const titleEl = notification.querySelector('.notification-title');
-            const messageEl = notification.querySelector('.notification-message');
-            
-            // Set content
-            icon.className = `fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} notification-icon`;
-            titleEl.textContent = title;
-            messageEl.textContent = message;
-            
-            // Set type
-            notification.className = `notification ${type}`;
-            
-            // Show notification
-            notification.classList.add('show');
-            
-            // Auto hide after 5 seconds
+
+            // Simulate Processing
+            loader.style.display = 'flex';
+            inputSection.style.opacity = '0';
+
             setTimeout(() => {
-                notification.classList.remove('show');
-            }, 5000);
+                loader.style.display = 'none';
+                inputSection.style.display = 'none';
+                waitlistSection.style.display = 'block';
+                
+                // Trigger Confetti
+                startConfetti();
+
+                // Update Rank (Simulated)
+                const rankEl = document.getElementById('finalRank');
+                let currentRank = 0;
+                const targetRank = 405;
+                const interval = setInterval(() => {
+                    currentRank += 15;
+                    if(currentRank >= targetRank) {
+                        currentRank = targetRank;
+                        clearInterval(interval);
+                    }
+                    rankEl.innerText = '#' + currentRank;
+                }, 30);
+
+                // Add user to queue list visually
+                addNewUserToQueue();
+
+            }, 2500);
+        });
+
+        // Add current user to the top of the list (Visual effect)
+        function addNewUserToQueue() {
+            const list = document.getElementById('queueList');
+            const newUser = document.createElement('div');
+            newUser.className = 'queue-row';
+            // Apply style inline for quick insertion
+            newUser.style.background = 'rgba(106, 228, 77, 0.2)';
+            newUser.style.borderColor = 'var(--primary)';
+            newUser.style.animation = 'none'; // reset for instant appearance
+            newUser.style.opacity = '1';
+            
+            // Use generic avatar
+            newUser.innerHTML = `
+                <div class="q-avatar" style="background: var(--primary); display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-user" style="color: white; font-size: 1.2rem;"></i>
+                </div>
+                <div class="q-info">
+                    <span class="q-status" style="color: white; font-weight: bold;">أنت (جديد)</span>
+                    <span style="font-size: 0.7rem; color: rgba(255,255,255,0.4);">Just now</span>
+                </div>
+                <div class="q-rank">#405</div>
+            `;
+            
+            list.insertBefore(newUser, list.firstChild);
         }
-        
-        function showLoading(show) {
-            loading.style.display = show ? 'flex' : 'none';
+
+        // Confetti Logic
+        function startConfetti() {
+            const colors = ['#6ae44d', '#ffd166', '#ef476f', '#118ab2'];
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                
+                // Randomize properties
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                document.body.appendChild(confetti);
+                
+                // Remove after animation
+                setTimeout(() => confetti.remove(), 4000);
+            }
         }
     </script>
 </body>

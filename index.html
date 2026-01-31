@@ -6,18 +6,26 @@
     <meta name="keywords" content="welcome in tr">
     <title>Tribly | the home page</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- استخدام أيقونة عامة كـ Placeholder في حال عدم وجود الصورة -->
+    <!-- أيقونة الموقع -->
     <link rel="icon" href="img/logo icon.png" type="image/x-icon">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
     <style>
-        /* --- General Reset & Variables --- */
+        /* --- المتغيرات والألوان (Theme Variables) --- */
         :root {
             --primary-color: #6ae44d;
-            --text-dark: #333;
-            --text-light: #fff;
-            --bg-light: #f9f9f9;
+            --primary-hover: #5bc43e;
+            --secondary-color: #2c3e50;
+            --accent-color: #ffeb3b;
+            --text-dark: #1a1a1a;
+            --text-gray: #666;
+            --bg-light: #fcfcfc;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 20px 40px rgba(106, 228, 77, 0.2);
             --nav-height: 80px;
+            --border-radius: 16px;
         }
 
         * {
@@ -30,60 +38,96 @@
         body {
             overflow-x: hidden;
             background-color: #fff;
+            color: var(--text-dark);
         }
 
-        a { text-decoration: none; transition: 0.3s; }
+        a { text-decoration: none; transition: all 0.3s ease; }
         ul { list-style: none; }
         button { cursor: pointer; border: none; outline: none; font-family: inherit; }
 
-        /* --- Navbar Styling --- */
+        /* --- Scroll Reveal Animation Class --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Navbar Styling (Glassmorphism) --- */
         .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 5%;
-            background: #fff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            position: fixed; /* Fixed for scroll effect */
+            padding: 0.8rem 5%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px); /* تأثير الزجاج */
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--glass-border);
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             z-index: 1000;
             height: var(--nav-height);
-            transition: transform 0.3s ease-in-out;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            background: rgba(255, 255, 255, 0.95);
         }
 
         /* Logo */
         .logo a {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 24px;
+            gap: 10px;
+            font-size: 26px;
             font-weight: 800;
             color: #000;
+            letter-spacing: -0.5px;
         }
         .logo img {
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             object-fit: contain;
             border-radius: 50%;
+            transition: transform 0.3s;
         }
+        .logo:hover img { transform: rotate(10deg); }
         .logo a:hover { color: var(--primary-color); }
 
-        /* Nav Links (Desktop) */
+        /* Nav Links */
         .nav-links {
             display: flex;
-            gap: 30px;
+            gap: 35px;
         }
 
         .nav-links li a {
             color: var(--text-dark);
             font-weight: 500;
             font-size: 16px;
+            position: relative;
+        }
+
+        /* Hover Effect for Links (Animated Underline) */
+        .nav-links li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            right: 0; /* RTL */
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
         }
         .nav-links li a:hover { color: var(--primary-color); }
+        .nav-links li a:hover::after { width: 100%; }
 
-        /* Nav Actions (Language + Buttons) */
+        /* Nav Actions */
         .nav-actions {
             display: flex;
             align-items: center;
@@ -91,15 +135,12 @@
         }
 
         /* Language Switcher */
-        .lang-switcher {
-            position: relative;
-        }
-
+        .lang-switcher { position: relative; }
         .lang-toggle {
             padding: 8px 16px;
-            background: #f0f0f0;
+            background: #f4f4f4;
             color: #000;
-            border-radius: 6px;
+            border-radius: 30px;
             font-weight: 600;
             font-size: 13px;
             display: flex;
@@ -107,28 +148,28 @@
             gap: 6px;
             transition: 0.3s;
         }
-        .lang-toggle:hover { background: #e0e0e0; }
+        .lang-toggle:hover { background: #e0e0e0; transform: translateY(-2px); }
 
         .lang-dropdown {
             position: absolute;
-            top: 120%;
-            right: 0; /* RTL alignment */
+            top: 140%;
+            right: 0;
             background: #fff;
             border: 1px solid #eee;
-            border-radius: 8px;
-            min-width: 150px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            display: none; /* Hidden by default */
+            border-radius: 12px;
+            min-width: 160px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            display: none;
             flex-direction: column;
             overflow: hidden;
             z-index: 1001;
+            animation: fadeIn 0.2s ease;
         }
-
-        .lang-dropdown.show { display: flex; animation: fadeIn 0.2s ease; }
+        .lang-dropdown.show { display: flex; }
 
         .lang-option {
             width: 100%;
-            padding: 12px 16px;
+            padding: 12px 20px;
             text-align: right;
             background: #fff;
             border: none;
@@ -139,44 +180,263 @@
             align-items: center;
             gap: 10px;
         }
-        .lang-option:hover { background: #f9f9f9; color: var(--primary-color); }
-        .lang-option:first-child:hover { border-radius: 8px 8px 0 0; }
-        .lang-option:last-child:hover { border-radius: 0 0 8px 8px; }
+        .lang-option:hover { background: #f0fdf4; color: var(--primary-color); }
 
         /* Buttons */
         .join {
             color: #000;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 15px;
         }
         .join:hover { color: var(--primary-color); }
 
         .login-btn {
-            padding: 10px 24px;
+            padding: 10px 28px;
             background: var(--primary-color);
             color: #000;
-            border-radius: 6px;
+            border-radius: 30px;
             font-weight: 700;
             font-size: 14px;
             transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(106, 228, 77, 0.3);
         }
         .login-btn:hover {
-            background: #5bc43e;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(106, 228, 77, 0.3);
+            background: var(--primary-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(106, 228, 77, 0.4);
         }
 
         /* Mobile Menu Button */
         .menu-btn {
             display: none;
-            font-size: 24px;
+            font-size: 22px;
             color: #000;
             background: transparent;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+        .menu-btn:hover { background: #f0f0f0; }
+
+        /* --- Animations --- */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
         }
 
-        /* --- Responsive Design (Mobile) --- */
+        /* --- Popup Styling --- */
+        #betaPopup {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+        .popup-content {
+            background: #fff;
+            padding: 2.5rem;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            transform: scale(1);
+            transition: transform 0.3s;
+        }
+        .popup-content h2 { color: var(--primary-color); margin-bottom: 10px; }
+        .popup-content button {
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: var(--primary-color);
+            color: #000;
+            font-weight: bold;
+            border-radius: 30px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        .popup-content button:hover { transform: scale(1.05); }
+
+        /* --- Hero Section --- */
+        .hero {
+            padding: 140px 5% 60px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 90vh;
+            background: radial-gradient(circle at 10% 20%, rgba(106, 228, 77, 0.05) 0%, transparent 40%);
+        }
+        .hero-text { flex: 1; min-width: 300px; padding: 20px; }
+        .hero-text h1 { 
+            font-size: 56px; 
+            margin-bottom: 25px; 
+            line-height: 1.15; 
+            color: #1a1a1a;
+        }
+        .hero-text p { 
+            font-size: 18px; 
+            color: var(--text-gray); 
+            margin-bottom: 35px; 
+            line-height: 1.6;
+            max-width: 500px;
+        }
+        .hero-image { 
+            flex: 1; 
+            min-width: 300px; 
+            text-align: center; 
+            position: relative;
+        }
+        /* Float Animation for Hero Image */
+        .hero-image img { 
+            max-width: 100%; 
+            border-radius: 30px; 
+            box-shadow: var(--shadow-soft);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .beta {
+            background: #e0f7fa; 
+            color: #006064;
+            display: inline-block; 
+            padding: 6px 16px; 
+            border-radius: 30px; 
+            font-size: 12px; 
+            font-weight: 800; 
+            margin-bottom: 20px; 
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .hero-buttons { display: flex; gap: 15px; flex-wrap: wrap; }
+        .btn { 
+            padding: 14px 30px; 
+            border-radius: 30px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: all 0.3s; 
+            font-size: 15px;
+        }
+        .btn-green { 
+            background: var(--primary-color); 
+            color: #000; 
+            box-shadow: 0 5px 15px rgba(106, 228, 77, 0.4); 
+        }
+        .btn-yellow { 
+            background: var(--accent-color); 
+            color: #000; 
+        }
+        .btn-outline { 
+            border: 2px solid #000; 
+            color: #000; 
+            background: transparent; 
+        }
+        .btn:hover { transform: translateY(-3px); filter: brightness(0.95); }
+
+        /* --- Cards Section --- */
+        .cards { 
+            display: flex; 
+            gap: 25px; 
+            overflow-x: auto; 
+            padding: 60px 5%; 
+            scroll-behavior: smooth;
+            padding-bottom: 80px;
+        }
+        /* Hide Scrollbar */
+        .cards::-webkit-scrollbar { height: 8px; }
+        .cards::-webkit-scrollbar-thumb { background: #ddd; border-radius: 10px; }
+        .cards::-webkit-scrollbar-track { background: transparent; }
+
+        .card {
+            min-width: 300px;
+            background: #fff;
+            border: 1px solid #f0f0f0;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card:hover { 
+            transform: translateY(-10px); 
+            box-shadow: var(--shadow-hover); 
+            border-color: var(--primary-color);
+        }
+        .icon { 
+            font-size: 28px; 
+            font-weight: 800; 
+            color: var(--primary-color); 
+            margin-bottom: 15px; 
+            width: 50px; height: 50px; 
+            background: #f0fdf4; 
+            display: flex; align-items: center; justify-content: center; 
+            border-radius: 12px;
+        }
+        .card h3 { margin-bottom: 10px; font-size: 18px; }
+        .card p { font-size: 14px; color: #777; line-height: 1.6; }
+        
+        .interests { display: flex; flex-wrap: wrap; gap: 8px; margin: 15px 0; }
+        .interest { 
+            padding: 6px 12px; 
+            background: #f5f5f5; 
+            border-radius: 20px; 
+            font-size: 11px; 
+            font-weight: 600; 
+            color: #555;
+            transition: 0.2s;
+        }
+        .interest:hover { background: var(--primary-color); color: #fff; }
+        
+        .star { cursor: pointer; font-size: 24px; color: #ddd; transition: 0.2s; }
+        .star.active { color: #ffc107; transform: scale(1.2); }
+
+        /* --- Sections Styling --- */
+        #nearby { 
+            padding: 80px 20px; 
+            background: linear-gradient(125deg,#f0fdf4, #e0f7fa); 
+            text-align: center; 
+            border-radius: 30px;
+            margin: 20px 5%;
+        }
+        #nearby img { 
+            width: 100%; 
+            max-width: 900px; 
+            border-radius: 20px; 
+            box-shadow: var(--shadow-soft);
+            margin: 30px auto;
+            display: block;
+        }
+        
+        #Tursted_by { padding: 80px 20px; text-align: center; }
+        
+        /* Footer CSS */
+        footer { 
+            margin-top: 80px; 
+            background: #111; 
+            color: #fff; 
+            padding: 80px 20px 30px; 
+            border-top: 5px solid var(--primary-color);
+        }
+        footer h3 { font-size: 32px; }
+        footer ul li { margin-bottom: 12px; }
+        footer a:hover { color: var(--primary-color); padding-right: 5px; }
+
+        /* --- Responsive Design --- */
         @media (max-width: 992px) {
-            .menu-btn { display: block; }
+            .menu-btn { display: flex; align-items: center; justify-content: center; }
+            .hero h1 { font-size: 40px; }
             
             .nav-links {
                 position: fixed;
@@ -187,107 +447,17 @@
                 background: #fff;
                 flex-direction: column;
                 padding: 40px 20px;
-                gap: 25px;
-                transform: translateX(100%); /* Hide off-screen */
-                transition: transform 0.4s ease;
+                gap: 30px;
+                transform: translateX(100%);
+                transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
                 z-index: 999;
-                border-top: 1px solid #eee;
-                align-items: center; /* Center items vertically */
+                box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+                align-items: center;
             }
-
-            .nav-links.active {
-                transform: translateX(0);
-            }
-
-            .nav-actions {
-                /* On mobile, keep lang switcher visible, move login/join into menu if preferred, 
-                   or keep them. Let's keep them but simplify */
-                gap: 10px;
-            }
-            .join { display: none; } /* Hide text link on mobile, keep button */
-            .login-btn { padding: 8px 16px; font-size: 13px; }
+            .nav-links.active { transform: translateX(0); }
+            .join { display: none; } 
+            .nav-actions { gap: 10px; }
         }
-
-        /* --- Animations --- */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* --- Popup Styling --- */
-        #betaPopup {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-        .popup-content {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 12px;
-            text-align: center;
-            max-width: 400px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        .popup-content button {
-            margin-top: 15px;
-            padding: 10px 20px;
-            background: var(--primary-color);
-            font-weight: bold;
-            border-radius: 5px;
-        }
-
-        /* --- Hero Section (Basic Styling for presentation) --- */
-        .hero {
-            padding: 120px 5% 60px;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            min-height: 80vh;
-        }
-        .hero-text { flex: 1; min-width: 300px; padding: 20px; }
-        .hero-text h1 { font-size: 48px; margin-bottom: 20px; line-height: 1.2; }
-        .hero-text p { font-size: 18px; color: #666; margin-bottom: 30px; }
-        .hero-image { flex: 1; min-width: 300px; text-align: center; }
-        .hero-image img { max-width: 100%; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-        .beta {
-            background: #e0f7fa; color: #006064;
-            display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 15px;
-        }
-        .hero-buttons { display: flex; gap: 15px; flex-wrap: wrap; }
-        .btn { padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; }
-        .btn-green { background: var(--primary-color); color: #000; }
-        .btn-yellow { background: #ffeb3b; color: #000; }
-        .btn-outline { border: 2px solid #000; color: #000; background: transparent; }
-        .btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-
-        /* --- Cards Section --- */
-        .cards { display: flex; gap: 20px; overflow-x: auto; padding: 40px 5%; scroll-behavior: smooth; }
-        .card {
-            min-width: 280px;
-            background: #fff;
-            border: 1px solid #eee;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            transition: 0.3s;
-            opacity: 0; /* For animation */
-            transform: translateY(20px);
-        }
-        .card.show { opacity: 1; transform: translateY(0); }
-        .card:hover { border-color: var(--primary-color); }
-        .icon { font-size: 24px; font-weight: bold; color: var(--primary-color); margin-bottom: 10px; }
-        .interests { display: flex; flex-wrap: wrap; gap: 5px; margin: 10px 0; }
-        .interest { padding: 4px 8px; background: #eee; border-radius: 4px; font-size: 12px; }
-        .star { cursor: pointer; font-size: 24px; color: #ddd; }
-        .star.active { color: #ffc107; }
-
-        /* Footer CSS */
-        footer { margin-top: 60px; }
     </style>
 </head>
 <body>
@@ -295,9 +465,9 @@
     <!-- Popup -->
     <div id="betaPopup">
         <div class="popup-content">
-            <h2>Beta Version (V0.2.1)</h2>
-            <p>Some features may not work correctly yet.<br>Thanks for testing Tribly!</p>
-            <button id="closePopup">OK</button>
+            <h2>Beta Version</h2>
+            <p style="color: #666;">V0.2.1 - Some features may not work correctly yet. Thanks for testing Tribly!</p>
+            <button id="closePopup">Got it!</button>
         </div>
     </div>
 
@@ -305,7 +475,7 @@
     <nav class="navbar">
       <div class="logo">
        <a href="index.html">
-         <!-- Placeholder for logo -->
+         <!-- Keep same image source -->
          <img src="img/logo icon.png" onerror="this.src='https://picsum.photos/seed/logo/40/40'" alt="Tribly">
          <span>Tribly</span>
        </a>
@@ -316,8 +486,7 @@
         <li><a href="about.html">About</a></li>
         <li><a href="get app.html">Get The App</a></li>
         <li><a href="manifesto.html">Manifesto</a></li>
-        <!-- Mobile Only Login/Join inside menu -->
-        <li style="display: block;" class="mobile-only-item">
+        <li class="mobile-only-item" style="display: none;">
             <a href="login.html" style="color:var(--primary-color); font-weight:bold;">Login / Join</a>
         </li>
       </ul>
@@ -327,7 +496,7 @@
           <button class="lang-toggle" id="langToggle">
             <i class="fas fa-globe"></i>
             <span id="currentLang">العربية</span>
-            <i class="fas fa-chevron-down"></i>
+            <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
           </button>
           <div class="lang-dropdown" id="langDropdown">
             <button class="lang-option" data-lang="ar">🇸🇦 العربية</button>
@@ -345,9 +514,9 @@
 
     <!-- Hero -->
     <section class="hero">
-        <div class="hero-text">
-            <div class="beta"><span>Beta release V.0.4</span></div>
-            <h1>Find Your<br><span style="font-weight: bold; color: #6ae44d;">Tribe</span><br>Anywhere</h1>
+        <div class="hero-text reveal">
+            <div class="beta">Beta release V.0.4</div>
+            <h1>Find Your<br><span style="font-weight: 800; color: var(--primary-color);">Tribe</span><br>Anywhere</h1>
             <p>Find community and the people you click with closest to you. Your next magical connection is just a click away.</p>
             <div class="hero-buttons">
                 <a href="login.html"><button class="btn btn-green">Login</button></a>
@@ -355,113 +524,116 @@
              <a href="get-code.html"><button class="btn btn-outline">Got An Invitation Code?</button></a>
             </div>
         </div>
-        <div class="hero-image">
-            <!-- Placeholder for hero image -->
-            </div>
+        <div class="hero-image reveal">
+            <!-- Keep same placeholder logic -->
+            <img src="img/hero-image-base.jpg" onerror="this.src='https://picsum.photos/seed/triblyhero/600/400'" alt="Tribe Hero">
+        </div>
     </section> 
 
     <!-- How It Works -->
-    <section id="how" style="padding: 60px 20px; text-align: center;">
-        <h2 style="margin-bottom: 40px;">How Does It Work?</h2>
+    <section id="how">
+        <div style="padding: 60px 5%; text-align: center;" class="reveal">
+            <h2 style="font-size: 32px; margin-bottom: 10px; color: #1a1a1a;">How Does It Work?</h2>
+            <p style="color: #666;">Simple steps to find your community.</p>
+        </div>
         <div class="cards">
-            <div class="card">
+            <div class="card reveal">
               <div class="icon">1</div>
-                <div class="map-box" style="background-image: url(img/cities.b5e15162.svg); height: 100px; background-size: cover; border-radius: 8px; margin-bottom: 10px; background: #eee;"></div>
+                <div class="map-box" style="background-image: url(img/cities.b5e15162.svg); height: 120px; background-size: cover; border-radius: 12px; margin-bottom: 15px; background: #eee;"></div>
                 <h3>Join Tribly</h3>
                 <p>Subscribe to Tribly and join our growing community.</p><br>
                 <a href="login.html"><button class="login-btn" style="width: 100%;">Join Tribly</button></a>
             </div>
-            <div class="card">
+            <div class="card reveal">
                 <div class="icon">2</div>
                 <h3>Fill in your interests</h3>
                 <p>Tell us what you love, and we'll do the rest.</p>
                 <div class="interests">
-                    <div class="interest" style="background: #7df6ff; color: #000;">Music ✓</div>
-                    <div class="interest">Sports +</div>
-                    <div class="interest" style="background: #7df6ff; color: #000;">Gaming ✓</div>
-                    <div class="interest">Reading+</div>
-                    <div class="interest" style="background: #7df6ff; color: #000;">programming+</div>
-                    <div class="interest">swimming+</div>
-                    <div class="interest" style="background: #7df6ff; color: #000;">interviews +</div>
-                    <div class="interest">run +</div>
+                    <div class="interest">Music</div>
+                    <div class="interest">Sports</div>
+                    <div class="interest">Gaming</div>
+                    <div class="interest">Tech</div>
+                    <div class="interest">Art</div>
                 </div>
             </div>
-            <div class="card">
+            <div class="card reveal">
                 <div class="icon" >3</div>
                 <h3>Get Recommendations</h3>
                 <p>Tribly AI will suggest communities to join.</p>
-                <img src="img/hero-image-base.jpg" onerror="this.src='https://picsum.photos/seed/card3/250/150'" alt="Events" style="width:100%;margin-top:10px; border-radius: 8px;">
+                <img src="img/hero-image-base.jpg" onerror="this.src='https://picsum.photos/seed/card3/250/150'" alt="Events" style="width:100%;margin-top:15px; border-radius: 12px;">
             </div>
-            <div class="card">
+            <div class="card reveal">
                 <div class="icon">4</div>
                 <h3>Meet IRL</h3>
                 <p>Go out and connect with people we're sure you'll click with.</p>
             </div>
-            <div class="card">
+            <div class="card reveal">
                 <div class="icon">5</div>
                 <h3>Rate your Experience</h3>
                 <p>Help Tribly AI improve its recommendations.</p>
-                <div class="stars" style="font-size: 24px; color: #ddd;">
+                <div class="stars" style="font-size: 24px; margin-top: 10px; display: flex; gap: 5px;">
                     <span class="star" data-value="1">★</span>
                     <span class="star" data-value="2">★</span>
                     <span class="star" data-value="3">★</span>
                     <span class="star" data-value="4">★</span>
                     <span class="star" data-value="5">★</span>
                 </div>
-                <p id="rating-text" style="margin-top:10px;color:gray; font-size: 12px;">Click a star to rate!</p>
+                <p id="rating-text" style="margin-top:10px;color:gray; font-size: 12px;">Rate us!</p>
             </div>
         </div>
     </section>
 
 
-<section id="nearby" style="padding: 60px 20px; background: linear-gradient(125deg,#effaff, #dbf4ff); text-align: center;">
-  <h2 style="font-size: 28px; font-weight: 700; color: #2c3e50;">Cities</h2>
-  <!-- Placeholder map -->
-  <img src="img/cities.b5e15162.svg" onerror="this.src='https://picsum.photos/seed/map/800/300'" alt="map" style="width: 100%; max-width: 800px; border-radius: 2px;"><br>
-  <h5 style="color: #000;">* You Can use Tribly from Anywhere but the <span style="font-weight: bolder;">meetup</span> Feature is currently only available in Alexandria, Egypt*</h5>
+<section id="nearby" class="reveal">
+  <h2 style="font-size: 32px; font-weight: 800; color: #2c3e50; margin-bottom: 10px;">Cities</h2>
+  <!-- Map Placeholder -->
+  <img src="img/cities.b5e15162.svg" onerror="this.src='https://picsum.photos/seed/map/800/300'" alt="map"><br>
+  <p style="color: #444; max-width: 600px; margin: 20px auto;">
+    * You Can use Tribly from Anywhere but the <strong>meetup</strong> Feature is currently only available in Alexandria, Egypt*
+  </p>
 </section>
 
-<section id="Tursted_by" style="padding: 60px 20px; text-align: center;">
-<h2 style="font-size: 28px; font-weight: 700; color: #2c3e50;">Trusted by communities</h2>
-<p>We are building connections in <span style="font-weight: bolder; color: #000;">Alexandria</span> and the rest of Egypt.</p>
+<section id="Tursted_by" class="reveal" style="padding: 80px 20px; text-align: center;">
+<h2 style="font-size: 32px; font-weight: 700; color: #2c3e50; margin-bottom: 15px;">Trusted by communities</h2>
+<p style="font-size: 18px; color: #555;">We are building connections in <span style="font-weight: 800; color: var(--primary-color);">Alexandria</span> and the rest of Egypt.</p>
 </section>
 
 <!-- Footer HTML -->
-<footer style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #fff; padding: 60px 20px 30px;">
+<footer>
   <div style="max-width: 1200px; margin: 0 auto;">
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 50px;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 50px;">
       <!-- Brand -->
       <div>
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 25px;">
           <img src="img/logo icon.png" onerror="this.src='https://picsum.photos/seed/logo/50/50'" alt="Tribly" style="width: 50px; height: 50px; object-fit: contain; border-radius: 50%; background: #fff;">
           <h3 style="font-size: 28px; font-weight: 700; color: #6ae44d; margin: 0;">Tribly</h3>
         </div>
-        <p style="color: #aaa; line-height: 1.8;">Find your tribe, connect with people you click with, and build meaningful communities wherever you are.</p>
+        <p style="color: #aaa; line-height: 1.8; font-size: 15px;">Find your tribe, connect with people you click with, and build meaningful communities wherever you are.</p>
       </div>
       <!-- Links -->
       <div>
-        <h4 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 20px;">Product</h4>
+        <h4 style="font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 25px;">Product</h4>
         <ul style="color: #aaa; line-height: 2;">
-            <li><a href="index.html" style="color:#aaa; text-decoration:none;">Home</a></li>
-            <li><a href="about.html" style="color:#aaa; text-decoration:none;">About Us</a></li>
-            <li><a href="get-app.html" style="color:#aaa; text-decoration:none;">Get The App</a></li>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="get-app.html">Get The App</a></li>
         </ul>
       </div>
        <div>
-        <h4 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 20px;">Company</h4>
+        <h4 style="font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 25px;">Company</h4>
         <ul style="color: #aaa; line-height: 2;">
-            <li><a href="manifesto.html" style="color:#aaa; text-decoration:none;">Manifesto</a></li>
-            <li><a href="communities.html" style="color:#aaa; text-decoration:none;">Communities</a></li>
-            <li><a href="mailto:triblyteam@gmail.com" style="color:#aaa; text-decoration:none;">Contact</a></li>
+            <li><a href="manifesto.html">Manifesto</a></li>
+            <li><a href="communities.html">Communities</a></li>
+            <li><a href="mailto:triblyteam@gmail.com">Contact</a></li>
         </ul>
       </div>
     </div>
 
     <!-- Bottom Section -->
-    <div style="height: 1px; background: rgba(106, 228, 77, 0.2); margin-bottom: 30px;"></div>
+    <div style="height: 1px; background: rgba(255, 255, 255, 0.1); margin: 50px 0 30px;"></div>
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
       <div style="color: #888; font-size: 14px;">
-        © 2026 Tribly. All rights reserved. Made with <span style="color: #6ae44d;">❤️</span> for communities.
+        © 2026 Tribly. All rights reserved. Made with <span style="color: #e74c3c;">❤️</span> for communities.
       </div>
     </div>
   </div>
@@ -475,10 +647,9 @@
     const navbar = document.querySelector(".navbar");
 
     menuBtn.addEventListener("click", (e) => {
-        e.stopPropagation(); // Prevent immediate closing
+        e.stopPropagation();
         navLinks.classList.toggle("active");
         
-        // Toggle Icon
         const icon = menuBtn.querySelector("i");
         if (navLinks.classList.contains("active")) {
             icon.classList.remove("fa-bars");
@@ -504,33 +675,23 @@
     const currentLangSpan = document.getElementById("currentLang");
     const langOptions = document.querySelectorAll(".lang-option");
 
-    // Toggle Dropdown
     langToggle.addEventListener("click", (e) => {
         e.stopPropagation();
         langDropdown.classList.toggle("show");
     });
 
-    // Select Language
     langOptions.forEach(opt => {
         opt.addEventListener("click", () => {
-            const selectedLang = opt.getAttribute("data-lang");
-            const langText = opt.innerText; // e.g., "🇸🇦 العربية"
-            
-            // Update Text
-            currentLangSpan.innerText = langText.split(" ")[1] || langText; // Just take text part
+            const langText = opt.innerText; 
+            currentLangSpan.innerText = langText.split(" ")[1] || langText; 
             langDropdown.classList.remove("show");
-            
-            // Here you would add logic to actually change the page language
-            console.log("Language switched to: " + selectedLang);
         });
     });
 
-    // Close Dropdown when clicking outside
     window.addEventListener("click", (e) => {
         if (!langToggle.contains(e.target) && !langDropdown.contains(e.target)) {
             langDropdown.classList.remove("show");
         }
-        // Also close mobile menu if clicked outside
         if (window.innerWidth <= 992 && !navbar.contains(e.target) && navLinks.classList.contains("active")) {
             navLinks.classList.remove("active");
             menuBtn.querySelector("i").classList.remove("fa-times");
@@ -538,18 +699,23 @@
         }
     });
 
-    // --- 3. Navbar Hide/Show on Scroll ---
+    // --- 3. Navbar Hide/Show & Glass Effect on Scroll ---
     let lastScrollTop = 0;
     
     window.addEventListener("scroll", function() {
         let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         
-        // Scroll Down -> Hide
+        // Add class for blur effect
+        if (scrollTop > 50) {
+            navbar.classList.add("scrolled");
+        } else {
+            navbar.classList.remove("scrolled");
+        }
+
+        // Hide/Show logic
         if (scrollTop > lastScrollTop && scrollTop > 100) {
             navbar.style.transform = "translateY(-100%)";
-        } 
-        // Scroll Up -> Show
-        else {
+        } else {
             navbar.style.transform = "translateY(0)";
         }
         lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
@@ -566,7 +732,7 @@
                 stars[i].classList.add('active');
             }
             ratingText.textContent = `You rated ${index+1} star${index !== 0 ? 's' : ''}!`;
-            ratingText.style.color = 'green';
+            ratingText.style.color = 'var(--primary-color)';
         });
     });
 
@@ -579,27 +745,20 @@
         setTimeout(() => popup.style.display = "none", 300);
     });
     
-    // Auto hide after 10 seconds
-    setTimeout(() => {
-        if(popup.style.display !== 'none') {
-            popup.style.opacity = "0";
-            setTimeout(() => popup.style.display = "none", 300);
-        }
-    }, 10000);
-
-    // --- 6. Scroll Animation for Cards ---
-    const cards = document.querySelectorAll(".card");
-    const fadeOptions = { threshold: 0.2 };
-
-    const fadeObserver = new IntersectionObserver((entries) => {
+    // --- 6. NEW: Scroll Reveal Animation ---
+    const revealElements = document.querySelectorAll(".reveal");
+    
+    const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add("show");
+                entry.target.classList.add("active");
+                // Optional: Stop observing once revealed
+                // revealObserver.unobserve(entry.target); 
             }
         });
-    }, fadeOptions);
+    }, { threshold: 0.15 });
 
-    cards.forEach(card => fadeObserver.observe(card));
+    revealElements.forEach(el => revealObserver.observe(el));
 </script>
 
 </body>
